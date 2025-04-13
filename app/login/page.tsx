@@ -1,52 +1,102 @@
-"use client"
-
-import type React from "react"
-
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Github, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { toast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
+"use client";
+import type React from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { useSignIn } from "@clerk/nextjs";
+import { OAuthStrategy } from "@clerk/types";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { signIn, isLoaded: clerkLoaded } = useSignIn();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
 
-    try {
-      // This is where you would integrate with Clerk
-      // For now, we'll just simulate a login
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      toast({
-        title: "Success",
-        description: "You have successfully logged in.",
-      })
-
-      // Redirect to dashboard after successful login
-      router.push("/")
-    } catch (error) {
-      console.error("Login error:", error)
+    if (!clerkLoaded) {
       toast({
         title: "Error",
-        description: "Failed to log in. Please check your credentials and try again.",
+        description:
+          "Authentication system is still loading. Please try again.",
         variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
+      });
+      return;
     }
-  }
+
+    setIsLoading(true);
+
+    try {
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      if (result.status === "complete") {
+        toast({
+          title: "Success",
+          description: "You have successfully logged in.",
+        });
+        router.push("/");
+      } else {
+        // This shouldn't happen with email/password auth, but just in case
+        toast({
+          title: "Error",
+          description: "Login process couldn't be completed. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: "Error",
+        description:
+          "Failed to log in. Please check your credentials and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOAuthSignIn = async (strategy: OAuthStrategy) => {
+    if (!clerkLoaded) {
+      toast({
+        title: "Error",
+        description:
+          "Authentication system is still loading. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await signIn.authenticateWithRedirect({
+        strategy,
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/",
+      });
+    } catch (error) {
+      console.error("OAuth error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to authenticate with provider.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -73,10 +123,10 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold text-gray-800">NutriTrack</h1>
           </div>
         </div>
-
         <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Welcome back</h2>
-
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            Welcome back
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -90,11 +140,13 @@ export default function LoginPage() {
                 disabled={isLoading}
               />
             </div>
-
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-xs text-green-600 hover:underline">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-green-600 hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -121,12 +173,17 @@ export default function LoginPage() {
                   ) : (
                     <Eye className="h-4 w-4 text-gray-500" />
                   )}
-                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                  <span className="sr-only">
+                    {showPassword ? "Hide password" : "Show password"}
+                  </span>
                 </Button>
               </div>
             </div>
-
-            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700"
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -137,19 +194,23 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
-
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
-
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <Button variant="outline" disabled={isLoading}>
+              <Button
+                variant="outline"
+                disabled={isLoading}
+                onClick={() => handleOAuthSignIn("oauth_google")}
+              >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                   <path
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -171,26 +232,32 @@ export default function LoginPage() {
                 </svg>
                 Google
               </Button>
-              <Button variant="outline" disabled={isLoading}>
+              <Button
+                variant="outline"
+                disabled={isLoading}
+                onClick={() => handleOAuthSignIn("oauth_github")}
+              >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
             </div>
           </div>
-
           <div className="mt-6 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-green-600 hover:underline font-medium">
+            <Link
+              href="/signup"
+              className="text-green-600 hover:underline font-medium"
+            >
               Sign up
             </Link>
           </div>
         </div>
-
         <p className="text-center text-xs text-gray-500 mt-6">
-          By continuing, you agree to NutriTrack&apos;s Terms of Service and Privacy Policy.
+          By continuing, you agree to NutriTrack&apos;s Terms of Service and
+          Privacy Policy.
         </p>
       </div>
       <Toaster />
     </div>
-  )
+  );
 }
