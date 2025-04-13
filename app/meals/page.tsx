@@ -181,10 +181,10 @@ export default function MealsPage() {
     setIsSubmitting(true)
 
     try {
-      const calories = Number.parseInt(newCalories)
-      const protein = newProtein ? Number.parseInt(newProtein) : null
-      const carbs = newCarbs ? Number.parseInt(newCarbs) : null
-      const fat = newFat ? Number.parseInt(newFat) : null
+      const calories = Number.parseFloat(newCalories)
+      const protein = newProtein ? Number.parseFloat(newProtein) : null
+      const carbs = newCarbs ? Number.parseFloat(newCarbs) : null
+      const fat = newFat ? Number.parseFloat(newFat) : null
 
       if (isNaN(calories)) throw new Error("Invalid calories value")
 
@@ -192,6 +192,9 @@ export default function MealsPage() {
       const tags = newTags.trim() ? newTags.split(",").map((tag) => tag.trim()) : []
 
       if (editMode && currentMealId) {
+        console.log("Updating meal with ID:", currentMealId)
+        console.log("Calories:", calories)
+        console.log("Protein:", protein)
         // Update existing meal
         const updatedMeal = await updateMeal(currentMealId, {
           name: newName,
