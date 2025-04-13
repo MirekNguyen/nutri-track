@@ -19,7 +19,13 @@ export async function getFoodEntries(date: Date) {
       .where(and(eq(foodEntries.userId, user.id), eq(foodEntries.entryDate, formattedDate)))
       .orderBy(desc(foodEntries.entryTime))
 
-    return entries
+    return entries.map(entry => ({
+      ...entry,
+      carbs: entry.carbs ? parseFloat(entry.carbs.toString()) : null,
+      protein: entry.protein ? parseFloat(entry.protein.toString()) : null,
+      fat: entry.fat ? parseFloat(entry.fat.toString()) : null,
+      calories: entry.calories ? parseFloat(entry.calories.toString()) : null,
+    }))
   } catch (error) {
     console.error("Error getting food entries:", error)
     throw new Error("Failed to get food entries")

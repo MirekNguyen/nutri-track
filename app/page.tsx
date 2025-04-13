@@ -178,6 +178,7 @@ export default function CalorieTracker() {
   async function loadFoodEntries() {
     try {
       const entriesData = await getFoodEntries(selectedDate)
+      console.log(entriesData);
       setEntries(entriesData)
     } catch (error) {
       console.error("Error loading food entries:", error)
