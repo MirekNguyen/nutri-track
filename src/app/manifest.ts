@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'App to track your nutrition and calories',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
+    background_color: '#16a34a',
     icons: [
       {
         src: '/icon-192x192.png',
