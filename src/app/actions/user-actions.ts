@@ -2,6 +2,7 @@
 
 import { db } from "@/db"
 import { users } from "@/db/schema"
+import { auth } from "@clerk/nextjs/server"
 import { eq } from "drizzle-orm"
 
 // For demo purposes, we'll use a fixed user ID
@@ -10,6 +11,8 @@ export async function getCurrentUser() {
   try {
     // Use db.select instead of db.query for type safety
     const result = await db.select().from(users).limit(1)
+    const clerkUser = await auth();
+    console.log("Clerk user:", clerkUser.userId);
     const user = result[0]
 
     if (!user) {
