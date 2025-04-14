@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { BookOpen, User, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { BookOpen, User, Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,17 +9,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useMobile } from "@/hooks/use-mobile"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { SidebarContent } from "./sidebar"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { SidebarContent } from "./sidebar";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 export function Header() {
-  const isMobile = useMobile()
-  const pathname = usePathname()
+  const isMobile = useMobile();
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useUser();
+  const { signOut } = useClerk();
+
+  // Get user initials for avatar fallback
+  const getInitials = () => {
+    if (!user) return "U";
+    const firstName = user.firstName || "";
+    const lastName = user.lastName || "";
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || "U";
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 md:px-6 py-3 shadow-sm">
@@ -43,7 +60,9 @@ export function Header() {
               <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
-          <h1 className="text-lg md:text-xl font-bold text-gray-800">NutriTrack</h1>
+          <h1 className="text-lg md:text-xl font-bold text-gray-800">
+            NutriTrack
+          </h1>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
           {isMobile && (
@@ -76,7 +95,11 @@ export function Header() {
               </SheetContent>
             </Sheet>
           )}
-          <Button variant="ghost" size="icon" className="text-gray-500 hidden md:flex hover:bg-gray-100">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-gray-500 hidden md:flex hover:bg-gray-100"
+          >
             <BookOpen className="h-5 w-5" />
             <span className="sr-only">Nutrition Guide</span>
           </Button>
@@ -84,29 +107,46 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 border border-gray-200">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="@user" />
-                  <AvatarFallback className="bg-green-100 text-green-800">JD</AvatarFallback>
+                  <AvatarImage
+                    src={user?.imageUrl}
+                    alt={user?.fullName || "User"}
+                  />
+                  <AvatarFallback className="bg-green-100 text-green-800">
+                    {getInitials()}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">John Doe</p>
-                  <p className="text-xs leading-none text-gray-500">john.doe@example.com</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user?.fullName || "User"}
+                  </p>
+                  <p className="text-xs leading-none text-gray-500">
+                    {user?.primaryEmailAddress?.emailAddress || ""}
+                  </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push("/profile")}
+              >
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">Log out</DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleSignOut}
+              >
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
     </header>
-  )
+  );
 }
