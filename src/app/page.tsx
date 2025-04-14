@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  PlusCircle,
-  Search,
-  Loader2,
-  Plus,
-  Loader,
-} from "lucide-react";
+import { PlusCircle, Search, Loader2, Plus, Loader } from "lucide-react";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -57,6 +51,8 @@ import { CalorieBreakdown } from "./(dashboard)/calorie-breakdown/calorie-breakd
 import { FoodEntry } from "@/types/food-entry";
 import { NutritionGoal } from "@/types/nutrition-goal";
 import { DateSelector } from "./(dashboard)/date-selector/date-selector";
+import { MealTypeDropdown } from "./(dashboard)/food-entry-dialog/meal-type-dropdown";
+import { UnitDropdown } from "./(dashboard)/food-entry-dialog/unit-dropdown";
 
 export default function CalorieTracker() {
   const isMobile = useMobile();
@@ -536,40 +532,7 @@ export default function CalorieTracker() {
                                   onChange={(e) => setNewName(e.target.value)}
                                 />
                               </div>
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="unit" className="text-right">
-                                  Unit
-                                </Label>
-                                <Select
-                                  value={newUnit}
-                                  onValueChange={(value) => setNewUnit(value)}
-                                  className="col-span-3"
-                                >
-                                  <SelectTrigger id="unit">
-                                    <SelectValue placeholder="Select unit" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="serving">
-                                      serving
-                                    </SelectItem>
-                                    <SelectItem value="g">grams (g)</SelectItem>
-                                    <SelectItem value="ml">
-                                      milliliters (ml)
-                                    </SelectItem>
-                                    <SelectItem value="oz">
-                                      ounces (oz)
-                                    </SelectItem>
-                                    <SelectItem value="cup">cup</SelectItem>
-                                    <SelectItem value="tbsp">
-                                      tablespoon
-                                    </SelectItem>
-                                    <SelectItem value="tsp">
-                                      teaspoon
-                                    </SelectItem>
-                                    <SelectItem value="piece">piece</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
+                              <UnitDropdown newUnit={newUnit} setNewUnit={setNewUnit} />
                               <div className="grid grid-cols-4 items-start gap-4">
                                 <Label
                                   htmlFor="description"
@@ -781,26 +744,10 @@ export default function CalorieTracker() {
                           )}
                         </div>
                       </div>
-
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="mealType" className="text-right">
-                          Meal Type
-                        </Label>
-                        <Select
-                          value={newMealType}
-                          onValueChange={(value) => setNewMealType(value)}
-                        >
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select meal type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="breakfast">Breakfast</SelectItem>
-                            <SelectItem value="lunch">Lunch</SelectItem>
-                            <SelectItem value="dinner">Dinner</SelectItem>
-                            <SelectItem value="snack">Snack</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <MealTypeDropdown
+                        newMealType={newMealType}
+                        setNewMealType={setNewMealType}
+                      />
                     </TabsContent>
 
                     <TabsContent value="custom" className="space-y-4 mt-4">
@@ -916,25 +863,10 @@ export default function CalorieTracker() {
                           </Select>
                         </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="mealType" className="text-right">
-                          Meal Type
-                        </Label>
-                        <Select
-                          value={newMealType}
-                          onValueChange={(value) => setNewMealType(value)}
-                        >
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select meal type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="breakfast">Breakfast</SelectItem>
-                            <SelectItem value="lunch">Lunch</SelectItem>
-                            <SelectItem value="dinner">Dinner</SelectItem>
-                            <SelectItem value="snack">Snack</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <MealTypeDropdown
+                        newMealType={newMealType}
+                        setNewMealType={setNewMealType}
+                      />
                       <div className="flex justify-end">
                         <Button
                           variant="outline"
@@ -997,7 +929,6 @@ export default function CalorieTracker() {
                   totalCalories={totalCalories}
                   macros={macros}
                   nutritionGoals={nutritionGoals}
-                  openAddFoodDialog={openAddFoodDialog}
                 />
               </div>
 
@@ -1009,10 +940,7 @@ export default function CalorieTracker() {
                   openAddFoodDialog={openAddFoodDialog}
                   meals={meals}
                 />
-                <CalorieBreakdown
-                  openAddFoodDialog={openAddFoodDialog}
-                  mealTypeTotals={mealTypeTotals}
-                />
+                <CalorieBreakdown mealTypeTotals={mealTypeTotals} />
               </div>
             </>
           )}
@@ -1020,4 +948,5 @@ export default function CalorieTracker() {
       </div>
       <Toaster />
     </div>
-  )};
+  );
+}

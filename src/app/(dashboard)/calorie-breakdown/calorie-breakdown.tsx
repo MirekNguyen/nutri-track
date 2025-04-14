@@ -2,7 +2,6 @@ import { CalorieChart } from "@/app/components/calorie-chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type Props = {
-  openAddFoodDialog: () => void;
   mealTypeTotals: {
     breakfast: number;
     lunch: number;
@@ -11,11 +10,10 @@ type Props = {
   };
 };
 
-export const CalorieBreakdown = ({ mealTypeTotals, openAddFoodDialog }: Props) => {
+export const CalorieBreakdown = ({ mealTypeTotals }: Props) => {
   return (
     <Card
       className="shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => openAddFoodDialog()}
     >
       <CardHeader className="border-b pb-3">
         <CardTitle>Calorie Breakdown</CardTitle>

@@ -16,25 +16,22 @@ type Props = {
     fatGoal?: number | null | undefined;
   };
   totalCalories: number;
-  openAddFoodDialog: () => void;
 };
 
 export const MacronutrientStats = ({
   nutritionGoals,
   totalCalories,
-  openAddFoodDialog,
   macros,
 }: Props) => {
   return (
     <>
       <Card
         className={cn(
-          "shadow-sm hover:shadow-md transition-shadow cursor-pointer",
+          "shadow-sm hover:shadow-md transition-shadow",
           totalCalories > nutritionGoals.calorieGoal
             ? "border-red-300"
             : "border-green-300",
         )}
-        onClick={() => openAddFoodDialog()}
       >
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500 flex items-center justify-between">
@@ -73,8 +70,7 @@ export const MacronutrientStats = ({
       </Card>
 
       <Card
-        className="border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => openAddFoodDialog()}
+        className="border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow"
       >
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
@@ -106,8 +102,7 @@ export const MacronutrientStats = ({
       </Card>
 
       <Card
-        className="border-l-4 border-purple-600 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => openAddFoodDialog()}
+        className="border-l-4 border-purple-600 shadow-sm hover:shadow-md transition-shadow"
       >
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
@@ -139,8 +134,7 @@ export const MacronutrientStats = ({
       </Card>
 
       <Card
-        className="border-l-4 border-yellow-600 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => openAddFoodDialog()}
+        className="border-l-4 border-yellow-600 shadow-sm hover:shadow-md transition-shadow"
       >
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
