@@ -80,7 +80,7 @@ export default function StatisticsPage() {
 
         // Fetch entries for each day in the range
         for (const day of days) {
-          const entriesForDay = await getFoodEntries(day)
+          const entriesForDay = await getFoodEntries(format(day, "yyyy-MM-dd"))
           allEntries.push(...entriesForDay)
         }
 
