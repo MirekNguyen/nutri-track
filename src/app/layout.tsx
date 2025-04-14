@@ -3,9 +3,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "NutriTrack",
+  description: "App to track your nutrition and calories",
 };
 
 export default function RootLayout({
