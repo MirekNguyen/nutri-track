@@ -250,7 +250,8 @@ export default function CalorieTracker() {
       const amount = Number.parseFloat(newAmount) || 1;
 
       // Format date and time for database
-      const entryDate = selectedDate.toISOString().split("T")[0];
+      // const entryDate = selectedDate.toISOString().split("T")[0];
+      const entryDate = selectedDate.toLocaleDateString("en-CA");
       const entryTime = new Date().toTimeString().split(" ")[0];
 
       const newEntry = await createFoodEntry({
@@ -330,6 +331,7 @@ export default function CalorieTracker() {
 
       // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
+      console.log("Selected date:", entryDate);
       const entryTime = new Date().toTimeString().split(" ")[0];
 
       // Create a food entry with this meal
