@@ -1,3 +1,5 @@
+"use client";
+
 import { PlusCircle, Search, Loader2, Plus, Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -28,10 +30,19 @@ import { createFoodEntry } from "@/app/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
 import { UnitDropdown } from "../food-entry-dialog/unit-dropdown";
 import { MealTypeDropdown } from "../food-entry-dialog/meal-type-dropdown";
+import { Meal } from "@/db/schema";
 
-export const FoodEntryComponent = ({ meals, setMeals, loadFoodEntries, setNewMealType, newMealType, foodEntryDialogOpen, setFoodEntryDialogOpen }) => {
+type Props = {
+  meals: Meal[];
+  children: React.ReactNode;
+}
+
+export const FoodEntryComponent = ({ meals, children }: Props) => {
+  const loadFoodEntries = () => {};
+  const [foodEntryDialogOpen, setFoodEntryDialogOpen] = useState(false);
+
+  const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [addFoodTab, setAddFoodTab] = useState("choose");
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Food entry dialog state
@@ -215,7 +226,7 @@ export const FoodEntryComponent = ({ meals, setMeals, loadFoodEntries, setNewMea
       });
 
       // Add the new meal to the meals list
-      setMeals([newMealData, ...meals]);
+      // TODO reload meals
 
       // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
@@ -280,9 +291,7 @@ export const FoodEntryComponent = ({ meals, setMeals, loadFoodEntries, setNewMea
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Food
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]">
         <DialogHeader>

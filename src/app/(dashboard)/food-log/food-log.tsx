@@ -1,7 +1,11 @@
+'use client';
+
+import { deleteFoodEntry } from "@/app/actions/food-entry-actions";
 import { MealTypeIcon } from "@/app/components/meal-type-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Meal } from "@/types/meal";
+import { toast } from "@/components/ui/use-toast";
+import { Meal } from "@/db/schema";
 import { format, parseISO } from "date-fns";
 import { PlusCircle, Trash2 } from "lucide-react";
 
@@ -25,8 +29,6 @@ type Props = {
     dinner: number;
     snack: number;
   };
-  openAddFoodDialog: (mealType?: string) => void;
-  handleDeleteEntry: (id: number) => Promise<void>;
   meals: Meal[];
 };
 
@@ -51,10 +53,28 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
 export const FoodLog = ({
   entries,
   mealTypeTotals,
-  openAddFoodDialog,
-  handleDeleteEntry,
   meals,
 }: Props) => {
+  const openAddFoodDialog = (_open: boolean) => {};
+  const handleDeleteEntry = async (id: number) => {
+    try {
+      await deleteFoodEntry(id);
+
+      // Refresh the entries list
+
+      toast({
+        title: "Success",
+        description: "Food entry deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting food entry:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete food entry. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
@@ -64,7 +84,7 @@ export const FoodLog = ({
             variant="outline"
             size="sm"
             className="text-green-600 border-green-600"
-            onClick={() => openAddFoodDialog()}
+            onClick={() => openAddFoodDialog(true)}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Food
           </Button>
@@ -74,7 +94,7 @@ export const FoodLog = ({
             {entries.length === 0 ? (
               <div
                 className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => openAddFoodDialog()}
+                onClick={() => openAddFoodDialog(true)}
               >
                 <div className="mb-2">
                   <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
@@ -98,7 +118,7 @@ export const FoodLog = ({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog("breakfast")}
+                      onClick={() => openAddFoodDialog(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -178,7 +198,7 @@ export const FoodLog = ({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog("lunch")}
+                      onClick={() => openAddFoodDialog()}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -258,7 +278,7 @@ export const FoodLog = ({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog("dinner")}
+                      onClick={() => openAddFoodDialog()}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -338,7 +358,7 @@ export const FoodLog = ({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog("snack")}
+                      onClick={() => openAddFoodDialog()}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>

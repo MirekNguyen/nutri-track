@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Meal } from "@/types/meal";
+import { Meal } from "@/db/schema";
 import { Loader, Loader2, Plus, PlusCircle, Search } from "lucide-react";
 
 type Props = {

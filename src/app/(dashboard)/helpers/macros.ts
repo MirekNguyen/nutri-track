@@ -1,4 +1,4 @@
-import { FoodEntry } from "@/types/food-entry";
+import { FoodEntry } from "@/db/schema";
 
 export const macros = (entries: FoodEntry[]) => {
   return entries.reduce(

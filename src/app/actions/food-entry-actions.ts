@@ -8,6 +8,7 @@ import { getCurrentUser } from "./user-actions"
 export async function getFoodEntries(formattedDate: string) {
   try {
     const user = await getCurrentUser()
+    console.log("Fetching food entries for user:", user.id, "on date:", formattedDate)
 
     const entries = await db
       .select()

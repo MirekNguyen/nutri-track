@@ -47,9 +47,6 @@ import { Sidebar } from "../components/sidebar"
 
 import { getMeals, createMeal, toggleFavoriteMeal, updateMeal, deleteMeal } from "../actions/meal-actions"
 
-// Import the useSidebar hook
-import { useSidebar } from "@/hooks/use-sidebar"
-
 // Add these imports
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -322,9 +319,6 @@ export default function MealsPage() {
     setCurrentMealId(null)
   }
 
-  // Inside the MealsPage component, add:
-  const { collapsed } = useSidebar()
-
   // Add the unit field to the meal form in the DialogContent
   // Add this after the name input and before the description textarea
   // Remove this line:
@@ -338,7 +332,7 @@ export default function MealsPage() {
         <main
           className={cn(
             "flex-1 p-4 md:p-6 overflow-auto",
-            !isMobile && (collapsed ? "md:ml-16" : "md:ml-64"),
+            "md:ml-64",
             "transition-all duration-300",
           )}
         >
