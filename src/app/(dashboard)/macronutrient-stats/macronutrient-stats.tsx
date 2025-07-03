@@ -16,11 +16,6 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
     0,
   )
   const macrosData = macros(entriesData);
-  const mappedMacros = {
-    protein: parseFloat(macrosData.protein),
-    carbs: parseFloat(macrosData.carbs),
-    fat: macrosData.fat,
-  }
 
   const nutritionGoals = {
     calorieGoal: 2000,
@@ -83,7 +78,7 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-blue-600">
-              {mappedMacros.protein.toFixed(0)}g
+              {macrosData.protein.toFixed(0)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.proteinGoal}g
@@ -93,7 +88,7 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
             <div
               className="h-full bg-blue-500"
               style={{
-                width: `${Math.min(100, (mappedMacros.protein / (nutritionGoals.proteinGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (macrosData.protein / (nutritionGoals.proteinGoal || 1)) * 100)}%`,
               }}
             />
           </div>
@@ -113,7 +108,7 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-purple-600">
-              {mappedMacros.carbs.toFixed(0)}g
+              {macrosData.carbs.toFixed(0)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.carbsGoal}g
@@ -123,12 +118,12 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
             <div
               className="h-full bg-purple-500"
               style={{
-                width: `${Math.min(100, (mappedMacros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}%`,
               }}
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((mappedMacros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}
+            {Math.round((macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}
             % of daily goal
           </p>
         </CardContent>
@@ -143,7 +138,7 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-yellow-600">
-              {mappedMacros.fat}g
+              {macrosData.fat}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.fatGoal}g
@@ -153,12 +148,12 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
             <div
               className="h-full bg-yellow-500"
               style={{
-                width: `${Math.min(100, (mappedMacros.fat / (nutritionGoals.fatGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}%`,
               }}
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((mappedMacros.fat / (nutritionGoals.fatGoal || 1)) * 100)}% of
+            {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}% of
             daily goal
           </p>
         </CardContent>
