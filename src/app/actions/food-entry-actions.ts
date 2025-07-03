@@ -1,25 +1,23 @@
 "use server"
 
 import { db } from "@/db"
-import { foodEntries, type NewFoodEntry } from "@/db/schema"
+import { foodEntries, FoodEntry, type NewFoodEntry } from "@/db/schema"
 import { eq, and, desc } from "drizzle-orm"
 import { getCurrentUser } from "./user-actions"
 import { revalidatePath } from "next/cache"
 
-export async function getFoodEntries(formattedDate: string) {
+export async function getFoodEntries(formattedDate: string): Promise<FoodEntry[]> {
   try {
     const user = await getCurrentUser()
-    console.log("Fetching food entries for user:", user.id, "on date:", formattedDate)
 
     const entries = await db
       .select()
       .from(foodEntries)
       .where(and(eq(foodEntries.userId, user.id), eq(foodEntries.entryDate, formattedDate)))
       .orderBy(desc(foodEntries.entryTime))
-
     return entries;
+
   } catch (error) {
-    console.error("Error getting food entries:", error)
     throw new Error("Failed to get food entries")
   }
 }

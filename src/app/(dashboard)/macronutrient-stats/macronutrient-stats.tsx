@@ -84,7 +84,7 @@ export const MacronutrientStats = ({ entriesData }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-blue-600">
-              {mappedMacros.protein.toFixed(2)}g
+              {mappedMacros.protein.toFixed(0)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.proteinGoal}g
@@ -114,7 +114,7 @@ export const MacronutrientStats = ({ entriesData }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-purple-600">
-              {mappedMacros.carbs.toFixed(2)}g
+              {mappedMacros.carbs.toFixed(0)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.carbsGoal}g
