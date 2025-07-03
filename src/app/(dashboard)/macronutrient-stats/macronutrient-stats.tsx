@@ -1,17 +1,16 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { macros } from "../helpers/macros";
-import { FoodEntry } from "@/db/schema";
+import { getFoodEntries } from "@/app/actions/food-entry-actions";
 
 type Props = {
-  entriesData: FoodEntry[];
+  selectedDate: string;
 };
 
-export const MacronutrientStats = ({ entriesData }: Props) => {
+export const MacronutrientStats = async ({ selectedDate }: Props) => {
+  const entriesData = await getFoodEntries(selectedDate);
   const totalCalories= entriesData.reduce(
     (sum, entry) => sum + parseFloat(entry.calories),
     0,

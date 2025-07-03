@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FoodEntry, Meal } from "@/db/schema";
 import { PlusCircle } from "lucide-react";
-import { FoodEntryDialog } from "../food-entry/food-entry-dialog";
-import { useState } from "react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
 import { FoodRecord } from "./food-entry";
+import { useRouter } from "next/navigation";
 
 type Props = {
   entries: FoodEntry[];
@@ -18,15 +17,12 @@ type Props = {
 
 export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
   const mealTypeTotalsData = mealTypeTotals(entries);
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const handleDialog = () => {
+    router.push(`/add?date=${selectedDate}`);
+  }
   return (
     <>
-      <FoodEntryDialog
-        meals={meals}
-        foodEntryDialogOpen={open}
-        setOpenAction={setOpen}
-        selectedDate={new Date(selectedDate)}
-      />
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today&apos;s Food Log</CardTitle>
@@ -34,7 +30,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
             variant="outline"
             size="sm"
             className="text-green-600 border-green-600"
-            onClick={() => setOpen(true)}
+            onClick={handleDialog}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Food
           </Button>
@@ -44,7 +40,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
             {entries.length === 0 ? (
               <div
                 className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => setOpen(true)}
+                onClick={handleDialog}
               >
                 <div className="mb-2">
                   <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
@@ -68,7 +64,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => setOpen(true)}
+                      onClick={handleDialog}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -94,7 +90,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => setOpen(true)}
+                      onClick={handleDialog}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -120,7 +116,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => setOpen(true)}
+                      onClick={handleDialog}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -146,7 +142,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => setOpen(true)}
+                      onClick={handleDialog}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>

@@ -30,12 +30,12 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <DateSelector />
-              <AddFoodEntry meals={meals} selectedDate={selectedDate} />
+              <AddFoodEntry selectedDate={selectedDate} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-            <MacronutrientStats entriesData={entriesData} />
+            <MacronutrientStats selectedDate={selectedDate} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
