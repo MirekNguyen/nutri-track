@@ -1,4 +1,3 @@
-"use client";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "../components/header";
 import { Sidebar } from "../components/sidebar";
@@ -8,20 +7,19 @@ import { FoodLog } from "../(dashboard)/food-log/food-log";
 import { CalorieBreakdown } from "../(dashboard)/calorie-breakdown/calorie-breakdown";
 import { DateSelector } from "../(dashboard)/date-selector/date-selector";
 import { mealTypeTotals } from "../(dashboard)/helpers/mealtype-totals";
-import { macros } from "../(dashboard)/helpers/macros";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
 import { FoodEntry, Meal } from "@/db/schema";
-import { FoodEntryComponent } from "./fodd-entry/food-entry";
-import { useState } from "react";
+import { AddFoodEntry } from "./food-entry/add-food-entry";
+import { getMeals } from "../actions/meal-actions";
+import { getFoodEntries } from "../actions/food-entry-actions";
 
 type Props = {
-  meals: Meal[];
-  entriesData: FoodEntry[];
+  selectedDate: string;
 };
 
-export const CalorieTracker = ({ meals, entriesData }: Props) => {
-  const [open, setOpen] = useState(false);
+export const CalorieTracker = async ({ selectedDate }: Props) => {
+  const meals = await getMeals();
+  const entriesData = await getFoodEntries(selectedDate);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
@@ -34,41 +32,18 @@ export const CalorieTracker = ({ meals, entriesData }: Props) => {
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <DateSelector />
-              <FoodEntryComponent
-                meals={meals}
-                foodEntryDialogOpen={open}
-                setFoodEntryDialogOpen={setOpen}
-              >
-                <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
-                </Button>
-              </FoodEntryComponent>
-              ;
+              <AddFoodEntry meals={meals} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-            <MacronutrientStats
-              totalCalories={entriesData.reduce(
-                (sum, entry) => sum + parseFloat(entry.calories),
-                0,
-              )}
-              macros={macros(entriesData)}
-              nutritionGoals={{
-                calorieGoal: 2000,
-                proteinGoal: 150,
-                carbsGoal: 200,
-                fatGoal: 65,
-              }}
-            />
+            <MacronutrientStats entriesData={entriesData} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <FoodLog
               entries={entriesData}
-              mealTypeTotals={mealTypeTotals(entriesData)}
               meals={meals}
-              openAddFoodDialog={setOpen}
             />
             <CalorieBreakdown mealTypeTotals={mealTypeTotals(entriesData)} />
           </div>

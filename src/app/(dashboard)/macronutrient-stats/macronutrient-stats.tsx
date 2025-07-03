@@ -1,28 +1,34 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
+import { macros } from "../helpers/macros";
+import { FoodEntry } from "@/db/schema";
 
 type Props = {
-  macros: {
-    protein: number;
-    carbs: number;
-    fat: number;
-  };
-  nutritionGoals: {
-    calorieGoal: number;
-    proteinGoal: number | null | undefined;
-    carbsGoal: number | null | undefined;
-    fatGoal?: number | null | undefined;
-  };
-  totalCalories: number;
+  entriesData: FoodEntry[];
 };
 
-export const MacronutrientStats = ({
-  nutritionGoals,
-  totalCalories,
-  macros,
-}: Props) => {
+export const MacronutrientStats = ({ entriesData }: Props) => {
+  const totalCalories= entriesData.reduce(
+    (sum, entry) => sum + parseFloat(entry.calories),
+    0,
+  )
+  const macrosData = macros(entriesData);
+  const mappedMacros = {
+    protein: parseFloat(macrosData.protein),
+    carbs: parseFloat(macrosData.carbs),
+    fat: macrosData.fat,
+  }
+
+  const nutritionGoals = {
+    calorieGoal: 2000,
+    proteinGoal: 150,
+    carbsGoal: 200,
+    fatGoal: 65,
+  };
   return (
     <>
       <Card
@@ -69,9 +75,7 @@ export const MacronutrientStats = ({
         </CardContent>
       </Card>
 
-      <Card
-        className="border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow"
-      >
+      <Card className="border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
             Protein
@@ -80,7 +84,7 @@ export const MacronutrientStats = ({
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-blue-600">
-              {macros.protein}g
+              {mappedMacros.protein.toFixed(2)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.proteinGoal}g
@@ -90,7 +94,7 @@ export const MacronutrientStats = ({
             <div
               className="h-full bg-blue-500"
               style={{
-                width: `${Math.min(100, (macros.protein / (nutritionGoals.proteinGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (mappedMacros.protein / (nutritionGoals.proteinGoal || 1)) * 100)}%`,
               }}
             />
           </div>
@@ -101,9 +105,7 @@ export const MacronutrientStats = ({
         </CardContent>
       </Card>
 
-      <Card
-        className="border-l-4 border-purple-600 shadow-sm hover:shadow-md transition-shadow"
-      >
+      <Card className="border-l-4 border-purple-600 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
             Carbs
@@ -112,7 +114,7 @@ export const MacronutrientStats = ({
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-purple-600">
-              {macros.carbs}g
+              {mappedMacros.carbs.toFixed(2)}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.carbsGoal}g
@@ -122,20 +124,18 @@ export const MacronutrientStats = ({
             <div
               className="h-full bg-purple-500"
               style={{
-                width: `${Math.min(100, (macros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (mappedMacros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}%`,
               }}
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((macros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}
+            {Math.round((mappedMacros.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}
             % of daily goal
           </p>
         </CardContent>
       </Card>
 
-      <Card
-        className="border-l-4 border-yellow-600 shadow-sm hover:shadow-md transition-shadow"
-      >
+      <Card className="border-l-4 border-yellow-600 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-gray-500">
             Fats
@@ -144,7 +144,7 @@ export const MacronutrientStats = ({
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-yellow-600">
-              {macros.fat}g
+              {mappedMacros.fat}g
             </div>
             <div className="text-sm text-gray-500">
               / {nutritionGoals.fatGoal}g
@@ -154,12 +154,12 @@ export const MacronutrientStats = ({
             <div
               className="h-full bg-yellow-500"
               style={{
-                width: `${Math.min(100, (macros.fat / (nutritionGoals.fatGoal || 1)) * 100)}%`,
+                width: `${Math.min(100, (mappedMacros.fat / (nutritionGoals.fatGoal || 1)) * 100)}%`,
               }}
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((macros.fat / (nutritionGoals.fatGoal || 1)) * 100)}% of
+            {Math.round((mappedMacros.fat / (nutritionGoals.fatGoal || 1)) * 100)}% of
             daily goal
           </p>
         </CardContent>

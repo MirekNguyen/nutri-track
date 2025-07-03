@@ -1,113 +1,299 @@
+"use client";
+
+import { Search, Loader2, Plus, Loader } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+
+import { useState } from "react";
+import { createFoodEntry } from "@/app/actions/food-entry-actions";
+import { toast } from "@/components/ui/use-toast";
+import { UnitDropdown } from "./unit-dropdown";
+import { MealTypeDropdown } from "./meal-type-dropdown";
 import { Meal } from "@/db/schema";
-import { Loader, Loader2, Plus, PlusCircle, Search } from "lucide-react";
+import { createMeal } from "@/app/actions/meal-actions";
 
 type Props = {
-  foodEntryDialogOpen: boolean;
-  setFoodEntryDialogOpen: (isOpen: boolean) => void;
   meals: Meal[];
-  addFoodTab: string;
-  setAddFoodTab: (tab: string) => void;
-  mealSearchQuery: string;
-  setMealSearchQuery: (query: string) => void;
-  selectedMealId: number | null;
-  setSelectedMealId: (id: number | null) => void;
-  newMealDialogOpen: boolean;
-  setNewMealDialogOpen: (isOpen: boolean) => void;
-  newName: string;
-  setNewName: (name: string) => void;
-  newUnit: string;
-  setNewUnit: (unit: string) => void;
-  newDescription: string;
-  setNewDescription: (description: string) => void;
-  newCalories: string;
-  setNewCalories: (calories: string) => void;
-  newProtein: string;
-  setNewProtein: (protein: string) => void;
-  newCarbs: string;
-  setNewCarbs: (carbs: string) => void;
-  newFat: string;
-  handleAddMealEntry: () => void;
-  handleAddCustomEntry: () => void;
-  handleAddNewMeal: () => void;
-  isSubmitting: boolean;
-  newFood: string;
-  resetFoodEntryForm: () => void;
-  newTags: string;
-  setNewTags: (tags: string) => void;
-  newAmount: string;
-  setNewAmount: (amount: string) => void;
-  filteredMeals: Meal[];
-  setNewMealType: (type: string) => void;
-  setNewFat: (fat: string) => void;
-  resetNewMealForm: () => void;
-  newMealType: string;
-  setNewFood: (food: string) => void;
-}
+  foodEntryDialogOpen: boolean;
+  setOpenAction: (open: boolean) => void;
+};
 
-export const FoodEntryDialog = (
-  {
-    foodEntryDialogOpen,
-    setFoodEntryDialogOpen,
-    meals,
-    addFoodTab,
-    setAddFoodTab,
-    mealSearchQuery,
-    setMealSearchQuery,
-    selectedMealId,
-    setSelectedMealId,
-    newMealDialogOpen,
-    setNewMealDialogOpen,
-    newName,
-    setNewName,
-    newUnit,
-    setNewUnit,
-    newDescription,
-    setNewDescription,
-    newCalories,
-    setNewCalories,
-    newProtein,
-    setNewProtein,
-    newCarbs,
-    setNewCarbs,
-    handleAddCustomEntry,
-    handleAddMealEntry,
-    handleAddNewMeal,
-    isSubmitting,
-    newFood,
-    resetFoodEntryForm,
-    newFat,
-    setNewFat,
-    newTags,
-    setNewTags,
-    resetNewMealForm,
-    filteredMeals,
-    newAmount,
-    newMealType,
-    setNewMealType,
-    setNewAmount,
-    setNewFood,
+export const FoodEntryDialog2 = ({
+  meals,
+  foodEntryDialogOpen,
+  setOpenAction,
 }: Props) => {
+  const revalidatePath = (_path: string) => {};
+
+  const [newMealType, setNewMealType] = useState<string>("breakfast");
+  const [addFoodTab, setAddFoodTab] = useState("choose");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Food entry dialog state
+  const [mealSearchQuery, setMealSearchQuery] = useState("");
+  const [selectedMealId, setSelectedMealId] = useState<number | null>(null);
+
+  // New meal dialog state
+  const [newMealDialogOpen, setNewMealDialogOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newCalories, setNewCalories] = useState("");
+  const [newProtein, setNewProtein] = useState("");
+  const [newCarbs, setNewCarbs] = useState("");
+  const [newFat, setNewFat] = useState("");
+  const [newTags, setNewTags] = useState("");
+
+  // Custom entry form state
+  const [newFood, setNewFood] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  // Add state for the new fields
+  // Add these after the other state declarations
+  const [newAmount, setNewAmount] = useState("1");
+  const [newUnit, setNewUnit] = useState("serving");
+
+  const handleAddCustomEntry = async () => {
+    if (newFood.trim() === "" || newCalories.trim() === "") return;
+
+    setIsSubmitting(true);
+
+    try {
+      const calories = Number.parseInt(newCalories);
+      const protein = newProtein ? Number.parseInt(newProtein) : null;
+      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
+      const fat = newFat ? Number.parseInt(newFat) : null;
+      const amount = Number.parseFloat(newAmount) || 1;
+
+      if (isNaN(calories)) throw new Error("Invalid calories value");
+
+      // Format date and time for database
+      const entryDate = selectedDate.toISOString().split("T")[0];
+      const entryTime = new Date().toTimeString().split(" ")[0];
+
+      await createFoodEntry({
+        foodName: newFood,
+        calories,
+        protein,
+        carbs,
+        fat,
+        amount,
+        mealType: newMealType,
+        entryDate,
+        entryTime,
+        mealId: null,
+      });
+
+      // Refresh the entries list
+      revalidatePath("/");
+
+      resetFoodEntryForm();
+      setOpenAction(false);
+
+      toast({
+        title: "Success",
+        description: "Food entry added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding custom entry:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add food entry. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const resetNewMealForm = () => {
+    setNewName("");
+    setNewDescription("");
+    setNewCalories("");
+    setNewProtein("");
+    setNewCarbs("");
+    setNewFat("");
+    setNewTags("");
+    setNewUnit("serving");
+    setNewAmount("1");
+  };
+  // Filter meals based on search query
+  const filteredMeals = meals.filter((meal) =>
+    meal.name.toLowerCase().includes(mealSearchQuery.toLowerCase()),
+  );
+
+  // Update the handleAddMealEntry function to include the amount field
+  const handleAddMealEntry = async () => {
+    if (!selectedMealId) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const selectedMeal = meals.find((meal) => meal.id === selectedMealId);
+      if (!selectedMeal) throw new Error("Meal not found");
+
+      const amount = Number.parseFloat(newAmount) || 1;
+
+      // Format date and time for database
+      // const entryDate = selectedDate.toISOString().split("T")[0];
+      const entryDate = selectedDate.toLocaleDateString("en-CA");
+      const entryTime = new Date().toTimeString().split(" ")[0];
+
+      await createFoodEntry({
+        foodName: selectedMeal.name,
+        calories: Math.round(selectedMeal.calories * amount),
+        protein: selectedMeal.protein
+          ? Math.round(selectedMeal.protein * amount)
+          : null,
+        carbs: selectedMeal.carbs
+          ? Math.round(selectedMeal.carbs * amount)
+          : null,
+        fat: selectedMeal.fat ? Math.round(selectedMeal.fat * amount) : null,
+        amount,
+        mealType: newMealType,
+        entryDate,
+        entryTime,
+        mealId: selectedMeal.id,
+      });
+
+      // Refresh the entries list
+      revalidatePath("/");
+
+      resetFoodEntryForm();
+      setOpenAction(false);
+
+      toast({
+        title: "Success",
+        description: "Food entry added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding meal entry:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add food entry. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Update the handleAddNewMeal function to include the unit field
+  const handleAddNewMeal = async () => {
+    if (newName.trim() === "" || newCalories.trim() === "") return;
+
+    setIsSubmitting(true);
+
+    try {
+      const calories = Number.parseInt(newCalories);
+      const protein = newProtein ? Number.parseInt(newProtein) : null;
+      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
+      const fat = newFat ? Number.parseInt(newFat) : null;
+      const amount = Number.parseFloat(newAmount) || 1;
+
+      if (isNaN(calories)) throw new Error("Invalid calories value");
+
+      // Parse tags
+      const tags = newTags.trim()
+        ? newTags.split(",").map((tag) => tag.trim())
+        : [];
+
+      // Create the meal
+      const newMealData = await createMeal({
+        name: newName,
+        unit: newUnit,
+        description: newDescription || null,
+        calories,
+        protein,
+        carbs,
+        fat,
+        tags: tags.length > 0 ? tags : null,
+        isFavorite: false,
+      });
+
+      // Add the new meal to the meals list
+      revalidatePath("/");
+
+      // Format date and time for database
+      const entryDate = selectedDate.toISOString().split("T")[0];
+      console.log("Selected date:", entryDate);
+      const entryTime = new Date().toTimeString().split(" ")[0];
+
+      // Create a food entry with this meal
+      await createFoodEntry({
+        foodName: newName,
+        calories,
+        protein,
+        carbs,
+        fat,
+        amount,
+        mealType: newMealType,
+        entryDate,
+        entryTime,
+        mealId: newMealData.id,
+      });
+
+      revalidatePath("/");
+
+      resetNewMealForm();
+      setNewMealDialogOpen(false);
+      setOpenAction(false);
+
+      toast({
+        title: "Success",
+        description: "Meal created and added to your food log",
+      });
+    } catch (error) {
+      console.error("Error creating new meal:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create meal. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetFoodEntryForm = () => {
+    setNewFood("");
+    setNewCalories("");
+    setNewProtein("");
+    setNewCarbs("");
+    setNewFat("");
+    setNewAmount("1");
+    setSelectedMealId(null);
+    setMealSearchQuery("");
+    setAddFoodTab("choose");
+  };
+
   return (
     <Dialog
       open={foodEntryDialogOpen}
       onOpenChange={(isOpen) => {
-        setFoodEntryDialogOpen(isOpen);
+        setOpenAction(isOpen);
         if (!isOpen) resetFoodEntryForm();
       }}
     >
-      <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Food
-        </Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Add Food Entry</DialogTitle>
@@ -115,7 +301,6 @@ export const FoodEntryDialog = (
             Choose from your saved meals or add a custom entry
           </DialogDescription>
         </DialogHeader>
-
         <Tabs value={addFoodTab} onValueChange={setAddFoodTab} className="mt-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="choose">Choose Meal</TabsTrigger>
@@ -176,29 +361,7 @@ export const FoodEntryDialog = (
                         onChange={(e) => setNewName(e.target.value)}
                       />
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="unit" className="text-right">
-                        Unit
-                      </Label>
-                      <Select
-                        value={newUnit}
-                        onValueChange={(value) => setNewUnit(value)}
-                      >
-                        <SelectTrigger id="unit">
-                          <SelectValue placeholder="Select unit" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="serving">serving</SelectItem>
-                          <SelectItem value="g">grams (g)</SelectItem>
-                          <SelectItem value="ml">milliliters (ml)</SelectItem>
-                          <SelectItem value="oz">ounces (oz)</SelectItem>
-                          <SelectItem value="cup">cup</SelectItem>
-                          <SelectItem value="tbsp">tablespoon</SelectItem>
-                          <SelectItem value="tsp">teaspoon</SelectItem>
-                          <SelectItem value="piece">piece</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <UnitDropdown newUnit={newUnit} setNewUnit={setNewUnit} />
                     <div className="grid grid-cols-4 items-start gap-4">
                       <Label htmlFor="description" className="text-right pt-2">
                         Description
@@ -392,26 +555,10 @@ export const FoodEntryDialog = (
                 )}
               </div>
             </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="mealType" className="text-right">
-                Meal Type
-              </Label>
-              <Select
-                value={newMealType}
-                onValueChange={(value) => setNewMealType(value)}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select meal type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="breakfast">Breakfast</SelectItem>
-                  <SelectItem value="lunch">Lunch</SelectItem>
-                  <SelectItem value="dinner">Dinner</SelectItem>
-                  <SelectItem value="snack">Snack</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <MealTypeDropdown
+              newMealType={newMealType}
+              setNewMealType={setNewMealType}
+            />
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-4 mt-4">
@@ -525,25 +672,10 @@ export const FoodEntryDialog = (
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="mealType" className="text-right">
-                Meal Type
-              </Label>
-              <Select
-                value={newMealType}
-                onValueChange={(value) => setNewMealType(value)}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select meal type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="breakfast">Breakfast</SelectItem>
-                  <SelectItem value="lunch">Lunch</SelectItem>
-                  <SelectItem value="dinner">Dinner</SelectItem>
-                  <SelectItem value="snack">Snack</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <MealTypeDropdown
+              newMealType={newMealType}
+              setNewMealType={setNewMealType}
+            />
             <div className="flex justify-end">
               <Button
                 variant="outline"
@@ -560,7 +692,7 @@ export const FoodEntryDialog = (
         <DialogFooter className="mt-6">
           <Button
             variant="outline"
-            onClick={() => setFoodEntryDialogOpen(false)}
+            onClick={() => setOpenAction(false)}
             disabled={isSubmitting}
           >
             Cancel

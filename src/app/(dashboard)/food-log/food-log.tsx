@@ -1,28 +1,21 @@
 "use client";
 
-import { deleteFoodEntry } from "@/app/actions/food-entry-actions";
 import { MealTypeIcon } from "@/app/components/meal-type-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
 import { FoodEntry, Meal } from "@/db/schema";
 import { format, parseISO } from "date-fns";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { DeleteEntryButton } from "./delete-entry-button";
+import { FoodEntryDialog2 } from "../food-entry/food-entry-dialog";
+import { useState } from "react";
+import { mealTypeTotals } from "../helpers/mealtype-totals";
 
 type Props = {
   entries: FoodEntry[];
-  mealTypeTotals: {
-    breakfast: number;
-    lunch: number;
-    dinner: number;
-    snack: number;
-  };
   meals: Meal[];
-  openAddFoodDialog: (open: boolean) => void;
 };
 
-// Format date and time for display
 const formatEntryDateTime = (dateStr: string, timeStr: string) => {
   try {
     const date = parseISO(dateStr);
@@ -42,12 +35,17 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
 
 export const FoodLog = ({
   entries,
-  mealTypeTotals,
   meals,
-  openAddFoodDialog,
 }: Props) => {
+  const mealTypeTotalsData = mealTypeTotals(entries);
+  const [open, setOpen] = useState(false);
   return (
     <>
+      <FoodEntryDialog2
+        meals={meals}
+        foodEntryDialogOpen={open}
+        setOpenAction={setOpen}
+      />
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today's Food Log</CardTitle>
@@ -55,7 +53,7 @@ export const FoodLog = ({
             variant="outline"
             size="sm"
             className="text-green-600 border-green-600"
-            onClick={() => openAddFoodDialog(true)}
+            onClick={() => setOpen(true)}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Food
           </Button>
@@ -65,7 +63,7 @@ export const FoodLog = ({
             {entries.length === 0 ? (
               <div
                 className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => openAddFoodDialog(true)}
+                onClick={() => setOpen(true)}
               >
                 <div className="mb-2">
                   <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
@@ -83,13 +81,13 @@ export const FoodLog = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotals.breakfast} cal
+                      {mealTypeTotalsData.breakfast} cal
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog(true)}
+                      onClick={() => setOpen(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -156,13 +154,13 @@ export const FoodLog = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotals.lunch} cal
+                      {mealTypeTotalsData.lunch} cal
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog(true)}
+                      onClick={() => setOpen(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -229,13 +227,13 @@ export const FoodLog = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotals.dinner} cal
+                      {mealTypeTotalsData.dinner} cal
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog(true)}
+                      onClick={() => setOpen(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -302,13 +300,13 @@ export const FoodLog = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotals.snack} cal
+                      {mealTypeTotalsData.snack} cal
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog(true)}
+                      onClick={() => setOpen(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>

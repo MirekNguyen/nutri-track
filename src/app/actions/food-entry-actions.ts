@@ -17,20 +17,13 @@ export async function getFoodEntries(formattedDate: string) {
       .where(and(eq(foodEntries.userId, user.id), eq(foodEntries.entryDate, formattedDate)))
       .orderBy(desc(foodEntries.entryTime))
 
-    return entries.map(entry => ({
-      ...entry,
-      carbs: entry.carbs ? parseFloat(entry.carbs.toString()) : null,
-      protein: entry.protein ? parseFloat(entry.protein.toString()) : null,
-      fat: entry.fat ? parseFloat(entry.fat.toString()) : null,
-      calories: entry.calories ? parseFloat(entry.calories.toString()) : null,
-    }))
+    return entries;
   } catch (error) {
     console.error("Error getting food entries:", error)
     throw new Error("Failed to get food entries")
   }
 }
 
-// Update the createFoodEntry function to include the amount field
 export async function createFoodEntry(entryData: Omit<NewFoodEntry, "id" | "userId" | "createdAt">) {
   try {
     const user = await getCurrentUser()
