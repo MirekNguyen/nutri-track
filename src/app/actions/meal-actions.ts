@@ -4,12 +4,13 @@ import { db } from "@/db"
 import { meals, type NewMeal } from "@/db/schema"
 import { eq, and, desc } from "drizzle-orm"
 import { getCurrentUser } from "./user-actions"
+import { unstable_cache } from "next/cache"
 
 export const getMeals = async () => {
   try {
     const user = await getCurrentUser()
 
-    const userMeals = await db.select().from(meals).where(eq(meals.userId, user.id)).orderBy(desc(meals.createdAt))
+    const userMeals = await getMealsHelper(user.id)
 
     return userMeals
   } catch (error) {
@@ -17,6 +18,16 @@ export const getMeals = async () => {
     throw new Error("Failed to get meals")
   }
 }
+const getMealsHelper = unstable_cache(async (userId: number) => {
+  try {
+    const userMeals = await db.select().from(meals).where(eq(meals.userId, userId)).orderBy(desc(meals.createdAt))
+
+    return userMeals
+  } catch (error) {
+    console.error("Error getting meals:", error)
+    throw new Error("Failed to get meals")
+  }
+}, ["getMeals"], {revalidate: 60 })
 
 export async function getMealById(id: number) {
   try {
