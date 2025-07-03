@@ -1,28 +1,17 @@
-'use client';
+"use client";
 
 import { deleteFoodEntry } from "@/app/actions/food-entry-actions";
 import { MealTypeIcon } from "@/app/components/meal-type-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Meal } from "@/db/schema";
+import { FoodEntry, Meal } from "@/db/schema";
 import { format, parseISO } from "date-fns";
 import { PlusCircle, Trash2 } from "lucide-react";
+import { DeleteEntryButton } from "./delete-entry-button";
 
 type Props = {
-  entries: {
-    id: number;
-    foodName: string;
-    entryDate: string;
-    entryTime: string;
-    amount: number;
-    mealType: string;
-    mealId?: number | null;
-    protein?: number | null;
-    carbs?: number | null;
-    fat?: number | null;
-    calories: number;
-  }[];
+  entries: FoodEntry[];
   mealTypeTotals: {
     breakfast: number;
     lunch: number;
@@ -30,6 +19,7 @@ type Props = {
     snack: number;
   };
   meals: Meal[];
+  openAddFoodDialog: (open: boolean) => void;
 };
 
 // Format date and time for display
@@ -50,31 +40,7 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
   }
 };
 
-export const FoodLog = ({
-  entries,
-  mealTypeTotals,
-  meals,
-}: Props) => {
-  const openAddFoodDialog = (_open: boolean) => {};
-  const handleDeleteEntry = async (id: number) => {
-    try {
-      await deleteFoodEntry(id);
-
-      // Refresh the entries list
-
-      toast({
-        title: "Success",
-        description: "Food entry deleted successfully",
-      });
-    } catch (error) {
-      console.error("Error deleting food entry:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete food entry. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
+export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: Props) => {
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
@@ -172,14 +138,7 @@ export const FoodLog = ({
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -252,14 +211,7 @@ export const FoodLog = ({
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -332,14 +284,7 @@ export const FoodLog = ({
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -412,14 +357,7 @@ export const FoodLog = ({
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}

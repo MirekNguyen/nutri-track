@@ -35,11 +35,12 @@ import { Meal } from "@/db/schema";
 type Props = {
   meals: Meal[];
   children: React.ReactNode;
+  foodEntryDialogOpen: boolean;
+  setFoodEntryDialogOpen: (open: boolean) => void;
 }
 
-export const FoodEntryComponent = ({ meals, children }: Props) => {
-  const loadFoodEntries = () => {};
-  const [foodEntryDialogOpen, setFoodEntryDialogOpen] = useState(false);
+export const FoodEntryComponent = ({ meals, children, foodEntryDialogOpen, setFoodEntryDialogOpen }: Props) => {
+  const revalidatePath = (_path: string) => {}
 
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [addFoodTab, setAddFoodTab] = useState("choose");
@@ -100,7 +101,7 @@ export const FoodEntryComponent = ({ meals, children }: Props) => {
       });
 
       // Refresh the entries list
-      await loadFoodEntries();
+      revalidatePath('/');
 
       resetFoodEntryForm();
       setFoodEntryDialogOpen(false);
@@ -171,7 +172,7 @@ export const FoodEntryComponent = ({ meals, children }: Props) => {
       });
 
       // Refresh the entries list
-      await loadFoodEntries();
+      revalidatePath('/');
 
       resetFoodEntryForm();
       setFoodEntryDialogOpen(false);
@@ -226,7 +227,7 @@ export const FoodEntryComponent = ({ meals, children }: Props) => {
       });
 
       // Add the new meal to the meals list
-      // TODO reload meals
+      revalidatePath('/');
 
       // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
@@ -247,8 +248,7 @@ export const FoodEntryComponent = ({ meals, children }: Props) => {
         mealId: newMealData.id,
       });
 
-      // Refresh the entries list
-      await loadFoodEntries();
+      revalidatePath('/');
 
       resetNewMealForm();
       setNewMealDialogOpen(false);

@@ -1,3 +1,4 @@
+"use client";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "../components/header";
 import { Sidebar } from "../components/sidebar";
@@ -8,10 +9,11 @@ import { CalorieBreakdown } from "../(dashboard)/calorie-breakdown/calorie-break
 import { DateSelector } from "../(dashboard)/date-selector/date-selector";
 import { mealTypeTotals } from "../(dashboard)/helpers/mealtype-totals";
 import { macros } from "../(dashboard)/helpers/macros";
-import { FoodEntryDialogButton } from "./fodd-entry/food-entry-dialog-button";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { FoodEntry, Meal } from "@/db/schema";
+import { FoodEntryComponent } from "./fodd-entry/food-entry";
+import { useState } from "react";
 
 type Props = {
   meals: Meal[];
@@ -19,6 +21,7 @@ type Props = {
 };
 
 export const CalorieTracker = ({ meals, entriesData }: Props) => {
+  const [open, setOpen] = useState(false);
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
@@ -31,11 +34,14 @@ export const CalorieTracker = ({ meals, entriesData }: Props) => {
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <DateSelector />
-              <FoodEntryDialogButton>
+              <FoodEntryComponent meals={meals}
+                foodEntryDialogOpen={open}
+                setFoodEntryDialogOpen={setOpen}
+              >
                 <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
                   <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
                 </Button>
-              </FoodEntryDialogButton>
+              </FoodEntryComponent>;
             </div>
           </div>
 
@@ -60,6 +66,7 @@ export const CalorieTracker = ({ meals, entriesData }: Props) => {
               entries={entriesData}
               mealTypeTotals={mealTypeTotals(entriesData)}
               meals={meals}
+              openAddFoodDialog={setOpen}
             />
             <CalorieBreakdown mealTypeTotals={mealTypeTotals(entriesData)} />
           </div>

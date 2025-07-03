@@ -1,13 +1,13 @@
 import { getMeals } from "@/app/actions/meal-actions";
 import { FoodEntryComponent } from "./food-entry";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
+import { Meal } from "@/db/schema";
 
-export const FoodEntryDialogButton = async ({children} : PropsWithChildren) => {
-  const meals = await getMeals();
-  return (
-    <FoodEntryComponent meals={meals}>
-      {children}
-    </FoodEntryComponent>
+type Props = {
+  meals: Meal[];
+  children: ReactNode;
+};
 
-  );
-}
+export const FoodEntryDialogButton = ({ meals, children }: Props) => {
+  return <FoodEntryComponent meals={meals}>{children}</FoodEntryComponent>;
+};
