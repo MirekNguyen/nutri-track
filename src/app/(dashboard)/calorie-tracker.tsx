@@ -6,8 +6,6 @@ import { MacronutrientStats } from "../(dashboard)/macronutrient-stats/macronutr
 import { FoodLog } from "../(dashboard)/food-log/food-log";
 import { CalorieBreakdown } from "../(dashboard)/calorie-breakdown/calorie-breakdown";
 import { DateSelector } from "../(dashboard)/date-selector/date-selector";
-import { mealTypeTotals } from "../(dashboard)/helpers/mealtype-totals";
-import { FoodEntry, Meal } from "@/db/schema";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { getMeals } from "../actions/meal-actions";
 import { getFoodEntries } from "../actions/food-entry-actions";
@@ -41,11 +39,8 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <FoodLog
-              entries={entriesData}
-              meals={meals}
-            />
-            <CalorieBreakdown mealTypeTotals={mealTypeTotals(entriesData)} />
+            <FoodLog entries={entriesData} meals={meals} />
+            <CalorieBreakdown selectedDate={selectedDate} />
           </div>
         </main>
       </div>

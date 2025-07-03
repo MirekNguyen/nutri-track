@@ -1,16 +1,16 @@
+import { getFoodEntries } from "@/app/actions/food-entry-actions";
 import { CalorieChart } from "@/app/components/calorie-chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { mealTypeTotals } from "../helpers/mealtype-totals";
 
 type Props = {
-  mealTypeTotals: {
-    breakfast: number;
-    lunch: number;
-    dinner: number;
-    snack: number;
-  };
+  selectedDate: string;
 };
 
-export const CalorieBreakdown = ({ mealTypeTotals }: Props) => {
+export const CalorieBreakdown = async ({ selectedDate }: Props) => {
+  const entriesData = await getFoodEntries(selectedDate);
+  const totals = mealTypeTotals(entriesData);
+
   return (
     <Card
       className="shadow-sm hover:shadow-md transition-shadow cursor-pointer"
@@ -20,10 +20,10 @@ export const CalorieBreakdown = ({ mealTypeTotals }: Props) => {
       </CardHeader>
       <CardContent className="pt-4">
         <CalorieChart
-          breakfast={mealTypeTotals.breakfast}
-          lunch={mealTypeTotals.lunch}
-          dinner={mealTypeTotals.dinner}
-          snack={mealTypeTotals.snack}
+          breakfast={totals.breakfast}
+          lunch={totals.lunch}
+          dinner={totals.dinner}
+          snack={totals.snack}
         />
       </CardContent>
     </Card>

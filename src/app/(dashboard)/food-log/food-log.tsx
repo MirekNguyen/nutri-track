@@ -4,39 +4,18 @@ import { MealTypeIcon } from "@/app/components/meal-type-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FoodEntry, Meal } from "@/db/schema";
-import { format, parseISO } from "date-fns";
 import { PlusCircle } from "lucide-react";
-import { DeleteEntryButton } from "./delete-entry-button";
 import { FoodEntryDialog2 } from "../food-entry/food-entry-dialog";
 import { useState } from "react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
+import { FoodRecord } from "./food-entry";
 
 type Props = {
   entries: FoodEntry[];
   meals: Meal[];
 };
 
-const formatEntryDateTime = (dateStr: string, timeStr: string) => {
-  try {
-    const date = parseISO(dateStr);
-    const time = timeStr.split(":");
-    const hours = Number.parseInt(time[0]);
-    const minutes = Number.parseInt(time[1]);
-
-    const dateTime = new Date(date);
-    dateTime.setHours(hours);
-    dateTime.setMinutes(minutes);
-
-    return format(dateTime, "h:mm a");
-  } catch (error) {
-    return timeStr;
-  }
-};
-
-export const FoodLog = ({
-  entries,
-  meals,
-}: Props) => {
+export const FoodLog = ({ entries, meals }: Props) => {
   const mealTypeTotalsData = mealTypeTotals(entries);
   const [open, setOpen] = useState(false);
   return (
@@ -48,7 +27,7 @@ export const FoodLog = ({
       />
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
-          <CardTitle>Today's Food Log</CardTitle>
+          <CardTitle>Today&apos;s Food Log</CardTitle>
           <Button
             variant="outline"
             size="sm"
@@ -96,54 +75,7 @@ export const FoodLog = ({
                 {entries
                   .filter((entry) => entry.mealType === "breakfast")
                   .map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="font-medium text-gray-800">
-                            {entry.foodName}
-                          </h3>
-                          <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 mt-1">
-                            <span>
-                              {formatEntryDateTime(
-                                entry.entryDate,
-                                entry.entryTime,
-                              )}
-                            </span>
-                            <span className="font-medium">
-                              {entry.amount}{" "}
-                              {entry.mealId
-                                ? meals.find((m) => m.id === entry.mealId)
-                                    ?.unit || "serving"
-                                : "serving"}
-                            </span>
-                            {entry.protein && (
-                              <span className="text-blue-600">
-                                {entry.protein}g protein
-                              </span>
-                            )}
-                            {entry.carbs && (
-                              <span className="text-purple-600">
-                                {entry.carbs}g carbs
-                              </span>
-                            )}
-                            {entry.fat && (
-                              <span className="text-yellow-600">
-                                {entry.fat}g fat
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
-                        <span className="font-semibold text-gray-800">
-                          {entry.calories} cal
-                        </span>
-                        <DeleteEntryButton entry={entry} />
-                      </div>
-                    </div>
+                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
                   ))}
 
                 {/* Lunch section */}
@@ -169,54 +101,7 @@ export const FoodLog = ({
                 {entries
                   .filter((entry) => entry.mealType === "lunch")
                   .map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="font-medium text-gray-800">
-                            {entry.foodName}
-                          </h3>
-                          <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 mt-1">
-                            <span>
-                              {formatEntryDateTime(
-                                entry.entryDate,
-                                entry.entryTime,
-                              )}
-                            </span>
-                            <span className="font-medium">
-                              {entry.amount}{" "}
-                              {entry.mealId
-                                ? meals.find((m) => m.id === entry.mealId)
-                                    ?.unit || "serving"
-                                : "serving"}
-                            </span>
-                            {entry.protein && (
-                              <span className="text-blue-600">
-                                {entry.protein}g protein
-                              </span>
-                            )}
-                            {entry.carbs && (
-                              <span className="text-purple-600">
-                                {entry.carbs}g carbs
-                              </span>
-                            )}
-                            {entry.fat && (
-                              <span className="text-yellow-600">
-                                {entry.fat}g fat
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
-                        <span className="font-semibold text-gray-800">
-                          {entry.calories} cal
-                        </span>
-                        <DeleteEntryButton entry={entry} />
-                      </div>
-                    </div>
+                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
                   ))}
 
                 {/* Dinner section */}
@@ -242,54 +127,7 @@ export const FoodLog = ({
                 {entries
                   .filter((entry) => entry.mealType === "dinner")
                   .map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="font-medium text-gray-800">
-                            {entry.foodName}
-                          </h3>
-                          <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 mt-1">
-                            <span>
-                              {formatEntryDateTime(
-                                entry.entryDate,
-                                entry.entryTime,
-                              )}
-                            </span>
-                            <span className="font-medium">
-                              {entry.amount}{" "}
-                              {entry.mealId
-                                ? meals.find((m) => m.id === entry.mealId)
-                                    ?.unit || "serving"
-                                : "serving"}
-                            </span>
-                            {entry.protein && (
-                              <span className="text-blue-600">
-                                {entry.protein}g protein
-                              </span>
-                            )}
-                            {entry.carbs && (
-                              <span className="text-purple-600">
-                                {entry.carbs}g carbs
-                              </span>
-                            )}
-                            {entry.fat && (
-                              <span className="text-yellow-600">
-                                {entry.fat}g fat
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
-                        <span className="font-semibold text-gray-800">
-                          {entry.calories} cal
-                        </span>
-                        <DeleteEntryButton entry={entry} />
-                      </div>
-                    </div>
+                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
                   ))}
 
                 {/* Snack section */}
@@ -315,54 +153,7 @@ export const FoodLog = ({
                 {entries
                   .filter((entry) => entry.mealType === "snack")
                   .map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="font-medium text-gray-800">
-                            {entry.foodName}
-                          </h3>
-                          <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 mt-1">
-                            <span>
-                              {formatEntryDateTime(
-                                entry.entryDate,
-                                entry.entryTime,
-                              )}
-                            </span>
-                            <span className="font-medium">
-                              {entry.amount}{" "}
-                              {entry.mealId
-                                ? meals.find((m) => m.id === entry.mealId)
-                                    ?.unit || "serving"
-                                : "serving"}
-                            </span>
-                            {entry.protein && (
-                              <span className="text-blue-600">
-                                {entry.protein}g protein
-                              </span>
-                            )}
-                            {entry.carbs && (
-                              <span className="text-purple-600">
-                                {entry.carbs}g carbs
-                              </span>
-                            )}
-                            {entry.fat && (
-                              <span className="text-yellow-600">
-                                {entry.fat}g fat
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
-                        <span className="font-semibold text-gray-800">
-                          {entry.calories} cal
-                        </span>
-                        <DeleteEntryButton entry={entry} />
-                      </div>
-                    </div>
+                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
                   ))}
               </>
             )}
