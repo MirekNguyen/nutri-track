@@ -4,8 +4,8 @@ export const macros = (entries: FoodEntry[]) => {
   return entries.reduce(
     (acc, entry) => {
       return {
-        protein: acc.protein + (entry.protein || 0),
-        carbs: acc.carbs + (entry.carbs || 0),
+        protein: acc.protein + (parseFloat(entry.protein ?? '0') || 0),
+        carbs: acc.carbs + (parseFloat(entry.carbs ?? '0') || 0),
         fat: acc.fat + (entry.fat || 0),
       };
     },

@@ -2,7 +2,6 @@ import { CalorieTracker } from "./(dashboard)/calorie-tracker";
 import { getMeals } from "./actions/meal-actions";
 import { getFoodEntries } from "./actions/food-entry-actions";
 import { format } from "date-fns";
-import Link from "next/link";
 
 type Props = {
   searchParams: Promise<{ date?: string }>;
