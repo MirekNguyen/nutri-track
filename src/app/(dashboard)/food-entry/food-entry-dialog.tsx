@@ -37,15 +37,15 @@ type Props = {
   meals: Meal[];
   foodEntryDialogOpen: boolean;
   setOpenAction: (open: boolean) => void;
+  selectedDate: Date;
 };
 
-export const FoodEntryDialog2 = ({
+export const FoodEntryDialog = ({
   meals,
   foodEntryDialogOpen,
   setOpenAction,
+  selectedDate,
 }: Props) => {
-  const revalidatePath = (_path: string) => {};
-
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [addFoodTab, setAddFoodTab] = useState("choose");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +66,6 @@ export const FoodEntryDialog2 = ({
 
   // Custom entry form state
   const [newFood, setNewFood] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   // Add state for the new fields
   // Add these after the other state declarations
@@ -103,9 +102,6 @@ export const FoodEntryDialog2 = ({
         entryTime,
         mealId: null,
       });
-
-      // Refresh the entries list
-      revalidatePath("/");
 
       resetFoodEntryForm();
       setOpenAction(false);
@@ -175,9 +171,6 @@ export const FoodEntryDialog2 = ({
         mealId: selectedMeal.id,
       });
 
-      // Refresh the entries list
-      revalidatePath("/");
-
       resetFoodEntryForm();
       setOpenAction(false);
 
@@ -230,9 +223,6 @@ export const FoodEntryDialog2 = ({
         isFavorite: false,
       });
 
-      // Add the new meal to the meals list
-      revalidatePath("/");
-
       // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
       console.log("Selected date:", entryDate);
@@ -251,8 +241,6 @@ export const FoodEntryDialog2 = ({
         entryTime,
         mealId: newMealData.id,
       });
-
-      revalidatePath("/");
 
       resetNewMealForm();
       setNewMealDialogOpen(false);

@@ -3,21 +3,23 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
-import { FoodEntryDialog2 } from "./food-entry-dialog";
+import { FoodEntryDialog } from "./food-entry-dialog";
 import { Meal } from "@/db/schema";
 
 type Props = {
   meals: Meal[];
+  selectedDate: string;
 };
 
-export const AddFoodEntry = ({ meals }: Props) => {
+export const AddFoodEntry = ({ meals, selectedDate }: Props) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <FoodEntryDialog2
+      <FoodEntryDialog
         meals={meals}
         foodEntryDialogOpen={open}
         setOpenAction={setOpen}
+        selectedDate={new Date(selectedDate)}
       />
       <Button
         className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto"

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FoodEntry, Meal } from "@/db/schema";
 import { PlusCircle } from "lucide-react";
-import { FoodEntryDialog2 } from "../food-entry/food-entry-dialog";
+import { FoodEntryDialog } from "../food-entry/food-entry-dialog";
 import { useState } from "react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
 import { FoodRecord } from "./food-entry";
@@ -13,17 +13,19 @@ import { FoodRecord } from "./food-entry";
 type Props = {
   entries: FoodEntry[];
   meals: Meal[];
+  selectedDate: string;
 };
 
-export const FoodLog = ({ entries, meals }: Props) => {
+export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
   const mealTypeTotalsData = mealTypeTotals(entries);
   const [open, setOpen] = useState(false);
   return (
     <>
-      <FoodEntryDialog2
+      <FoodEntryDialog
         meals={meals}
         foodEntryDialogOpen={open}
         setOpenAction={setOpen}
+        selectedDate={new Date(selectedDate)}
       />
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
