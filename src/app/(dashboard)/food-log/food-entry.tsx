@@ -37,10 +37,10 @@ export const FoodRecord = ({ entry, meals }: Props) => {
                 : "serving"}
             </span>
             {entry.protein && (
-              <span className="text-blue-600">{entry.protein}g protein</span>
+              <span className="text-blue-600">{parseFloat(entry.protein).toFixed(0)}g protein</span>
             )}
             {entry.carbs && (
-              <span className="text-purple-600">{entry.carbs}g carbs</span>
+              <span className="text-purple-600">{parseFloat(entry.carbs).toFixed(0)}g carbs</span>
             )}
             {entry.fat && (
               <span className="text-yellow-600">{entry.fat}g fat</span>
@@ -50,7 +50,7 @@ export const FoodRecord = ({ entry, meals }: Props) => {
       </div>
       <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
         <span className="font-semibold text-gray-800">
-          {entry.calories} cal
+          {parseFloat(entry.calories).toFixed(0)} kcal
         </span>
         <DeleteEntryButton entry={entry} />
       </div>

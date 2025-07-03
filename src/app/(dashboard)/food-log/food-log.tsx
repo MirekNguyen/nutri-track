@@ -62,7 +62,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotalsData.breakfast} cal
+                      {mealTypeTotalsData.breakfast} kcal
                     </span>
                     <Button
                       variant="ghost"
@@ -88,7 +88,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotalsData.lunch} cal
+                      {mealTypeTotalsData.lunch} kcal
                     </span>
                     <Button
                       variant="ghost"
@@ -114,7 +114,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotalsData.dinner} cal
+                      {mealTypeTotalsData.dinner} kcal
                     </span>
                     <Button
                       variant="ghost"
@@ -140,7 +140,7 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
-                      {mealTypeTotalsData.snack} cal
+                      {mealTypeTotalsData.snack} kcal
                     </span>
                     <Button
                       variant="ghost"
