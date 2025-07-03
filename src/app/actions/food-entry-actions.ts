@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { foodEntries, type NewFoodEntry } from "@/db/schema"
 import { eq, and, desc } from "drizzle-orm"
 import { getCurrentUser } from "./user-actions"
+import { revalidatePath } from "next/cache"
 
 export async function getFoodEntries(formattedDate: string) {
   try {
@@ -42,6 +43,7 @@ export async function createFoodEntry(entryData: Omit<NewFoodEntry, "id" | "user
       })
       .returning()
 
+    revalidatePath("/")
     return entry
   } catch (error) {
     console.error("Error creating food entry:", error)
@@ -62,6 +64,7 @@ export async function deleteFoodEntry(id: number) {
       throw new Error("Food entry not found")
     }
 
+    revalidatePath("/")
     return deletedEntry
   } catch (error) {
     console.error("Error deleting food entry:", error)

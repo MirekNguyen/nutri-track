@@ -40,7 +40,12 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
   }
 };
 
-export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: Props) => {
+export const FoodLog = ({
+  entries,
+  mealTypeTotals,
+  meals,
+  openAddFoodDialog,
+}: Props) => {
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
@@ -138,7 +143,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                          <DeleteEntryButton entry={entry} />
+                        <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -157,7 +162,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog()}
+                      onClick={() => openAddFoodDialog(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -211,7 +216,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                          <DeleteEntryButton entry={entry} />
+                        <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -230,7 +235,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog()}
+                      onClick={() => openAddFoodDialog(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -284,7 +289,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                          <DeleteEntryButton entry={entry} />
+                        <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}
@@ -303,7 +308,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={() => openAddFoodDialog()}
+                      onClick={() => openAddFoodDialog(true)}
                     >
                       <PlusCircle className="h-4 w-4" />
                     </Button>
@@ -357,7 +362,7 @@ export const FoodLog = ({ entries, mealTypeTotals, meals, openAddFoodDialog }: P
                         <span className="font-semibold text-gray-800">
                           {entry.calories} cal
                         </span>
-                          <DeleteEntryButton entry={entry} />
+                        <DeleteEntryButton entry={entry} />
                       </div>
                     </div>
                   ))}

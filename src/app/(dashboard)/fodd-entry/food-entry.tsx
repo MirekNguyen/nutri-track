@@ -300,7 +300,6 @@ export const FoodEntryComponent = ({ meals, children, foodEntryDialogOpen, setFo
             Choose from your saved meals or add a custom entry
           </DialogDescription>
         </DialogHeader>
-
         <Tabs value={addFoodTab} onValueChange={setAddFoodTab} className="mt-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="choose">Choose Meal</TabsTrigger>

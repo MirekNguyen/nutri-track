@@ -34,21 +34,23 @@ export const CalorieTracker = ({ meals, entriesData }: Props) => {
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <DateSelector />
-              <FoodEntryComponent meals={meals}
+              <FoodEntryComponent
+                meals={meals}
                 foodEntryDialogOpen={open}
                 setFoodEntryDialogOpen={setOpen}
               >
                 <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
                   <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
                 </Button>
-              </FoodEntryComponent>;
+              </FoodEntryComponent>
+              ;
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
             <MacronutrientStats
               totalCalories={entriesData.reduce(
-                (sum, entry) => sum + entry.calories,
+                (sum, entry) => sum + parseFloat(entry.calories),
                 0,
               )}
               macros={macros(entriesData)}
