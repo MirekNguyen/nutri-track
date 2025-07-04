@@ -18,19 +18,25 @@ import {
 } from "@/components/ui/dialog";
 import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
 import { UnitDropdown } from "@/app/(dashboard)/food-entry/unit-dropdown";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FC, useState } from "react";
-import { Meal } from "@/db/schema";
-import { createMeal } from "@/app/actions/meal-actions";
+import { createMeal, getMeals } from "@/app/actions/meal-actions";
 import { createFoodEntry } from "@/app/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
 
-type Props = {
-  meals: Meal[];
-  selectedDate: Date;
-};
+export const EntryTab: FC = () => {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
 
-export const EntryTab: FC<Props> = ({ meals, selectedDate }) => {
+  const { data: meals = [] } = useQuery({
+    queryKey: ["meals"],
+    queryFn: getMeals,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
   const router = useRouter();
 
   const [newMealType, setNewMealType] = useState<string>("breakfast");

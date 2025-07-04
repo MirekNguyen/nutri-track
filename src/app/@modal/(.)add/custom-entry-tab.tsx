@@ -1,3 +1,5 @@
+"use client";
+
 import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
 import { createFoodEntry } from "@/app/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
@@ -13,13 +15,14 @@ import {
 } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
+import { useSearchParams } from "next/navigation";
 import { FC, useState } from "react";
 
-type Props = {
-  selectedDate: Date;
-};
+export const CustomEntryTab: FC = () => {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-export const CustomEntryTab: FC<Props> = ({ selectedDate }) => {
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [newCalories, setNewCalories] = useState("");
   const [newProtein, setNewProtein] = useState("");
