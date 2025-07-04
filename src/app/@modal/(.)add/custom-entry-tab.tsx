@@ -19,7 +19,7 @@ type Props = {
   selectedDate: Date;
 };
 
-export const AddCustomEntry: FC<Props> = ({ selectedDate }) => {
+export const CustomEntryTab: FC<Props> = ({ selectedDate }) => {
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [newCalories, setNewCalories] = useState("");
   const [newProtein, setNewProtein] = useState("");
