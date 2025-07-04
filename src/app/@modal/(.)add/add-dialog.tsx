@@ -28,7 +28,6 @@ export const AddDialog = () => {
           <TabsTrigger value="choose">Choose Meal</TabsTrigger>
           <TabsTrigger value="custom">Custom Entry</TabsTrigger>
         </TabsList>
-
         <EntryTab />
         <CustomEntryTab />
       </Tabs>
