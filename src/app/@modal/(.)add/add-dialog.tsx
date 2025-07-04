@@ -5,13 +5,6 @@ import { Search, Loader2, Plus, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +26,7 @@ import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdow
 import { UnitDropdown } from "@/app/(dashboard)/food-entry/unit-dropdown";
 import { Meal } from "@/db/schema";
 import { useRouter } from "next/navigation";
+import { AddCustomEntry } from "./add-custom-entry";
 
 type Props = {
   selectedDate: Date;
@@ -59,62 +53,9 @@ export const AddDialog = ({ selectedDate, meals }: Props) => {
   const [newFat, setNewFat] = useState("");
   const [newTags, setNewTags] = useState("");
 
-  // Custom entry form state
-  const [newFood, setNewFood] = useState("");
-
-  // Add state for the new fields
-  // Add these after the other state declarations
   const [newAmount, setNewAmount] = useState("1");
   const [newUnit, setNewUnit] = useState("serving");
 
-  const handleAddCustomEntry = async () => {
-    if (newFood.trim() === "" || newCalories.trim() === "") return;
-
-    setIsSubmitting(true);
-
-    try {
-      const calories = Number.parseInt(newCalories);
-      const protein = newProtein ? Number.parseInt(newProtein) : null;
-      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
-      const fat = newFat ? Number.parseInt(newFat) : null;
-      const amount = Number.parseFloat(newAmount) || 1;
-
-      if (isNaN(calories)) throw new Error("Invalid calories value");
-
-      // Format date and time for database
-      const entryDate = selectedDate.toISOString().split("T")[0];
-      const entryTime = new Date().toTimeString().split(" ")[0];
-
-      await createFoodEntry({
-        foodName: newFood,
-        calories,
-        protein,
-        carbs,
-        fat,
-        amount,
-        mealType: newMealType,
-        entryDate,
-        entryTime,
-        mealId: null,
-      });
-
-      resetFoodEntryForm();
-
-      toast({
-        title: "Success",
-        description: "Food entry added successfully",
-      });
-    } catch (error) {
-      console.error("Error adding custom entry:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add food entry. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
   const resetNewMealForm = () => {
     setNewName("");
     setNewDescription("");
@@ -164,8 +105,6 @@ export const AddDialog = ({ selectedDate, meals }: Props) => {
         entryTime,
         mealId: selectedMeal.id,
       });
-
-      resetFoodEntryForm();
 
       toast({
         title: "Success",
@@ -253,18 +192,6 @@ export const AddDialog = ({ selectedDate, meals }: Props) => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const resetFoodEntryForm = () => {
-    setNewFood("");
-    setNewCalories("");
-    setNewProtein("");
-    setNewCarbs("");
-    setNewFat("");
-    setNewAmount("1");
-    setSelectedMealId(null);
-    setMealSearchQuery("");
-    setAddFoodTab("choose");
   };
 
   return (
@@ -534,161 +461,37 @@ export const AddDialog = ({ selectedDate, meals }: Props) => {
             setNewMealType={setNewMealType}
           />
         </TabsContent>
+        <AddCustomEntry selectedDate={selectedDate}/>
 
-        <TabsContent value="custom" className="space-y-4 mt-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="food" className="text-right">
-              Food Name
-            </Label>
-            <Input
-              id="food"
-              value={newFood}
-              onChange={(e) => setNewFood(e.target.value)}
-              className="col-span-3"
-              placeholder="e.g., Grilled Chicken Salad"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="calories" className="text-right">
-              Calories
-            </Label>
-            <Input
-              id="calories"
-              value={newCalories}
-              onChange={(e) => setNewCalories(e.target.value)}
-              className="col-span-3"
-              type="number"
-              placeholder="e.g., 450"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Macros (g)</Label>
-            <div className="col-span-3 grid grid-cols-3 gap-2">
-              <div>
-                <Label
-                  htmlFor="protein"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Protein
-                </Label>
-                <Input
-                  id="protein"
-                  value={newProtein}
-                  onChange={(e) => setNewProtein(e.target.value)}
-                  type="number"
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="carbs"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Carbs
-                </Label>
-                <Input
-                  id="carbs"
-                  value={newCarbs}
-                  onChange={(e) => setNewCarbs(e.target.value)}
-                  type="number"
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <Label
-                  htmlFor="fat"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Fat
-                </Label>
-                <Input
-                  id="fat"
-                  value={newFat}
-                  onChange={(e) => setNewFat(e.target.value)}
-                  type="number"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="amount" className="text-right">
-              Amount
-            </Label>
-            <div className="col-span-3 flex gap-2 items-center">
-              <Input
-                id="amount"
-                type="number"
-                step="0.1"
-                min="0.1"
-                placeholder="1"
-                value={newAmount}
-                onChange={(e) => setNewAmount(e.target.value)}
-                className="flex-1"
-              />
-              <Select
-                value={newUnit}
-                onValueChange={(value) => setNewUnit(value)}
-              >
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="Unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="serving">serving</SelectItem>
-                  <SelectItem value="g">grams (g)</SelectItem>
-                  <SelectItem value="ml">milliliters (ml)</SelectItem>
-                  <SelectItem value="oz">ounces (oz)</SelectItem>
-                  <SelectItem value="cup">cup</SelectItem>
-                  <SelectItem value="tbsp">tablespoon</SelectItem>
-                  <SelectItem value="tsp">teaspoon</SelectItem>
-                  <SelectItem value="piece">piece</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <MealTypeDropdown
-            newMealType={newMealType}
-            setNewMealType={setNewMealType}
-          />
-          <div className="flex justify-end">
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-green-600"
-              onClick={() => setNewMealDialogOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-1" /> Save as Meal
-            </Button>
-          </div>
-        </TabsContent>
+        <DialogFooter className="mt-6">
+          <Button variant="outline" disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            className="bg-green-600 hover:bg-green-700"
+            onClick={
+              addFoodTab === "custom"
+                ? () => {}
+                : handleAddMealEntry
+            }
+            disabled={
+              isSubmitting ||
+              (addFoodTab === "custom"
+                ? !newCalories
+                : !selectedMealId)
+            }
+          >
+            {isSubmitting ? (
+              <>
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Add Entry"
+            )}
+          </Button>
+        </DialogFooter>
       </Tabs>
-
-      <DialogFooter className="mt-6">
-        <Button variant="outline" disabled={isSubmitting}>
-          Cancel
-        </Button>
-        <Button
-          className="bg-green-600 hover:bg-green-700"
-          onClick={
-            addFoodTab === "custom" ? handleAddCustomEntry : handleAddMealEntry
-          }
-          disabled={
-            isSubmitting ||
-            (addFoodTab === "custom"
-              ? !newFood || !newCalories
-              : !selectedMealId)
-          }
-        >
-          {isSubmitting ? (
-            <>
-              <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Add Entry"
-          )}
-        </Button>
-      </DialogFooter>
     </DialogContent>
   );
 };
