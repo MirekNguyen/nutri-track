@@ -17,9 +17,9 @@ import { FC, useState } from "react";
 
 type Props = {
   selectedDate: Date;
-}
+};
 
-export const AddCustomEntry: FC<Props> = ({selectedDate}) => {
+export const AddCustomEntry: FC<Props> = ({ selectedDate }) => {
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [newCalories, setNewCalories] = useState("");
   const [newProtein, setNewProtein] = useState("");
@@ -82,9 +82,7 @@ export const AddCustomEntry: FC<Props> = ({selectedDate}) => {
     }
   };
 
-
   return (
-    <>
       <TabsContent value="custom" className="space-y-4 mt-4">
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="food" className="text-right">
@@ -197,18 +195,15 @@ export const AddCustomEntry: FC<Props> = ({selectedDate}) => {
           newMealType={newMealType}
           setNewMealType={setNewMealType}
         />
-      </TabsContent>
-      <DialogFooter className="mt-6">
-        <Button variant="outline">
-          Cancel
-        </Button>
-        <Button
-          className="bg-green-600 hover:bg-green-700"
-          onClick={handleAddCustomEntry}
-        >
+        <DialogFooter className="mt-6">
+          <Button variant="outline">Cancel</Button>
+          <Button
+            className="bg-green-600 hover:bg-green-700"
+            onClick={handleAddCustomEntry}
+          >
             Add Entry
-        </Button>
-      </DialogFooter>
-    </>
+          </Button>
+        </DialogFooter>
+      </TabsContent>
   );
 };
