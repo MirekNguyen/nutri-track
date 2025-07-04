@@ -7,8 +7,6 @@ import Modal from "@/components/modal";
 import { AddDialog } from "./add-dialog";
 import { getMeals } from "@/app/actions/meal-actions";
 
-
-
 export default function ModalPage() {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");

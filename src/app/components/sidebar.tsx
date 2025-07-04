@@ -98,18 +98,12 @@ export function SidebarContent() {
 }
 
 export function Sidebar() {
-  const isMobile = useMobile()
-  const [collapsed, setCollapsed] = useState(false)
-
-  const sidebarContextValue = React.useMemo(() => ({ collapsed }), [collapsed])
-
-  // For desktop: render the sidebar directly
   return (
-    <SidebarContext.Provider value={sidebarContextValue}>
+    <SidebarContext.Provider value={{collapsed: false}}>
       <aside
         className={cn(
           "fixed top-[60px] h-[calc(100vh-60px)] bg-white border-r border-gray-200 transition-all duration-300 z-20 hidden md:block shadow-sm overflow-y-auto",
-          collapsed ? "w-16" : "w-64",
+          "w-64",
         )}
       >
         <SidebarContent />
