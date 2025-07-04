@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { QueryProvider } from "@/providers/query-provider";
 
 export const metadata: Metadata = {
   title: "NutriTrack",
@@ -18,8 +19,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          {modal}
-          {children}
+          <QueryProvider>
+            {modal}
+            {children}
+          </QueryProvider>
         </body>
       </html>
     </ClerkProvider>
