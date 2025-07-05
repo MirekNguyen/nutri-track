@@ -20,9 +20,10 @@ import { NewMealDialog } from "./new-meal-dialog";
 
 type Props = {
   submitAction: () => void;
+  cancelAction: () => void;
 };
 
-export const EntryTab: FC<Props> = ({ submitAction }) => {
+export const EntryTab: FC<Props> = ({ submitAction, cancelAction }) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
@@ -201,7 +202,7 @@ export const EntryTab: FC<Props> = ({ submitAction }) => {
         setNewMealType={setNewMealType}
       />
       <DialogFooter className="mt-6">
-        <Button variant="outline" disabled={isSubmitting}>
+        <Button variant="outline" disabled={isSubmitting} onClick={cancelAction}>
           Cancel
         </Button>
         <Button

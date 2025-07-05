@@ -9,7 +9,7 @@ export const AddFoodEntry: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <AddDialog submitAction={() => setIsOpen(false)} />
+        <AddDialog submitAction={() => setIsOpen(false)} cancelAction={() => setIsOpen(false)} />
       </Dialog>
       <div onClick={() => setIsOpen(true)}>{children}</div>
     </>
