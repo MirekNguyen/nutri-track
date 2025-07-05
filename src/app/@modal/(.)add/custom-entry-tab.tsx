@@ -16,7 +16,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { useSearchParams } from "next/navigation";
 import { FC } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -60,10 +60,6 @@ export const CustomEntryTab: FC = () => {
 
   const onSubmit = async (data: CustomEntryFormData) => {
     try {
-      // Format date and time for database
-      const entryDate = selectedDate.toISOString().split("T")[0];
-      const entryTime = new Date().toTimeString().split(" ")[0];
-
       await createFoodEntry({
         foodName: data.foodName,
         calories: data.calories,
@@ -72,8 +68,8 @@ export const CustomEntryTab: FC = () => {
         fat: parseInt(data.fat),
         amount: data.amount.toString(),
         mealType: data.mealType,
-        entryDate,
-        entryTime,
+        entryDate: selectedDate.toISOString().split("T")[0],
+        entryTime: new Date().toTimeString().split(" ")[0],
         mealId: null,
       });
 
@@ -92,7 +88,7 @@ export const CustomEntryTab: FC = () => {
     }
   };
 
-  const onError = (errors: any) => {
+  const onError = (errors: FieldErrors<CustomEntryFormData>) => {
     console.log("Form validation errors:", errors);
     toast({
       title: "Validation Error",
