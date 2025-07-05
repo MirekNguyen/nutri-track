@@ -27,7 +27,7 @@ export const EntryTab: FC<Props> = ({ submitAction }) => {
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const { data: meals = [] } = useQuery({
+  const { data: meals = [], isLoading: mealsAreLoading } = useQuery({
     queryKey: ["meals"],
     queryFn: getMeals,
     staleTime: 5 * 60 * 1000,
@@ -120,12 +120,21 @@ export const EntryTab: FC<Props> = ({ submitAction }) => {
 
       <div className="border rounded-md">
         <ScrollArea className="h-[200px] w-full">
-          {filteredMeals.length > 0 ? (
+          {mealsAreLoading ? (
+            <div className="flex items-center justify-center h-[200px] text-gray-500">
+              <Loader className="animate-spin mr-2" />
+              Loading meals...
+            </div>
+          ) : filteredMeals.length > 0 ? (
             <div className="divide-y">
               {filteredMeals.map((meal) => (
                 <div
                   key={meal.id}
-                  className={`p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors ${selectedMealId === meal.id ? "bg-green-50 border-l-4 border-green-600" : ""}`}
+                  className={`p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors ${
+                    selectedMealId === meal.id
+                      ? "bg-green-50 border-l-4 border-green-600"
+                      : ""
+                  }`}
                   onClick={() => setSelectedMealId(meal.id)}
                 >
                   <div>
