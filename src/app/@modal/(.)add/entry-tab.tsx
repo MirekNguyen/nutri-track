@@ -22,6 +22,7 @@ import { NewMealDialog } from "./new-meal-dialog";
 export const EntryTab: FC = () => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
   const { data: meals = [] } = useQuery({
     queryKey: ["meals"],
@@ -30,7 +31,6 @@ export const EntryTab: FC = () => {
     retry: 1,
   });
 
-  const selectedDate = dateParam ? new Date(dateParam) : new Date();
   const router = useRouter();
 
   const [newMealType, setNewMealType] = useState<string>("breakfast");

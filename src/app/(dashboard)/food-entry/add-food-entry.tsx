@@ -1,21 +1,21 @@
 "use client";
 
+import { AddDialog } from "@/app/@modal/(.)add/add-dialog";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 
-type Props = {
-  selectedDate: string;
-};
-
-export const AddFoodEntry = ({ selectedDate }: Props) => {
+export const AddFoodEntry = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Link href={`/add?date=${selectedDate}`}>
-        <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
-        </Button>
-      </Link>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <AddDialog />
+      </Dialog>
+      <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto" onClick={() => setIsOpen(true)}>
+        <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
+      </Button>
     </>
   );
 };
