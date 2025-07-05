@@ -45,10 +45,7 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <FoodLog
-              entries={entriesData}
-              meals={meals}
-            />
+            <FoodLog entries={entriesData} meals={meals} />
             <CalorieBreakdown selectedDate={selectedDate} />
           </div>
         </main>
