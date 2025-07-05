@@ -2,7 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   DialogContent,
   DialogDescription,
@@ -12,7 +12,10 @@ import {
 import { CustomEntryTab } from "./custom-entry-tab";
 import { EntryTab } from "./entry-tab";
 
-export const AddDialog = () => {
+type Props = {
+  submitAction: () => void;
+}
+export const AddDialog: FC<Props> = ({submitAction}) => {
   const [foodTab, setFoodTab] = useState<string>("choose");
 
   return (
@@ -28,7 +31,7 @@ export const AddDialog = () => {
           <TabsTrigger value="choose">Choose Meal</TabsTrigger>
           <TabsTrigger value="custom">Custom Entry</TabsTrigger>
         </TabsList>
-        <EntryTab />
+        <EntryTab submitAction={submitAction}/>
         <CustomEntryTab />
       </Tabs>
     </DialogContent>

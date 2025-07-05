@@ -19,7 +19,11 @@ import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { NewMealDialog } from "./new-meal-dialog";
 
-export const EntryTab: FC = () => {
+type Props = {
+  submitAction: () => void;
+}
+
+export const EntryTab: FC<Props> = ({submitAction}) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
@@ -96,6 +100,7 @@ export const EntryTab: FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+    submitAction();
     router.back();
   };
 

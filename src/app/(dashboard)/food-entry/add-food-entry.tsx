@@ -11,7 +11,7 @@ export const AddFoodEntry = () => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <AddDialog />
+        <AddDialog submitAction={() => setIsOpen(false)}/>
       </Dialog>
       <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto" onClick={() => setIsOpen(true)}>
         <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
