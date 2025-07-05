@@ -1,21 +1,20 @@
-"use client";
-
-import { MealTypeIcon } from "@/app/components/meal-type-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FoodEntry, Meal } from "@/db/schema";
 import { PlusCircle } from "lucide-react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
-import { FoodRecord } from "./food-entry";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
+import { FoodRecordSection } from "./food-record-section";
+import { getFoodEntries } from "@/app/actions/food-entry-actions";
+import { FC } from "react";
 
 type Props = {
-  entries: FoodEntry[];
-  meals: Meal[];
+  date: string;
 };
 
-export const FoodLog = ({ entries, meals }: Props) => {
+export const FoodLog: FC<Props> = async ({ date }) => {
+  const entries = await getFoodEntries(date);
   const mealTypeTotalsData = mealTypeTotals(entries);
+
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
@@ -45,113 +44,34 @@ export const FoodLog = ({ entries, meals }: Props) => {
               </AddFoodEntry>
             ) : (
               <>
-                {/* Breakfast section */}
-                <div className="bg-blue-50/50 px-4 py-2 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <MealTypeIcon type="breakfast" />
-                    <span className="ml-2 font-medium">Breakfast</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {mealTypeTotalsData.breakfast} kcal
-                    </span>
-                    <AddFoodEntry>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </AddFoodEntry>
-                  </div>
-                </div>
-                {entries
-                  .filter((entry) => entry.mealType === "breakfast")
-                  .map((entry) => (
-                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
-                  ))}
-
-                {/* Lunch section */}
-                <div className="bg-purple-50/50 px-4 py-2 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <MealTypeIcon type="lunch" />
-                    <span className="ml-2 font-medium">Lunch</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {mealTypeTotalsData.lunch} kcal
-                    </span>
-                    <AddFoodEntry>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </AddFoodEntry>
-                  </div>
-                </div>
-                {entries
-                  .filter((entry) => entry.mealType === "lunch")
-                  .map((entry) => (
-                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
-                  ))}
-
-                {/* Dinner section */}
-                <div className="bg-indigo-50/50 px-4 py-2 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <MealTypeIcon type="dinner" />
-                    <span className="ml-2 font-medium">Dinner</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {mealTypeTotalsData.dinner} kcal
-                    </span>
-                    <AddFoodEntry>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </AddFoodEntry>
-                  </div>
-                </div>
-                {entries
-                  .filter((entry) => entry.mealType === "dinner")
-                  .map((entry) => (
-                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
-                  ))}
-
-                {/* Snack section */}
-                <div className="bg-orange-50/50 px-4 py-2 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <MealTypeIcon type="snack" />
-                    <span className="ml-2 font-medium">Snack</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {mealTypeTotalsData.snack} kcal
-                    </span>
-                    <AddFoodEntry>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </AddFoodEntry>
-                  </div>
-                </div>
-                {entries
-                  .filter((entry) => entry.mealType === "snack")
-                  .map((entry) => (
-                    <FoodRecord key={entry.id} entry={entry} meals={meals} />
-                  ))}
+                <FoodRecordSection
+                  className="bg-blue-50/50"
+                  entries={entries}
+                  totals={mealTypeTotalsData.breakfast}
+                  type="breakfast"
+                  title="Breakfast"
+                />
+                <FoodRecordSection
+                  className="bg-purple-50/50"
+                  entries={entries}
+                  totals={mealTypeTotalsData.lunch}
+                  type="lunch"
+                  title="Lunch"
+                />
+                <FoodRecordSection
+                  className="bg-indigo-50/50"
+                  entries={entries}
+                  totals={mealTypeTotalsData.dinner}
+                  type="dinner"
+                  title="Dinner"
+                />
+                <FoodRecordSection
+                  className="bg-orange-50/50"
+                  entries={entries}
+                  totals={mealTypeTotalsData.snack}
+                  type="snack"
+                  title="Snack"
+                />
               </>
             )}
           </div>

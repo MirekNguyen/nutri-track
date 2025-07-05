@@ -20,8 +20,6 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
   return format(dateTime, "h:mm a");
 };
 
-
-
 export const FoodRecord = ({ entry, meals }: Props) => {
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors">
@@ -37,10 +35,14 @@ export const FoodRecord = ({ entry, meals }: Props) => {
                 : "serving"}
             </span>
             {entry.protein && (
-              <span className="text-blue-600">{parseFloat(entry.protein).toFixed(0)}g protein</span>
+              <span className="text-blue-600">
+                {parseFloat(entry.protein).toFixed(0)}g protein
+              </span>
             )}
             {entry.carbs && (
-              <span className="text-purple-600">{parseFloat(entry.carbs).toFixed(0)}g carbs</span>
+              <span className="text-purple-600">
+                {parseFloat(entry.carbs).toFixed(0)}g carbs
+              </span>
             )}
             {entry.fat && (
               <span className="text-yellow-600">{entry.fat}g fat</span>

@@ -6,16 +6,16 @@ import { macros } from "../helpers/macros";
 import { getFoodEntries } from "@/app/actions/food-entry-actions";
 
 type Props = {
-  selectedDate: string;
+  date: string;
 };
 
-export const MacronutrientStats = async ({ selectedDate }: Props) => {
-  const entriesData = await getFoodEntries(selectedDate);
-  const totalCalories= entriesData.reduce(
+export const MacronutrientStats = async ({ date }: Props) => {
+  const entries = await getFoodEntries(date);
+  const totalCalories = entries.reduce(
     (sum, entry) => sum + parseFloat(entry.calories),
     0,
-  )
-  const macrosData = macros(entriesData);
+  );
+  const macrosData = macros(entries);
 
   const nutritionGoals = {
     calorieGoal: 2000,
@@ -123,7 +123,9 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}
+            {Math.round(
+              (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100,
+            )}
             % of daily goal
           </p>
         </CardContent>
@@ -153,8 +155,8 @@ export const MacronutrientStats = async ({ selectedDate }: Props) => {
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}% of
-            daily goal
+            {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}
+            % of daily goal
           </p>
         </CardContent>
       </Card>
