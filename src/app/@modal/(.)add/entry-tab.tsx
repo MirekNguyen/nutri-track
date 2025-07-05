@@ -1,4 +1,5 @@
 "use client";
+
 import { Search, Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -7,11 +8,9 @@ import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import {
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FC, useState } from "react";
 import { getMeals } from "@/app/actions/meal-actions";
 import { createFoodEntry } from "@/app/actions/food-entry-actions";
@@ -21,9 +20,9 @@ import { NewMealDialog } from "./new-meal-dialog";
 
 type Props = {
   submitAction: () => void;
-}
+};
 
-export const EntryTab: FC<Props> = ({submitAction}) => {
+export const EntryTab: FC<Props> = ({ submitAction }) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
@@ -34,8 +33,6 @@ export const EntryTab: FC<Props> = ({submitAction}) => {
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });
-
-  const router = useRouter();
 
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [addFoodTab, setAddFoodTab] = useState("choose");
@@ -101,7 +98,6 @@ export const EntryTab: FC<Props> = ({submitAction}) => {
       setIsSubmitting(false);
     }
     submitAction();
-    router.back();
   };
 
   return (
