@@ -22,11 +22,11 @@ import { z } from "zod";
 
 const customEntrySchema = z.object({
   foodName: z.string().min(1, "Food name is required"),
-  calories: z.string().min(1, "Calories is required").pipe(z.coerce.number().min(0, "Calories must be a positive number")),
-  protein: z.string().min(1, "Protein is required").pipe(z.coerce.number().min(0, "Protein must be a positive number")),
-  carbs: z.string().min(1, "Carbs is required").pipe(z.coerce.number().min(0, "Carbs must be a positive number")),
-  fat: z.string().min(1, "Fat is required").pipe(z.coerce.number().int().min(0, "Fat must be a positive integer")),
-  amount: z.string().min(1, "Amount is required").pipe(z.coerce.number().min(0.1, "Amount must be at least 0.1")),
+  calories: z.string().min(1, "Calories is required"),
+  protein: z.string().min(0, "Protein must be a positive number"),
+  carbs: z.string().min(0, "Carbs must be a positive number"),
+  fat: z.string().min(0, "Fat must be a positive integer"),
+  amount: z.number().min(0.1, "Amount must be at least 0.1"),
   unit: z.string(),
   mealType: z.string(),
 });
@@ -48,11 +48,11 @@ export const CustomEntryTab: FC = () => {
     mode: "onSubmit",
     defaultValues: {
       foodName: "",
-      calories: "",
-      protein: "",
-      carbs: "",
-      fat: "",
-      amount: "1",
+      calories: undefined,
+      protein: undefined,
+      carbs: undefined,
+      fat: undefined,
+      amount: 1,
       unit: "serving",
       mealType: "breakfast",
     },
@@ -64,20 +64,13 @@ export const CustomEntryTab: FC = () => {
       const entryDate = selectedDate.toISOString().split("T")[0];
       const entryTime = new Date().toTimeString().split(" ")[0];
 
-      // Convert string values to numbers for the API
-      const calories = parseFloat(data.calories);
-      const protein = parseFloat(data.protein);
-      const carbs = parseFloat(data.carbs);
-      const fat = parseInt(data.fat);
-      const amount = parseFloat(data.amount);
-
       await createFoodEntry({
         foodName: data.foodName,
-        calories: calories.toString(),
-        protein: protein.toString(),
-        carbs: carbs.toString(),
-        fat: fat,
-        amount: amount.toString(),
+        calories: data.calories,
+        protein: data.protein,
+        carbs: data.carbs,
+        fat: parseInt(data.fat),
+        amount: data.amount.toString(),
         mealType: data.mealType,
         entryDate,
         entryTime,
@@ -149,6 +142,7 @@ export const CustomEntryTab: FC = () => {
                   id="calories"
                   type="number"
                   step="0.01"
+                  value={field.value || ""}
                   placeholder="Enter calories (e.g., 450)"
                 />
               )}
@@ -180,6 +174,7 @@ export const CustomEntryTab: FC = () => {
                     id="protein"
                     type="number"
                     step="0.01"
+                    value={field.value || ""}
                     placeholder="e.g., 25.5"
                   />
                 )}
@@ -206,6 +201,7 @@ export const CustomEntryTab: FC = () => {
                     id="carbs"
                     type="number"
                     step="0.01"
+                    value={field.value || ""}
                     placeholder="e.g., 15.2"
                   />
                 )}
@@ -258,6 +254,7 @@ export const CustomEntryTab: FC = () => {
                     type="number"
                     step="0.01"
                     min="0.1"
+                    onChange={e => field.onChange(e.target.valueAsNumber)}
                     placeholder="1.5"
                   />
                 )}
@@ -272,10 +269,7 @@ export const CustomEntryTab: FC = () => {
               name="unit"
               control={control}
               render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="w-[130px]">
                     <SelectValue placeholder="Unit" />
                   </SelectTrigger>
