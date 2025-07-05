@@ -7,47 +7,42 @@ import { FoodEntry, Meal } from "@/db/schema";
 import { PlusCircle } from "lucide-react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
 import { FoodRecord } from "./food-entry";
-import { useRouter } from "next/navigation";
+import { AddFoodEntry } from "../food-entry/add-food-entry";
 
 type Props = {
   entries: FoodEntry[];
   meals: Meal[];
-  selectedDate: string;
 };
 
-export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
+export const FoodLog = ({ entries, meals }: Props) => {
   const mealTypeTotalsData = mealTypeTotals(entries);
-  const router = useRouter();
-  const handleDialog = () => {
-    router.push(`/add?date=${selectedDate}`);
-  }
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today&apos;s Food Log</CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-green-600 border-green-600"
-            onClick={handleDialog}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Food
-          </Button>
+          <AddFoodEntry>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-green-600 border-green-600"
+            >
+              <PlusCircle className="mr-2 h-4 w-4" /> Add Food
+            </Button>
+          </AddFoodEntry>
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y">
             {entries.length === 0 ? (
-              <div
-                className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={handleDialog}
-              >
-                <div className="mb-2">
-                  <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
+              <AddFoodEntry>
+                <div className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors">
+                  <div className="mb-2">
+                    <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
+                  </div>
+                  <p>No entries for this date.</p>
+                  <p className="text-sm">Click here to add some food!</p>
                 </div>
-                <p>No entries for this date.</p>
-                <p className="text-sm">Click here to add some food!</p>
-              </div>
+              </AddFoodEntry>
             ) : (
               <>
                 {/* Breakfast section */}
@@ -60,14 +55,15 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                     <span className="text-sm font-medium">
                       {mealTypeTotalsData.breakfast} kcal
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={handleDialog}
-                    >
-                      <PlusCircle className="h-4 w-4" />
-                    </Button>
+                    <AddFoodEntry>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-gray-400 hover:text-green-600"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </AddFoodEntry>
                   </div>
                 </div>
                 {entries
@@ -86,14 +82,15 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                     <span className="text-sm font-medium">
                       {mealTypeTotalsData.lunch} kcal
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={handleDialog}
-                    >
-                      <PlusCircle className="h-4 w-4" />
-                    </Button>
+                    <AddFoodEntry>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-gray-400 hover:text-green-600"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </AddFoodEntry>
                   </div>
                 </div>
                 {entries
@@ -112,14 +109,15 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                     <span className="text-sm font-medium">
                       {mealTypeTotalsData.dinner} kcal
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={handleDialog}
-                    >
-                      <PlusCircle className="h-4 w-4" />
-                    </Button>
+                    <AddFoodEntry>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-gray-400 hover:text-green-600"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </AddFoodEntry>
                   </div>
                 </div>
                 {entries
@@ -138,14 +136,15 @@ export const FoodLog = ({ entries, meals, selectedDate }: Props) => {
                     <span className="text-sm font-medium">
                       {mealTypeTotalsData.snack} kcal
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 text-gray-400 hover:text-green-600"
-                      onClick={handleDialog}
-                    >
-                      <PlusCircle className="h-4 w-4" />
-                    </Button>
+                    <AddFoodEntry>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-gray-400 hover:text-green-600"
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </AddFoodEntry>
                   </div>
                 </div>
                 {entries

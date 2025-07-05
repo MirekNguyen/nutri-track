@@ -9,6 +9,8 @@ import { DateSelector } from "../(dashboard)/date-selector/date-selector";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { getMeals } from "../actions/meal-actions";
 import { getFoodEntries } from "../actions/food-entry-actions";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 type Props = {
   selectedDate: string;
@@ -29,8 +31,12 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
               Dashboard
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <DateSelector date={new Date(selectedDate)}/>
-              <AddFoodEntry />
+              <DateSelector date={new Date(selectedDate)} />
+              <AddFoodEntry>
+                <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
+                  <PlusCircle className="mr-2 h-4 w-4" /> Add Food Entry
+                </Button>
+              </AddFoodEntry>
             </div>
           </div>
 
@@ -39,7 +45,10 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <FoodLog entries={entriesData} meals={meals} selectedDate={selectedDate} />
+            <FoodLog
+              entries={entriesData}
+              meals={meals}
+            />
             <CalorieBreakdown selectedDate={selectedDate} />
           </div>
         </main>
