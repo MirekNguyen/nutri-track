@@ -17,7 +17,7 @@ export async function getFoodEntries(formattedDate: string): Promise<FoodEntry[]
       .orderBy(desc(foodEntries.entryTime))
     return entries;
 
-  } catch (error) {
+  } catch {
     throw new Error("Failed to get food entries")
   }
 }

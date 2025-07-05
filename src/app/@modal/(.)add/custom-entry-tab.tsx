@@ -1,5 +1,4 @@
 "use client";
-
 import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
 import { createFoodEntry } from "@/app/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
@@ -16,61 +15,76 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { useSearchParams } from "next/navigation";
-import { FC, useState } from "react";
+import { FC } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const customEntrySchema = z.object({
+  foodName: z.string().min(1, "Food name is required"),
+  calories: z.string().min(1, "Calories is required").pipe(z.coerce.number().min(0, "Calories must be a positive number")),
+  protein: z.string().min(1, "Protein is required").pipe(z.coerce.number().min(0, "Protein must be a positive number")),
+  carbs: z.string().min(1, "Carbs is required").pipe(z.coerce.number().min(0, "Carbs must be a positive number")),
+  fat: z.string().min(1, "Fat is required").pipe(z.coerce.number().int().min(0, "Fat must be a positive integer")),
+  amount: z.string().min(1, "Amount is required").pipe(z.coerce.number().min(0.1, "Amount must be at least 0.1")),
+  unit: z.string(),
+  mealType: z.string(),
+});
+
+type CustomEntryFormData = z.infer<typeof customEntrySchema>;
 
 export const CustomEntryTab: FC = () => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const [newMealType, setNewMealType] = useState<string>("breakfast");
-  const [newCalories, setNewCalories] = useState("");
-  const [newProtein, setNewProtein] = useState("");
-  const [newCarbs, setNewCarbs] = useState("");
-  const [newFat, setNewFat] = useState("");
-  const [newFood, setNewFood] = useState("");
-  const [newAmount, setNewAmount] = useState("1");
-  const [newUnit, setNewUnit] = useState("serving");
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CustomEntryFormData>({
+    resolver: zodResolver(customEntrySchema),
+    mode: "onSubmit",
+    defaultValues: {
+      foodName: "",
+      calories: "",
+      protein: "",
+      carbs: "",
+      fat: "",
+      amount: "1",
+      unit: "serving",
+      mealType: "breakfast",
+    },
+  });
 
-  const resetFoodEntryForm = () => {
-    setNewFood("");
-    setNewCalories("");
-    setNewProtein("");
-    setNewCarbs("");
-    setNewFat("");
-    setNewAmount("1");
-  };
-  const handleAddCustomEntry = async () => {
-    if (newFood.trim() === "" || newCalories.trim() === "") return;
-
+  const onSubmit = async (data: CustomEntryFormData) => {
     try {
-      const calories = Number.parseInt(newCalories);
-      const protein = newProtein ? Number.parseInt(newProtein) : null;
-      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
-      const fat = newFat ? Number.parseInt(newFat) : null;
-      const amount = Number.parseFloat(newAmount) || 1;
-
-      if (isNaN(calories)) throw new Error("Invalid calories value");
-
       // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
       const entryTime = new Date().toTimeString().split(" ")[0];
 
+      // Convert string values to numbers for the API
+      const calories = parseFloat(data.calories);
+      const protein = parseFloat(data.protein);
+      const carbs = parseFloat(data.carbs);
+      const fat = parseInt(data.fat);
+      const amount = parseFloat(data.amount);
+
       await createFoodEntry({
-        foodName: newFood,
-        calories,
-        protein,
-        carbs,
-        fat,
-        amount,
-        mealType: newMealType,
+        foodName: data.foodName,
+        calories: calories.toString(),
+        protein: protein.toString(),
+        carbs: carbs.toString(),
+        fat: fat,
+        amount: amount.toString(),
+        mealType: data.mealType,
         entryDate,
         entryTime,
         mealId: null,
       });
 
-      resetFoodEntryForm();
-
+      reset();
       toast({
         title: "Success",
         description: "Food entry added successfully",
@@ -85,33 +99,68 @@ export const CustomEntryTab: FC = () => {
     }
   };
 
+  const onError = (errors: any) => {
+    console.log("Form validation errors:", errors);
+    toast({
+      title: "Validation Error",
+      description: "Please fix the errors in the form before submitting.",
+      variant: "destructive",
+    });
+  };
+
   return (
-      <TabsContent value="custom" className="space-y-4 mt-4">
+    <TabsContent value="custom" className="space-y-4 mt-4">
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4">
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="food" className="text-right">
+          <Label htmlFor="foodName" className="text-right">
             Food Name
           </Label>
-          <Input
-            id="food"
-            value={newFood}
-            onChange={(e) => setNewFood(e.target.value)}
-            className="col-span-3"
-            placeholder="e.g., Grilled Chicken Salad"
-          />
+          <div className="col-span-3">
+            <Controller
+              name="foodName"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id="foodName"
+                  placeholder="Enter food name (e.g., Grilled Chicken Salad)"
+                />
+              )}
+            />
+            {errors.foodName && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.foodName.message}
+              </p>
+            )}
+          </div>
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="calories" className="text-right">
             Calories
           </Label>
-          <Input
-            id="calories"
-            value={newCalories}
-            onChange={(e) => setNewCalories(e.target.value)}
-            className="col-span-3"
-            type="number"
-            placeholder="e.g., 450"
-          />
+          <div className="col-span-3">
+            <Controller
+              name="calories"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id="calories"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter calories (e.g., 450)"
+                />
+              )}
+            />
+            {errors.calories && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.calories.message}
+              </p>
+            )}
+          </div>
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label className="text-right">Macros (g)</Label>
           <div className="col-span-3 grid grid-cols-3 gap-2">
@@ -120,93 +169,156 @@ export const CustomEntryTab: FC = () => {
                 htmlFor="protein"
                 className="text-xs text-gray-500 mb-1 block"
               >
-                Protein
+                Protein *
               </Label>
-              <Input
-                id="protein"
-                value={newProtein}
-                onChange={(e) => setNewProtein(e.target.value)}
-                type="number"
-                placeholder="0"
+              <Controller
+                name="protein"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="protein"
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g., 25.5"
+                  />
+                )}
               />
+              {errors.protein && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.protein.message}
+                </p>
+              )}
             </div>
             <div>
               <Label
                 htmlFor="carbs"
                 className="text-xs text-gray-500 mb-1 block"
               >
-                Carbs
+                Carbs *
               </Label>
-              <Input
-                id="carbs"
-                value={newCarbs}
-                onChange={(e) => setNewCarbs(e.target.value)}
-                type="number"
-                placeholder="0"
+              <Controller
+                name="carbs"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="carbs"
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g., 15.2"
+                  />
+                )}
               />
+              {errors.carbs && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.carbs.message}
+                </p>
+              )}
             </div>
             <div>
               <Label htmlFor="fat" className="text-xs text-gray-500 mb-1 block">
-                Fat
+                Fat *
               </Label>
-              <Input
-                id="fat"
-                value={newFat}
-                onChange={(e) => setNewFat(e.target.value)}
-                type="number"
-                placeholder="0"
+              <Controller
+                name="fat"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="fat"
+                    type="number"
+                    step="1"
+                    placeholder="e.g., 8"
+                  />
+                )}
               />
+              {errors.fat && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.fat.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="amount" className="text-right">
             Amount
           </Label>
           <div className="col-span-3 flex gap-2 items-center">
-            <Input
-              id="amount"
-              type="number"
-              step="0.1"
-              min="0.1"
-              placeholder="1"
-              value={newAmount}
-              onChange={(e) => setNewAmount(e.target.value)}
-              className="flex-1"
+            <div className="flex-1">
+              <Controller
+                name="amount"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    min="0.1"
+                    placeholder="1.5"
+                  />
+                )}
+              />
+              {errors.amount && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.amount.message}
+                </p>
+              )}
+            </div>
+            <Controller
+              name="unit"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="serving">serving</SelectItem>
+                    <SelectItem value="g">grams (g)</SelectItem>
+                    <SelectItem value="ml">milliliters (ml)</SelectItem>
+                    <SelectItem value="oz">ounces (oz)</SelectItem>
+                    <SelectItem value="cup">cup</SelectItem>
+                    <SelectItem value="tbsp">tablespoon</SelectItem>
+                    <SelectItem value="tsp">teaspoon</SelectItem>
+                    <SelectItem value="piece">piece</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             />
-            <Select
-              value={newUnit}
-              onValueChange={(value) => setNewUnit(value)}
-            >
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Unit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="serving">serving</SelectItem>
-                <SelectItem value="g">grams (g)</SelectItem>
-                <SelectItem value="ml">milliliters (ml)</SelectItem>
-                <SelectItem value="oz">ounces (oz)</SelectItem>
-                <SelectItem value="cup">cup</SelectItem>
-                <SelectItem value="tbsp">tablespoon</SelectItem>
-                <SelectItem value="tsp">teaspoon</SelectItem>
-                <SelectItem value="piece">piece</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
-        <MealTypeDropdown
-          newMealType={newMealType}
-          setNewMealType={setNewMealType}
+
+        <Controller
+          name="mealType"
+          control={control}
+          render={({ field }) => (
+            <MealTypeDropdown
+              newMealType={field.value}
+              setNewMealType={field.onChange}
+            />
+          )}
         />
+
         <DialogFooter className="mt-6">
-          <Button variant="outline">Cancel</Button>
+          <Button type="button" variant="outline" onClick={() => reset()}>
+            Cancel
+          </Button>
           <Button
+            type="submit"
             className="bg-green-600 hover:bg-green-700"
-            onClick={handleAddCustomEntry}
+            disabled={isSubmitting}
           >
-            Add Entry
+            {isSubmitting ? "Adding..." : "Add Entry"}
           </Button>
         </DialogFooter>
-      </TabsContent>
+      </form>
+    </TabsContent>
   );
 };

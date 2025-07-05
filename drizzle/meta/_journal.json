@@ -15,6 +15,13 @@
       "when": 1744546216680,
       "tag": "0001_blue_hitman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1751704088368,
+      "tag": "0002_blushing_husk",
+      "breakpoints": true
     }
   ]
 }
