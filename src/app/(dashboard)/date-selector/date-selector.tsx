@@ -10,10 +10,13 @@ import {
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-export const DateSelector = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+type Props = {
+  date: Date;
+}
+export const DateSelector: FC<Props> = ({date}) => {
+  const [selectedDate, setSelectedDate] = useState<Date>(date);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 

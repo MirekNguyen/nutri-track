@@ -29,8 +29,8 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
               Dashboard
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <DateSelector />
-              <AddFoodEntry selectedDate={selectedDate} />
+              <DateSelector date={new Date(selectedDate)}/>
+              <AddFoodEntry />
             </div>
           </div>
 
