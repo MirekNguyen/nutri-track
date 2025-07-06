@@ -24,17 +24,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface CaloriesEntry {
+type CaloriesEntry = {
   date: string;
   calories: number;
   formattedDate: string;
 }
 
-interface CaloriesChartProps {
+type Props = {
   data: CaloriesEntry[];
 }
 
-export function CaloriesChart({ data }: CaloriesChartProps) {
+export function CaloriesChart({ data }: Props) {
   const total = data.reduce((sum, entry) => sum + entry.calories, 0);
   const avg = data.length > 0 ? Math.round(total / data.length) : 0;
   const minDate = new Date(Math.min(...data.map(entry => new Date(entry.date).getTime())));
