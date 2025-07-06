@@ -1,3 +1,4 @@
+'use client';
 import { Textarea } from "@/components/ui/textarea";
 
 import {
@@ -15,12 +16,16 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createMeal } from "@/app/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
 import { createFoodEntry } from "@/app/actions/food-entry-actions";
 
 export const NewMealDialog = () => {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
+
   const [newMealDialogOpen, setNewMealDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
