@@ -21,9 +21,10 @@ import { NewMealDialog } from "./new-meal-dialog";
 type Props = {
   submitAction: () => void;
   cancelAction: () => void;
+  type: "breakfast" | "lunch" | "dinner" | "snack";
 };
 
-export const EntryTab: FC<Props> = ({ submitAction, cancelAction }) => {
+export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
@@ -35,7 +36,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction }) => {
     retry: 1,
   });
 
-  const [newMealType, setNewMealType] = useState<string>("breakfast");
+  const [newMealType, setNewMealType] = useState<string>(type);
   const [addFoodTab, setAddFoodTab] = useState("choose");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

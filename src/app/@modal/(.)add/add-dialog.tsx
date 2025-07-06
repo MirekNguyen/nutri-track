@@ -15,8 +15,9 @@ import { EntryTab } from "./entry-tab";
 type Props = {
   submitAction: () => void;
   cancelAction: () => void;
+  type: "breakfast" | "lunch" | "dinner" | "snack";
 }
-export const AddDialog: FC<Props> = ({submitAction, cancelAction}) => {
+export const AddDialog: FC<Props> = ({submitAction, cancelAction, type}) => {
   const [foodTab, setFoodTab] = useState<string>("choose");
 
   return (
@@ -32,7 +33,7 @@ export const AddDialog: FC<Props> = ({submitAction, cancelAction}) => {
           <TabsTrigger value="choose">Choose Meal</TabsTrigger>
           <TabsTrigger value="custom">Custom Entry</TabsTrigger>
         </TabsList>
-        <EntryTab submitAction={submitAction} cancelAction={cancelAction}/>
+        <EntryTab submitAction={submitAction} cancelAction={cancelAction} type={type}/>
         <CustomEntryTab />
       </Tabs>
     </DialogContent>

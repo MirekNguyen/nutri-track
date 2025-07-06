@@ -1,11 +1,12 @@
 import { MealTypeIcon } from "@/app/components/meal-type-icon";
-import { FoodEntry, Meal } from "@/db/schema";
+import { FoodEntry } from "@/db/schema";
 import { FC } from "react";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { FoodRecord } from "./food-record";
 import { getMeals } from "@/app/actions/meal-actions";
+import { AddFoodEntryButton } from "./add-food-entry-button";
 
 type Props = {
   entries: FoodEntry[];
@@ -33,7 +34,7 @@ export const FoodRecordSection: FC<Props> = async ({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{totals} kcal</span>
-          <AddFoodEntry>
+          <AddFoodEntry type={type}>
             <Button
               variant="ghost"
               size="icon"
