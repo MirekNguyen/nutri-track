@@ -15,18 +15,8 @@ import { useMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 // Import the useSidebar hook
 import { useSidebar } from "@/hooks/use-sidebar"
-
-interface FoodEntry {
-  id: number
-  foodName: string
-  calories: number
-  mealType: string
-  protein: number | null
-  carbs: number | null
-  fat: number | null
-  entryDate: string
-  entryTime: string
-}
+import { FoodEntry } from "@/db/schema"
+import { CaloriesChart } from "./calories-chart"
 
 interface NutritionGoal {
   calorieGoal: number
@@ -108,7 +98,7 @@ export default function StatisticsPage() {
     return days.map((day) => {
       const dateStr = format(day, "yyyy-MM-dd")
       const entriesForDay = entries.filter((entry) => entry.entryDate === dateStr)
-      const calories = entriesForDay.reduce((sum, entry) => sum + entry.calories, 0)
+      const calories = entriesForDay.reduce((sum, entry) => sum + parseFloat(entry.calories), 0)
 
       return {
         date: dateStr,
@@ -188,77 +178,7 @@ export default function StatisticsPage() {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Calorie Intake</CardTitle>
-                    <CardDescription>Your calorie consumption over time</CardDescription>
-                  </CardHeader>
-                  <CardContent className="h-80 flex items-center justify-center">
-                    {dailyCalorieData.length > 0 ? (
-                      <div className="w-full h-full">
-                        <div className="flex flex-col h-full">
-                          <div className="flex-1 relative">
-                            {dailyCalorieData.map((day, index) => {
-                              const maxCalories = Math.max(
-                                ...dailyCalorieData.map((d) => d.calories),
-                                nutritionGoals.calorieGoal,
-                              )
-                              const height = day.calories > 0 ? (day.calories / maxCalories) * 100 : 0
-                              const isOverGoal = day.calories > nutritionGoals.calorieGoal
-
-                              return (
-                                <div
-                                  key={day.date}
-                                  className="absolute bottom-0 flex flex-col items-center"
-                                  style={{
-                                    left: `${(index / (dailyCalorieData.length - 1)) * 100}%`,
-                                    transform: "translateX(-50%)",
-                                    width: `${80 / dailyCalorieData.length}%`,
-                                    maxWidth: "40px",
-                                    minWidth: "15px",
-                                  }}
-                                >
-                                  <div className="w-full bg-gray-100 rounded-sm relative h-full">
-                                    <div
-                                      className={`absolute bottom-0 w-full rounded-sm ${isOverGoal ? "bg-red-500" : "bg-green-500"}`}
-                                      style={{ height: `${height}%` }}
-                                    />
-                                    {index === dailyCalorieData.length - 1 && (
-                                      <div
-                                        className="absolute w-full border-t border-dashed border-gray-400"
-                                        style={{
-                                          bottom: `${(nutritionGoals.calorieGoal / maxCalories) * 100}%`,
-                                          left: "-100%",
-                                          width: "300%",
-                                        }}
-                                      />
-                                    )}
-                                  </div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                          <div className="h-6 mt-2 flex justify-between text-xs text-gray-500">
-                            {dailyCalorieData.map((day, index) => (
-                              <div
-                                key={day.date}
-                                className="text-center"
-                                style={{
-                                  width: `${100 / dailyCalorieData.length}%`,
-                                  display: dailyCalorieData.length > 14 && index % 2 !== 0 ? "none" : "block",
-                                }}
-                              >
-                                {day.formattedDate}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">No data available for the selected time range</p>
-                    )}
-                  </CardContent>
-                </Card>
+              <CaloriesChart data={dailyCalorieData.filter(entry => entry.calories >= 1500)}/>
                 <Card>
                   <CardHeader>
                     <CardTitle>Macronutrient Distribution</CardTitle>
