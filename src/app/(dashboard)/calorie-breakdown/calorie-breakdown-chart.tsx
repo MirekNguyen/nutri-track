@@ -33,7 +33,7 @@ type Props = {
   chartData: MealTotal[];
 };
 
-export const CalorieBreadownChartNew: FC<Props> = ({ chartData }) => {
+export const CalorieBreadownChart: FC<Props> = ({ chartData }) => {
   const totalCalories = chartData.reduce((sum, entry) => sum + entry.calories, 0);
 
   return (

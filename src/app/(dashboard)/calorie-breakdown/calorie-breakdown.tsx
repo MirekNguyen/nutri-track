@@ -1,30 +1,32 @@
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { FC } from "react";
 import { getFoodEntries } from "@/app/actions/food-entry-actions";
-import { CalorieChart } from "@/app/components/calorie-chart";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { mealTypeTotals } from "../helpers/mealtype-totals";
+import { mealTotal } from "../helpers/meal-total";
+import { CalorieBreadownChart } from "./calorie-breakdown-chart";
+
+export const description = "A donut chart with text";
 
 type Props = {
   selectedDate: string;
 };
 
-export const CalorieBreakdown = async ({ selectedDate }: Props) => {
+export const CalorieBreakdown: FC<Props> = async ({ selectedDate }) => {
   const entriesData = await getFoodEntries(selectedDate);
-  const totals = mealTypeTotals(entriesData);
+  const totals = mealTotal(entriesData);
 
   return (
-    <Card
-      className="shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-    >
-      <CardHeader className="border-b pb-3">
-        <CardTitle>Calorie Breakdown</CardTitle>
+    <Card className="flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Calorie breakdown</CardTitle>
       </CardHeader>
-      <CardContent className="pt-4">
-        <CalorieChart
-          breakfast={totals.breakfast}
-          lunch={totals.lunch}
-          dinner={totals.dinner}
-          snack={totals.snack}
-        />
+      <CardContent className="flex-1 pb-0">
+        <CalorieBreadownChart chartData={totals} />
       </CardContent>
     </Card>
   );

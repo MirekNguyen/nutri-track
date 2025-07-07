@@ -4,12 +4,11 @@ import { Sidebar } from "../components/sidebar";
 
 import { MacronutrientStats } from "../(dashboard)/macronutrient-stats/macronutrient-stats";
 import { FoodLog } from "../(dashboard)/food-log/food-log";
-import { CalorieBreakdown } from "../(dashboard)/calorie-breakdown/calorie-breakdown";
 import { DateSelector } from "../(dashboard)/date-selector/date-selector";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { CalorieBreakdownNew } from "./calorie-breakdown/calorie-breakdown-new";
+import { CalorieBreakdown } from "./calorie-breakdown/calorie-breakdown";
 
 type Props = {
   selectedDate: string;
@@ -42,7 +41,7 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <FoodLog date={selectedDate} />
-            <CalorieBreakdownNew selectedDate={selectedDate}/>
+            <CalorieBreakdown selectedDate={selectedDate}/>
           </div>
         </main>
       </div>
