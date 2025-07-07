@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -9,8 +8,6 @@ import { FC } from "react";
 import { getFoodEntries } from "@/app/actions/food-entry-actions";
 import { mealTotal } from "../helpers/meal-total";
 import { CalorieBreadownChart } from "./calorie-breakdown-chart";
-
-export const description = "A donut chart with text";
 
 type Props = {
   selectedDate: string;

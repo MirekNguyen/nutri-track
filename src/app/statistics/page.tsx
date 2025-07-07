@@ -111,15 +111,31 @@ export default function StatisticsPage() {
   // Calculate average macronutrient distribution
   const getMacroDistribution = () => {
     if (entries.length === 0) return { protein: 0, carbs: 0, fat: 0 }
+    const { start, end } = getDateRange()
+    const days = eachDayOfInterval({ start, end })
 
-    const totalProtein = entries.reduce((sum, entry) => sum + (entry.protein || 0), 0)
-    const totalCarbs = entries.reduce((sum, entry) => sum + (entry.carbs || 0), 0)
-    const totalFat = entries.reduce((sum, entry) => sum + (entry.fat || 0), 0)
+    const stats = days.map((day) => {
+      const dateStr = format(day, "yyyy-MM-dd")
+      const entriesForDay = entries.filter((entry) => entry.entryDate === dateStr)
+      const calories = entriesForDay.reduce((sum, entry) => sum + parseFloat(entry.calories), 0)
+      const proteins = entriesForDay.reduce((sum, entry) => sum + (parseFloat(entry.protein) || 0), 0)
+      const carbs = entriesForDay.reduce((sum, entry) => sum + (parseFloat(entry.carbs) || 0), 0)
+      const fat = entriesForDay.reduce((sum, entry) => sum + (entry.fat || 0), 0)
+
+      return {
+        date: dateStr,
+        calories,
+        proteins,
+        carbs,
+        fat,
+        formattedDate: format(day, "MMM d"),
+      }
+    }).filter((stat) => stat.calories >= 1200)
 
     return {
-      protein: Math.round(totalProtein / entries.length),
-      carbs: Math.round(totalCarbs / entries.length),
-      fat: Math.round(totalFat / entries.length),
+      protein: Math.round(stats.reduce((sum, stat) => sum + stat.proteins, 0) / stats.length),
+      carbs: Math.round(stats.reduce((sum, stat) => sum + stat.carbs, 0) / stats.length),
+      fat: Math.round(stats.reduce((sum, stat) => sum + stat.fat, 0) / stats.length),
     }
   }
 
@@ -142,7 +158,9 @@ export default function StatisticsPage() {
   }
 
   const dailyCalorieData = getDailyCalorieData()
+  console.log("Daily Calorie Data:", dailyCalorieData)
   const macroDistribution = getMacroDistribution()
+  console.log("Macro Distribution:", macroDistribution)
   const proteinData = getDailyMacroData("protein")
   const carbsData = getDailyMacroData("carbs")
   const fatData = getDailyMacroData("fat")
@@ -178,7 +196,7 @@ export default function StatisticsPage() {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <CaloriesChart data={dailyCalorieData.filter(entry => entry.calories >= 1500)}/>
+              <CaloriesChart data={dailyCalorieData.filter(entry => entry.calories >= 1000)}/>
                 <Card>
                   <CardHeader>
                     <CardTitle>Macronutrient Distribution</CardTitle>
