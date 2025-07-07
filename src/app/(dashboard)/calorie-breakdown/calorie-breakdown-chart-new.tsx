@@ -34,10 +34,8 @@ type Props = {
 };
 
 export const CalorieBreadownChartNew: FC<Props> = ({ chartData }) => {
-  const totalVisitors = chartData.reduce(
-    (sum, entry) => sum + entry.calories,
-    0,
-  );
+  const totalCalories = chartData.reduce((sum, entry) => sum + entry.calories, 0);
+
   return (
     <ChartContainer
       config={chartConfig}
@@ -76,7 +74,7 @@ export const CalorieBreadownChartNew: FC<Props> = ({ chartData }) => {
                       y={viewBox.cy}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      {totalVisitors.toLocaleString()}
+                      {totalCalories.toLocaleString()}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
