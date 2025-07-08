@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import { Textarea } from "@/components/ui/textarea";
 
 import {
@@ -16,16 +17,13 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createMeal } from "@/app/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
-import { createFoodEntry } from "@/app/actions/food-entry-actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const NewMealDialog = () => {
-  const searchParams = useSearchParams();
-  const dateParam = searchParams.get("date");
-  const selectedDate = dateParam ? new Date(dateParam) : new Date();
-
+  const queryClient = useQueryClient();
   const [newMealDialogOpen, setNewMealDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -34,10 +32,7 @@ export const NewMealDialog = () => {
   const [newCarbs, setNewCarbs] = useState("");
   const [newFat, setNewFat] = useState("");
   const [newTags, setNewTags] = useState("");
-
-  const [newAmount, setNewAmount] = useState("1");
   const [newUnit, setNewUnit] = useState("serving");
-  const [newMealType, setNewMealType] = useState<string>("breakfast");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -51,7 +46,6 @@ export const NewMealDialog = () => {
     setNewFat("");
     setNewTags("");
     setNewUnit("serving");
-    setNewAmount("1");
   };
 
   // Update the handleAddNewMeal function to include the unit field
@@ -61,50 +55,22 @@ export const NewMealDialog = () => {
     setIsSubmitting(true);
 
     try {
-      const calories = Number.parseInt(newCalories);
-      const protein = newProtein ? Number.parseInt(newProtein) : null;
-      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
-      const fat = newFat ? Number.parseInt(newFat) : null;
-      const amount = Number.parseFloat(newAmount) || 1;
-
-      if (isNaN(calories)) throw new Error("Invalid calories value");
-
-      // Parse tags
       const tags = newTags.trim()
         ? newTags.split(",").map((tag) => tag.trim())
         : [];
 
-      // Create the meal
-      const newMealData = await createMeal({
+      await createMeal({
         name: newName,
         unit: newUnit,
         description: newDescription || null,
-        calories,
-        protein,
-        carbs,
-        fat,
+        calories: newCalories,
+        protein: newProtein,
+        carbs: newCarbs,
+        fat: newFat,
         tags: tags.length > 0 ? tags : null,
         isFavorite: false,
       });
-
-      // Format date and time for database
-      const entryDate = selectedDate.toISOString().split("T")[0];
-      console.log("Selected date:", entryDate);
-      const entryTime = new Date().toTimeString().split(" ")[0];
-
-      // Create a food entry with this meal
-      await createFoodEntry({
-        foodName: newName,
-        calories,
-        protein,
-        carbs,
-        fat,
-        amount,
-        mealType: newMealType,
-        entryDate,
-        entryTime,
-        mealId: newMealData.id,
-      });
+      queryClient.invalidateQueries({ queryKey: ["getMeals"] });
 
       resetNewMealForm();
       setNewMealDialogOpen(false);

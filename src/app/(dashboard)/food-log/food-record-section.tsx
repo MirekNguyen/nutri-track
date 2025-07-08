@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { FoodRecord } from "./food-record";
 import { getMeals } from "@/app/actions/meal-actions";
-import { AddFoodEntryButton } from "./add-food-entry-button";
 
 type Props = {
   entries: FoodEntry[];
