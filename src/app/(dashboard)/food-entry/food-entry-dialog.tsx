@@ -80,25 +80,16 @@ export const FoodEntryDialog = ({
     setIsSubmitting(true);
 
     try {
-      const calories = Number.parseInt(newCalories);
-      const protein = newProtein ? Number.parseInt(newProtein) : null;
-      const carbs = newCarbs ? Number.parseInt(newCarbs) : null;
-      const fat = newFat ? Number.parseInt(newFat) : null;
-      const amount = Number.parseFloat(newAmount) || 1;
-
-      if (isNaN(calories)) throw new Error("Invalid calories value");
-
-      // Format date and time for database
       const entryDate = selectedDate.toISOString().split("T")[0];
       const entryTime = new Date().toTimeString().split(" ")[0];
 
       await createFoodEntry({
         foodName: newFood,
-        calories,
-        protein,
-        carbs,
-        fat,
-        amount,
+        calories: newCalories,
+        protein: newProtein,
+        carbs: newCarbs,
+        fat: Number.parseInt(newFat),
+        amount: newAmount,
         mealType: newMealType,
         entryDate,
         entryTime,
