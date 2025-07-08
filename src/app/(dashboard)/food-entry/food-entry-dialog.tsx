@@ -32,6 +32,7 @@ import { UnitDropdown } from "./unit-dropdown";
 import { MealTypeDropdown } from "./meal-type-dropdown";
 import { Meal } from "@/db/schema";
 import { createMeal } from "@/app/actions/meal-actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   meals: Meal[];
@@ -46,6 +47,7 @@ export const FoodEntryDialog = ({
   setOpenAction,
   selectedDate,
 }: Props) => {
+  const queryClient = useQueryClient();
   const [newMealType, setNewMealType] = useState<string>("breakfast");
   const [addFoodTab, setAddFoodTab] = useState("choose");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -211,7 +213,7 @@ export const FoodEntryDialog = ({
         : [];
 
       // Create the meal
-      const newMealData = await createMeal({
+      await createMeal({
         name: newName,
         unit: newUnit,
         description: newDescription || null,
@@ -222,25 +224,7 @@ export const FoodEntryDialog = ({
         tags: tags.length > 0 ? tags : null,
         isFavorite: false,
       });
-
-      // Format date and time for database
-      const entryDate = selectedDate.toISOString().split("T")[0];
-      console.log("Selected date:", entryDate);
-      const entryTime = new Date().toTimeString().split(" ")[0];
-
-      // Create a food entry with this meal
-      await createFoodEntry({
-        foodName: newName,
-        calories,
-        protein,
-        carbs,
-        fat,
-        amount,
-        mealType: newMealType,
-        entryDate,
-        entryTime,
-        mealId: newMealData.id,
-      });
+      queryClient.invalidateQueries({queryKey: ['getMeals']});
 
       resetNewMealForm();
       setNewMealDialogOpen(false);
