@@ -77,7 +77,7 @@ export const NewMealDialog = () => {
 
       toast({
         title: "Success",
-        description: "Meal created and added to your food log",
+        description: "Meal created successfully created",
       });
     } catch (error) {
       console.error("Error creating new meal:", error);
