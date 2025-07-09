@@ -1,4 +1,5 @@
 "use client";
+
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -15,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { createMeal } from "@/app/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -49,7 +49,6 @@ export const NewMealDialog = () => {
   } = useForm<NewMeal>({ defaultValues, resolver: zodResolver(newMealSchema) });
 
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const onSubmit = async (data: NewMeal) => {
     try {
@@ -93,7 +92,11 @@ export const NewMealDialog = () => {
             Enter the details of your meal including nutritional information.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+          noValidate
+        >
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
@@ -152,6 +155,7 @@ export const NewMealDialog = () => {
                   type="number"
                   inputMode="numeric"
                   placeholder="e.g., 350"
+                  formNoValidate
                   {...register("calories", { valueAsNumber: true })}
                 />
                 {errors.calories && (
@@ -233,7 +237,7 @@ export const NewMealDialog = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => setOpen(false)}
               disabled={isSubmitting}
             >
               Cancel
@@ -249,7 +253,7 @@ export const NewMealDialog = () => {
                   Saving...
                 </>
               ) : (
-                "Save & Add to Log"
+                "Save"
               )}
             </Button>
           </DialogFooter>
