@@ -1,7 +1,5 @@
 "use client";
-
 import { Textarea } from "@/components/ui/textarea";
-
 import {
   Dialog,
   DialogContent,
@@ -21,63 +19,49 @@ import { useRouter } from "next/navigation";
 import { createMeal } from "@/app/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { NewMeal } from "@/db/schema";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const newMealSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().nullable(),
+  unit: z.string().default("serving"),
+  calories: z.number({ message: "Number is required" }).min(0),
+  protein: z.number({ message: "Number is required" }).min(0),
+  carbs: z.number({ message: "Number is required" }).min(0),
+  fat: z.number({ message: "Number is required" }).min(0),
+});
 
 export const NewMealDialog = () => {
-  const queryClient = useQueryClient();
-  const [newMealDialogOpen, setNewMealDialogOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newCalories, setNewCalories] = useState("");
-  const [newProtein, setNewProtein] = useState("");
-  const [newCarbs, setNewCarbs] = useState("");
-  const [newFat, setNewFat] = useState("");
-  const [newTags, setNewTags] = useState("");
-  const [newUnit, setNewUnit] = useState("serving");
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
-
-  const resetNewMealForm = () => {
-    setNewName("");
-    setNewDescription("");
-    setNewCalories("");
-    setNewProtein("");
-    setNewCarbs("");
-    setNewFat("");
-    setNewTags("");
-    setNewUnit("serving");
+  const defaultValues: Partial<NewMeal> = {
+    unit: "serving",
   };
 
-  // Update the handleAddNewMeal function to include the unit field
-  const handleAddNewMeal = async () => {
-    if (newName.trim() === "" || newCalories.trim() === "") return;
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<NewMeal>({ defaultValues, resolver: zodResolver(newMealSchema) });
 
-    setIsSubmitting(true);
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
+  const onSubmit = async (data: NewMeal) => {
     try {
-      const tags = newTags.trim()
-        ? newTags.split(",").map((tag) => tag.trim())
-        : [];
+      await createMeal({ ...data });
 
-      await createMeal({
-        name: newName,
-        unit: newUnit,
-        description: newDescription || null,
-        calories: newCalories,
-        protein: newProtein,
-        carbs: newCarbs,
-        fat: newFat,
-        tags: tags.length > 0 ? tags : null,
-        isFavorite: false,
-      });
       queryClient.invalidateQueries({ queryKey: ["getMeals"] });
-
-      resetNewMealForm();
-      setNewMealDialogOpen(false);
+      reset(defaultValues);
+      setOpen(false);
 
       toast({
         title: "Success",
-        description: "Meal created successfully created",
+        description: "Meal created successfully",
       });
     } catch (error) {
       console.error("Error creating new meal:", error);
@@ -86,17 +70,15 @@ export const NewMealDialog = () => {
         description: "Failed to create meal. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
     <Dialog
-      open={newMealDialogOpen}
+      open={open}
       onOpenChange={(isOpen) => {
-        setNewMealDialogOpen(isOpen);
-        if (!isOpen) resetNewMealForm();
+        setOpen(isOpen);
+        if (!isOpen) reset(defaultValues);
       }}
     >
       <DialogTrigger asChild>
@@ -111,131 +93,167 @@ export const NewMealDialog = () => {
             Enter the details of your meal including nutritional information.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              placeholder="e.g., Grilled Chicken Salad"
-              className="col-span-3"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-            />
-          </div>
-          <UnitDropdown newUnit={newUnit} setNewUnit={setNewUnit} />
-          <div className="grid grid-cols-4 items-start gap-4">
-            <Label htmlFor="description" className="text-right pt-2">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Describe your meal..."
-              className="col-span-3"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="calories" className="text-right">
-              Calories
-            </Label>
-            <Input
-              id="calories"
-              type="number"
-              placeholder="e.g., 350"
-              className="col-span-3"
-              value={newCalories}
-              onChange={(e) => setNewCalories(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Macros (g)</Label>
-            <div className="col-span-3 grid grid-cols-3 gap-2">
-              <div>
-                <Label
-                  htmlFor="protein"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Protein
-                </Label>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <div className="col-span-3">
                 <Input
-                  id="protein"
-                  type="number"
-                  placeholder="e.g., 30"
-                  value={newProtein}
-                  onChange={(e) => setNewProtein(e.target.value)}
+                  id="name"
+                  placeholder="e.g., Grilled Chicken Salad"
+                  {...register("name")}
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
-              <div>
-                <Label
-                  htmlFor="carbs"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Carbs
-                </Label>
-                <Input
-                  id="carbs"
-                  type="number"
-                  placeholder="e.g., 40"
-                  value={newCarbs}
-                  onChange={(e) => setNewCarbs(e.target.value)}
+            </div>
+
+            <Controller
+              name="unit"
+              control={control}
+              render={({ field }) => (
+                <UnitDropdown
+                  newUnit={field.value || "serving"}
+                  setNewUnit={(value) => field.onChange(value)}
                 />
+              )}
+            />
+
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="description" className="text-right pt-2">
+                Description
+              </Label>
+              <div className="col-span-3">
+                <Textarea
+                  id="description"
+                  placeholder="Describe your meal..."
+                  {...register("description")}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description.message}
+                  </p>
+                )}
               </div>
-              <div>
-                <Label
-                  htmlFor="fat"
-                  className="text-xs text-gray-500 mb-1 block"
-                >
-                  Fat
-                </Label>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="calories" className="text-right">
+                Calories
+              </Label>
+              <div className="col-span-3">
                 <Input
-                  id="fat"
+                  id="calories"
                   type="number"
-                  placeholder="e.g., 15"
-                  value={newFat}
-                  onChange={(e) => setNewFat(e.target.value)}
+                  inputMode="numeric"
+                  placeholder="e.g., 350"
+                  {...register("calories", { valueAsNumber: true })}
                 />
+                {errors.calories && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.calories.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Macros (g)</Label>
+              <div className="col-span-3 grid grid-cols-3 gap-2">
+                <div>
+                  <Label
+                    htmlFor="protein"
+                    className="text-xs text-gray-500 mb-1 block"
+                  >
+                    Protein
+                  </Label>
+                  <Input
+                    id="protein"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="e.g., 30"
+                    {...register("protein", { valueAsNumber: true })}
+                  />
+                  {errors.protein && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.protein.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label
+                    htmlFor="carbs"
+                    className="text-xs text-gray-500 mb-1 block"
+                  >
+                    Carbs
+                  </Label>
+                  <Input
+                    id="carbs"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="e.g., 40"
+                    {...register("carbs", { valueAsNumber: true })}
+                  />
+                  {errors.carbs && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.carbs.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label
+                    htmlFor="fat"
+                    className="text-xs text-gray-500 mb-1 block"
+                  >
+                    Fat
+                  </Label>
+                  <Input
+                    id="fat"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="e.g., 15"
+                    {...register("fat", { valueAsNumber: true })}
+                  />
+                  {errors.fat && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.fat.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tags" className="text-right">
-              Tags
-            </Label>
-            <Input
-              id="tags"
-              placeholder="e.g., high-protein, lunch (comma separated)"
-              className="col-span-3"
-              value={newTags}
-              onChange={(e) => setNewTags(e.target.value)}
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => router.back()}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="bg-green-600 hover:bg-green-700"
-            onClick={handleAddNewMeal}
-            disabled={isSubmitting || !newName || !newCalories}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save & Add to Log"
-            )}
-          </Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save & Add to Log"
+              )}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
