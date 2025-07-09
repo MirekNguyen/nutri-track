@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, User, Menu } from "lucide-react";
+import { User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SidebarContent } from "./sidebar";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Header() {
   const isMobile = useMobile();
@@ -65,44 +66,7 @@ export function Header() {
           </h1>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
-          {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-500 hover:bg-gray-100 transition-transform transform hover:scale-110 active:scale-95"
-                >
-                  <Menu
-                    className={cn(
-                      "h-5 w-5",
-                      pathname === "/" ||
-                        pathname === "/meals" ||
-                        pathname === "/statistics" ||
-                        pathname === "/planner" ||
-                        pathname === "/progress" ||
-                        pathname === "/profile" ||
-                        pathname === "/settings"
-                        ? "text-green-600"
-                        : "",
-                    )}
-                  />
-                  <span className="sr-only">Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64 shadow-xl">
-                <SidebarContent />
-              </SheetContent>
-            </Sheet>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-gray-500 hidden md:flex hover:bg-gray-100"
-          >
-            <BookOpen className="h-5 w-5" />
-            <span className="sr-only">Nutrition Guide</span>
-          </Button>
+          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -145,6 +109,37 @@ export function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {isMobile && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-gray-500 hover:bg-gray-100"
+                >
+                  <Menu
+                    className={cn(
+                      "h-5 w-5",
+                      pathname === "/" ||
+                        pathname === "/meals" ||
+                        pathname === "/statistics" ||
+                        pathname === "/planner" ||
+                        pathname === "/progress" ||
+                        pathname === "/profile" ||
+                        pathname === "/settings"
+                        ? "text-green-600"
+                        : "",
+                    )}
+                  />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="p-0 w-64 shadow-xl">
+                 <SheetTitle></SheetTitle>
+                <SidebarContent />
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </div>
     </header>
