@@ -102,7 +102,7 @@ export function Sidebar() {
     <SidebarContext.Provider value={{collapsed: false}}>
       <aside
         className={cn(
-          "fixed top-[60px] h-[calc(100vh-60px)] bg-white border-r border-gray-200 transition-all duration-300 z-20 hidden md:block shadow-sm overflow-y-auto",
+          "fixed top-[60px] h-[calc(100vh-60px)] bg-background border-r border-border transition-all duration-300 z-20 hidden md:block shadow-sm overflow-y-auto",
           "w-64",
         )}
       >

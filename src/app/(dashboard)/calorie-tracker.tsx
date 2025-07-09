@@ -16,13 +16,13 @@ type Props = {
 
 export const CalorieTracker = async ({ selectedDate }: Props) => {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <div className="flex flex-col md:flex-row flex-1">
         <Sidebar />
         <main className="flex-1 p-4 md:p-6 overflow-auto md:ml-64 transition-all duration-300">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
               Dashboard
             </h1>
             <div className="flex items-center gap-2 w-full sm:w-auto">
