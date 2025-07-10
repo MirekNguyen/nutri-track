@@ -9,7 +9,6 @@ import { TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { DialogFooter } from "@/components/ui/dialog";
-import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
 import { useSearchParams } from "next/navigation";
 import { FC, useState } from "react";
 import { getMeals } from "@/actions/meal-actions";
@@ -17,6 +16,7 @@ import { createFoodEntry } from "@/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { NewMealDialog } from "./new-meal-dialog";
+import { MealTypeDropdown } from "./meal-type-dropdown";
 
 type Props = {
   submitAction: () => void;

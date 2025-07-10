@@ -1,5 +1,4 @@
 "use client";
-import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
 import { createFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -19,6 +18,7 @@ import { FC } from "react";
 import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { MealTypeDropdown } from "./meal-type-dropdown";
 
 const customEntrySchema = z.object({
   foodName: z.string().min(1, "Food name is required"),

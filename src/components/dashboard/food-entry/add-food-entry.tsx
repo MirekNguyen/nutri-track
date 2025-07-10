@@ -1,8 +1,8 @@
 "use client";
 
-import { AddDialog } from "@/app/(dashboard)/food-entry/add-dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { FC, ReactNode, useState } from "react";
+import { AddDialog } from "./add-dialog";
 type Props = {
   type?: "breakfast" | "lunch" | "dinner" | "snack";
   children: ReactNode;

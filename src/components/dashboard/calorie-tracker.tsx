@@ -1,10 +1,10 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Header } from "../../components/header";
-import { Sidebar } from "../../components/sidebar";
+import { Header } from "../header";
+import { Sidebar } from "../sidebar";
 
-import { MacronutrientStats } from "../(dashboard)/macronutrient-stats/macronutrient-stats";
-import { FoodLog } from "../(dashboard)/food-log/food-log";
-import { DateSelector } from "../(dashboard)/date-selector/date-selector";
+import { MacronutrientStats } from "./macronutrient-stats/macronutrient-stats";
+import { FoodLog } from "./food-log/food-log";
+import { DateSelector } from "./date-selector/date-selector";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";

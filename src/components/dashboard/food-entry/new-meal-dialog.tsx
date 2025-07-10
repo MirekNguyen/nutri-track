@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { UnitDropdown } from "@/app/(dashboard)/food-entry/unit-dropdown";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
@@ -23,6 +22,7 @@ import { useForm, Controller } from "react-hook-form";
 import { NewMeal } from "@/db/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UnitDropdown } from "./unit-dropdown";
 
 const newMealSchema = z.object({
   name: z.string().min(1, "Name is required"),
