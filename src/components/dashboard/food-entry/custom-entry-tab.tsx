@@ -1,6 +1,6 @@
 "use client";
 import { MealTypeDropdown } from "@/app/(dashboard)/food-entry/meal-type-dropdown";
-import { createFoodEntry } from "@/app/actions/food-entry-actions";
+import { createFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";

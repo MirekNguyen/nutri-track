@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { macros } from "../helpers/macros";
-import { getFoodEntries } from "@/app/actions/food-entry-actions";
+import { getFoodEntries } from "@/actions/food-entry-actions";
 
 type Props = {
   date: string;

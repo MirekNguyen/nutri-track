@@ -1,11 +1,11 @@
-import { MealTypeIcon } from "@/app/components/meal-type-icon";
+import { MealTypeIcon } from "@/components/meal-type-icon";
 import { FoodEntry } from "@/db/schema";
 import { FC } from "react";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { FoodRecord } from "./food-record";
-import { getMeals } from "@/app/actions/meal-actions";
+import { getMeals } from "@/actions/meal-actions";
 
 type Props = {
   entries: FoodEntry[];

@@ -4,7 +4,7 @@ import { PlusCircle } from "lucide-react";
 import { mealTypeTotals } from "../helpers/mealtype-totals";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { FoodRecordSection } from "./food-record-section";
-import { getFoodEntries } from "@/app/actions/food-entry-actions";
+import { getFoodEntries } from "@/actions/food-entry-actions";
 import { FC } from "react";
 
 type Props = {

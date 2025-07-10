@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteFoodEntry } from "@/app/actions/food-entry-actions";
+import { deleteFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { FoodEntry } from "@/db/schema";

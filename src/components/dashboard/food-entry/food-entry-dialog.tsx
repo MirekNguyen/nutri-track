@@ -26,12 +26,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useState } from "react";
-import { createFoodEntry } from "@/app/actions/food-entry-actions";
+import { createFoodEntry } from "@/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
 import { UnitDropdown } from "./unit-dropdown";
 import { MealTypeDropdown } from "./meal-type-dropdown";
 import { Meal } from "@/db/schema";
-import { createMeal } from "@/app/actions/meal-actions";
+import { createMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {

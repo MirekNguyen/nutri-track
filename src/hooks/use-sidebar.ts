@@ -1,7 +1,7 @@
 "use client"
 
 import { useContext } from "react"
-import { SidebarContext } from "@/app/components/sidebar"
+import { SidebarContext } from "@/components/sidebar"
 
 export function useSidebar() {
   const context = useContext(SidebarContext)

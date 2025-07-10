@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { CalorieTracker } from "./(dashboard)/calorie-tracker";
+import { CalorieTracker } from "../components/dashboard/calorie-tracker";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 

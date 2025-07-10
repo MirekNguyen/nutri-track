@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { format, addDays, startOfWeek } from "date-fns"
 import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react"
-import { Header } from "../components/header"
-import { Sidebar } from "../components/sidebar"
+import { Header } from "../../components/header"
+import { Sidebar } from "../../components/sidebar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {

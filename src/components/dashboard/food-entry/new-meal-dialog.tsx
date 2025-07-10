@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { createMeal } from "@/app/actions/meal-actions";
+import { createMeal } from "@/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";

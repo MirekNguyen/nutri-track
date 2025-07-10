@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FC } from "react";
-import { getFoodEntries } from "@/app/actions/food-entry-actions";
+import { getFoodEntries } from "@/actions/food-entry-actions";
 import { mealTotal } from "../helpers/meal-total";
 import { CalorieBreadownChart } from "./calorie-breakdown-chart";
 

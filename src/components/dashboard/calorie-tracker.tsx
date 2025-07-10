@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Header } from "../components/header";
-import { Sidebar } from "../components/sidebar";
+import { Header } from "../../components/header";
+import { Sidebar } from "../../components/sidebar";
 
 import { MacronutrientStats } from "../(dashboard)/macronutrient-stats/macronutrient-stats";
 import { FoodLog } from "../(dashboard)/food-log/food-log";
