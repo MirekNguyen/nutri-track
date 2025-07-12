@@ -40,7 +40,7 @@ export function CaloriesChart({ data }: Props) {
   const minDate = new Date(Math.min(...data.map(entry => new Date(entry.date).getTime())));
   const maxDate = new Date(Math.max(...data.map(entry => new Date(entry.date).getTime())));
   const daysSpan = differenceInCalendarDays(maxDate, minDate) + 1;
-  const maintenanceCalories = 2400;
+  const maintenanceCalories = 2300;
 
   return (
     <Card>
