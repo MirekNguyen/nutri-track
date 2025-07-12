@@ -626,9 +626,9 @@ export default function MealsPage() {
                   <CardHeader className="pb-2 flex flex-row justify-between items-start">
                     <div>
                       <CardTitle className="text-lg">{meal.name}</CardTitle>
-                      <p className="text-xs text-gray-500 mt-0.5">Per {meal.unit || "serving"}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Per {meal.unit || "serving"}</p>
                       {meal.description && (
-                        <p className="text-sm text-gray-500 line-clamp-2 mt-1">{meal.description}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{meal.description}</p>
                       )}
                     </div>
                     <Button
@@ -642,19 +642,19 @@ export default function MealsPage() {
                   </CardHeader>
                   <CardContent className="pb-2 flex-1">
                     <div className="grid grid-cols-4 gap-2 text-center">
-                      <div className="bg-gray-50 p-2 rounded-md">
+                      <div className="bg-gray-50 dark:bg-muted/50 p-2 rounded-md">
                         <p className="text-xs text-gray-500">Calories</p>
                         <p className="font-semibold">{meal.calories}</p>
                       </div>
-                      <div className="bg-blue-50 p-2 rounded-md">
+                      <div className="bg-blue-50 dark:bg-blue-950/20 p-2 rounded-md">
                         <p className="text-xs text-gray-500">Protein</p>
                         <p className="font-semibold text-blue-600">{meal.protein || 0}g</p>
                       </div>
-                      <div className="bg-purple-50 p-2 rounded-md">
+                      <div className="bg-purple-50 dark:bg-purple-950/20 p-2 rounded-md">
                         <p className="text-xs text-gray-500">Carbs</p>
                         <p className="font-semibold text-purple-600">{meal.carbs || 0}g</p>
                       </div>
-                      <div className="bg-orange-50 p-2 rounded-md">
+                      <div className="bg-orange-50 dark:bg-orange-950/20 p-2 rounded-md">
                         <p className="text-xs text-gray-500">Fat</p>
                         <p className="font-semibold text-orange-600">{meal.fat || 0}g</p>
                       </div>
