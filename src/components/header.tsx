@@ -12,7 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SidebarContent } from "./sidebar";
@@ -135,7 +140,7 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="p-0 w-64 shadow-xl">
-                 <SheetTitle></SheetTitle>
+                <SheetTitle></SheetTitle>
                 <SidebarContent />
               </SheetContent>
             </Sheet>

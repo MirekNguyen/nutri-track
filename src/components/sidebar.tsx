@@ -1,28 +1,39 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-import { useState, useEffect } from "react"
-import { BarChart3, Calendar, Home, Utensils, User, Weight, Menu, ChevronLeft } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useMobile } from "@/hooks/use-mobile"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import React from "react"
+import { useState } from "react";
+import {
+  BarChart3,
+  Calendar,
+  Home,
+  Utensils,
+  User,
+  Weight,
+  Menu,
+  ChevronLeft,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useMobile } from "@/hooks/use-mobile";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 interface NavItem {
-  icon: React.ElementType
-  label: string
-  href: string
-  active?: boolean
+  icon: React.ElementType;
+  label: string;
+  href: string;
+  active?: boolean;
 }
 
-export const SidebarContext = React.createContext<{ collapsed: boolean }>({ collapsed: false })
+export const SidebarContext = React.createContext<{ collapsed: boolean }>({
+  collapsed: false,
+});
 
 export function SidebarContent() {
-  const [collapsed, setCollapsed] = useState(false)
-  const pathname = usePathname()
-  const isMobile = useMobile()
+  const [collapsed, setCollapsed] = useState(false);
+  const pathname = usePathname();
+  const isMobile = useMobile();
 
   const navItems: NavItem[] = [
     { icon: Home, label: "Dashboard", href: "/" },
@@ -31,34 +42,34 @@ export function SidebarContent() {
     { icon: Calendar, label: "Planner", href: "/planner" },
     { icon: Weight, label: "Progress", href: "/progress" },
     { icon: User, label: "Profile", href: "/profile" },
-  ]
+  ];
 
-  // Set active state based on current path
-  useEffect(() => {
-    navItems.forEach((item) => {
-      item.active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
-    })
-  }, [pathname])
-
-  // Create a new array with active states based on current path
   const navItemsWithActive = navItems.map((item) => ({
     ...item,
-    active: pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)),
-  }))
+    active:
+      pathname === item.href ||
+      (item.href !== "/" && pathname.startsWith(item.href)),
+  }));
 
   return (
     <div className="py-4 flex flex-col h-full">
       <div className="px-3 mb-4 flex items-center justify-between">
-        {!collapsed && <h2 className="text-lg font-semibold text-gray-600">Menu</h2>}
+        {!collapsed && (
+          <h2 className="text-lg font-semibold text-foreground">Menu</h2>
+        )}
         {!isMobile && (
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setCollapsed(!collapsed)}
-            className="h-8 w-8 text-gray-500 hover:bg-gray-100"
+            className="h-8 w-8 text-muted-foreground hover:bg-accent"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <Menu className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+            {collapsed ? (
+              <Menu className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
           </Button>
         )}
       </div>
@@ -70,14 +81,16 @@ export function SidebarContent() {
             className={cn(
               "w-full justify-start transition-all",
               item.active
-                ? "bg-green-600 text-white hover:bg-green-700"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                ? "bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
               collapsed ? "px-2" : "px-4",
             )}
             asChild
           >
             <Link href={item.href}>
-              <item.icon className={cn("h-5 w-5", collapsed ? "mr-0" : "mr-2")} />
+              <item.icon
+                className={cn("h-5 w-5", collapsed ? "mr-0" : "mr-2")}
+              />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           </Button>
@@ -85,29 +98,25 @@ export function SidebarContent() {
       </nav>
       <div className="mt-auto px-3 py-2">
         {!collapsed && (
-          <div className="bg-green-50 text-green-800 rounded-md p-3 text-sm">
+          <div className="bg-green-50 dark:bg-green-950/20 text-green-800 dark:text-green-200 rounded-md p-3 text-sm">
             <p className="font-medium mb-1">Pro Tip</p>
-            <p className="text-xs text-green-700">
-              Track your meals consistently for better insights into your nutrition habits.
+            <p className="text-xs text-green-700 dark:text-green-300">
+              Track your meals consistently for better insights into your
+              nutrition habits.
             </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export function Sidebar() {
   return (
-    <SidebarContext.Provider value={{collapsed: false}}>
-      <aside
-        className={cn(
-          "fixed top-[60px] h-[calc(100vh-60px)] bg-background border-r border-border transition-all duration-300 z-20 hidden md:block shadow-sm overflow-y-auto",
-          "w-64",
-        )}
-      >
+    <SidebarContext.Provider value={{ collapsed: false }}>
+      <aside className="fixed top-[60px] h-[calc(100vh-60px)] bg-background border-r border-border transition-all duration-300 z-20 hidden md:block shadow-sm overflow-y-auto w-64">
         <SidebarContent />
       </aside>
     </SidebarContext.Provider>
-  )
+  );
 }

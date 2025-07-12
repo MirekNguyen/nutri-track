@@ -24,7 +24,7 @@ export const FoodLog: FC<Props> = async ({ date }) => {
             <Button
               variant="outline"
               size="sm"
-              className="text-green-600 border-green-600"
+              className="text-green-600 dark:text-green-400 border-green-600 dark:border-green-400 bg-transparent"
             >
               <PlusCircle className="mr-2 h-4 w-4" /> Add Food
             </Button>
@@ -34,9 +34,9 @@ export const FoodLog: FC<Props> = async ({ date }) => {
           <div className="divide-y">
             {entries.length === 0 ? (
               <AddFoodEntry>
-                <div className="text-center py-8 text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors">
+                <div className="text-center py-8 text-muted-foreground cursor-pointer hover:bg-muted/50 transition-colors">
                   <div className="mb-2">
-                    <PlusCircle className="h-10 w-10 mx-auto text-gray-300" />
+                    <PlusCircle className="h-10 w-10 mx-auto text-muted-foreground/50" />
                   </div>
                   <p>No entries for this date.</p>
                   <p className="text-sm">Click here to add some food!</p>

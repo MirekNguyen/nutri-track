@@ -205,7 +205,7 @@ export default function StatisticsPage() {
   const fatData = getDailyMacroData("fat");
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-inherit flex flex-col">
       <Header />
       <div className="flex flex-col md:flex-row flex-1">
         <Sidebar />
@@ -217,7 +217,7 @@ export default function StatisticsPage() {
           )}
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
               Statistics
             </h1>
             <Tabs

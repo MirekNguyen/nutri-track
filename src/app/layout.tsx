@@ -10,11 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  modal,
   children,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
@@ -26,10 +24,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <QueryProvider>
-              {modal}
-              {children}
-            </QueryProvider>
+            <QueryProvider>{children}</QueryProvider>
           </ThemeProvider>
         </body>
       </html>

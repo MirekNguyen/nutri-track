@@ -325,7 +325,7 @@ export default function MealsPage() {
   // const { SelectContent, SelectItem, SelectTrigger, SelectValue } = require("@radix-ui/react-select")
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-inherit flex flex-col">
       <Header />
       <div className="flex flex-col md:flex-row flex-1">
         <Sidebar />
