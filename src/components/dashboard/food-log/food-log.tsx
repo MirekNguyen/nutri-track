@@ -45,28 +45,28 @@ export const FoodLog: FC<Props> = async ({ date }) => {
             ) : (
               <>
                 <FoodRecordSection
-                  className="bg-blue-50/50"
+                  className="bg-blue-50/50 dark:bg-blue-950/20"
                   entries={entries}
                   totals={mealTypeTotalsData.breakfast}
                   type="breakfast"
                   title="Breakfast"
                 />
                 <FoodRecordSection
-                  className="bg-purple-50/50"
+                  className="bg-purple-50/50 dark:bg-purple-950/20"
                   entries={entries}
                   totals={mealTypeTotalsData.lunch}
                   type="lunch"
                   title="Lunch"
                 />
                 <FoodRecordSection
-                  className="bg-indigo-50/50"
+                  className="bg-indigo-50/50 dark:bg-indigo-950/20"
                   entries={entries}
                   totals={mealTypeTotalsData.dinner}
                   type="dinner"
                   title="Dinner"
                 />
                 <FoodRecordSection
-                  className="bg-orange-50/50"
+                  className="bg-orange-50/50 dark:bg-orange-950/20"
                   entries={entries}
                   totals={mealTypeTotalsData.snack}
                   type="snack"
