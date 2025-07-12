@@ -185,6 +185,8 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             step="0.1"
             min="0.1"
             placeholder="1"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={newAmount}
             onChange={(e) => setNewAmount(e.target.value)}
             className="flex-1"
