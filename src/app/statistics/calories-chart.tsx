@@ -40,6 +40,7 @@ export function CaloriesChart({ data }: Props) {
   const minDate = new Date(Math.min(...data.map(entry => new Date(entry.date).getTime())));
   const maxDate = new Date(Math.max(...data.map(entry => new Date(entry.date).getTime())));
   const daysSpan = differenceInCalendarDays(maxDate, minDate) + 1;
+  const maintenanceCalories = 2000;
 
   return (
     <Card>
@@ -87,8 +88,13 @@ export function CaloriesChart({ data }: Props) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex justify-between w-full">
         <div className="flex gap-2 leading-none font-medium">
           Average calories: {avg} kcal
+        </div>
+        <div className="flex gap-2 leading-none font-medium">
+          Total Deficit: {avg * daysSpan} kcal
+        </div>
         </div>
         <div className="text-muted-foreground leading-none">
           Showing daily calories for the past {daysSpan} days
