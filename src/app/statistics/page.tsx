@@ -16,10 +16,8 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { getFoodEntries } from "../../actions/food-entry-actions";
-import { getNutritionGoals } from "../../actions/nutrition-goal-actions";
 import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-// Import the useSidebar hook
 import { useSidebar } from "@/hooks/use-sidebar";
 import { FoodEntry } from "@/db/schema";
 import { CaloriesChart } from "./calories-chart";
@@ -27,13 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { MacronutrientChart } from "./macronutrient-chart";
-
-interface NutritionGoal {
-  calorieGoal: number;
-  proteinGoal: number | null;
-  carbsGoal: number | null;
-  fatGoal: number | null;
-}
+import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
 
 interface DateRange {
   from: Date | undefined
@@ -43,12 +35,6 @@ interface DateRange {
 export default function StatisticsPage() {
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year" | "custom">("week");
   const [entries, setEntries] = useState<FoodEntry[]>([]);
-  const [nutritionGoals, setNutritionGoals] = useState<NutritionGoal>({
-    calorieGoal: 2000,
-    proteinGoal: 150,
-    carbsGoal: 200,
-    fatGoal: 65,
-  });
   const [customDateRange, setCustomDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
@@ -84,10 +70,6 @@ export default function StatisticsPage() {
     async function loadData() {
       setIsLoading(true);
       try {
-        // Load nutrition goals
-        const goalsData = await getNutritionGoals();
-        setNutritionGoals(goalsData);
-
         // Load food entries for the selected date range
         const { start, end } = getDateRange();
         const days = eachDayOfInterval({ start, end });
@@ -322,93 +304,7 @@ export default function StatisticsPage() {
                     (entry) => entry.calories >= 1000,
                   )}
                 />
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Macronutrient Distribution</CardTitle>
-                    <CardDescription>
-                      Your average macronutrient breakdown
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="h-80 flex items-center justify-center">
-                    {entries.length > 0 ? (
-                      <div className="w-full h-full flex flex-col justify-center items-center">
-                        <div className="relative w-48 h-48">
-                          <svg viewBox="0 0 100 100" className="w-full h-full">
-                            {/* Protein slice */}
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="40"
-                              fill="transparent"
-                              stroke="#3b82f6"
-                              strokeWidth="20"
-                              strokeDasharray={`${(macroDistribution.protein / (macroDistribution.protein + macroDistribution.carbs + macroDistribution.fat)) * 251.2} 251.2`}
-                              transform="rotate(-90) translate(-100, 0)"
-                            />
-                            {/* Carbs slice */}
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="40"
-                              fill="transparent"
-                              stroke="#8b5cf6"
-                              strokeWidth="20"
-                              strokeDasharray={`${(macroDistribution.carbs / (macroDistribution.protein + macroDistribution.carbs + macroDistribution.fat)) * 251.2} 251.2`}
-                              strokeDashoffset={`${-(macroDistribution.protein / (macroDistribution.protein + macroDistribution.carbs + macroDistribution.fat)) * 251.2}`}
-                              transform="rotate(-90) translate(-100, 0)"
-                            />
-                            {/* Fat slice */}
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="40"
-                              fill="transparent"
-                              stroke="#f97316"
-                              strokeWidth="20"
-                              strokeDasharray={`${(macroDistribution.fat / (macroDistribution.protein + macroDistribution.carbs + macroDistribution.fat)) * 251.2} 251.2`}
-                              strokeDashoffset={`${-((macroDistribution.protein + macroDistribution.carbs) / (macroDistribution.protein + macroDistribution.carbs + macroDistribution.fat)) * 251.2}`}
-                              transform="rotate(-90) translate(-100, 0)"
-                            />
-                            <circle cx="50" cy="50" r="30" fill="white" />
-                          </svg>
-                        </div>
-                        <div className="flex justify-center gap-6 mt-4">
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                            <div className="text-sm">
-                              <div className="font-medium">Protein</div>
-                              <div className="text-gray-500">
-                                {macroDistribution.protein}g
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
-                            <div className="text-sm">
-                              <div className="font-medium">Carbs</div>
-                              <div className="text-gray-500">
-                                {macroDistribution.carbs}g
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
-                            <div className="text-sm">
-                              <div className="font-medium">Fat</div>
-                              <div className="text-gray-500">
-                                {macroDistribution.fat}g
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">
-                        No data available for the selected time range
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
+                  <MacronutrientDistributionChart macroDistribution={macroDistribution} />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
