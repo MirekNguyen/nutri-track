@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { getFoodEntries } from "../../actions/food-entry-actions";
@@ -23,6 +23,9 @@ import { cn } from "@/lib/utils";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { FoodEntry } from "@/db/schema";
 import { CaloriesChart } from "./calories-chart";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 
 interface NutritionGoal {
   calorieGoal: number;
@@ -31,8 +34,13 @@ interface NutritionGoal {
   fatGoal: number | null;
 }
 
+interface DateRange {
+  from: Date | undefined
+  to: Date | undefined
+}
+
 export default function StatisticsPage() {
-  const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week");
+  const [timeRange, setTimeRange] = useState<"week" | "month" | "year" | "custom">("week");
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [nutritionGoals, setNutritionGoals] = useState<NutritionGoal>({
     calorieGoal: 2000,
@@ -40,6 +48,10 @@ export default function StatisticsPage() {
     carbsGoal: 200,
     fatGoal: 65,
   });
+  const [customDateRange, setCustomDateRange] = useState<DateRange>({
+    from: undefined,
+    to: undefined,
+  })
   const [isLoading, setIsLoading] = useState(true);
 
   const isMobile = useMobile();
@@ -56,6 +68,13 @@ export default function StatisticsPage() {
         return { start: subDays(today, 29), end: today };
       case "year":
         return { start: subDays(today, 364), end: today };
+      case "custom":
+        if (customDateRange.from && customDateRange.to) {
+          return { start: customDateRange.from, end: customDateRange.to }
+        }
+        return { start: subDays(today, 6), end: today }
+      default:
+        return { start: subDays(today, 6), end: today }
     }
   };
 
@@ -94,7 +113,7 @@ export default function StatisticsPage() {
     }
 
     loadData();
-  }, [timeRange]);
+  }, [timeRange, customDateRange]);
 
   // Calculate daily calorie data for the chart
   const getDailyCalorieData = () => {
@@ -220,17 +239,71 @@ export default function StatisticsPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">
               Statistics
             </h1>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Tabs
               value={timeRange}
               onValueChange={(v) => setTimeRange(v as any)}
               className="w-full sm:w-auto"
             >
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="week">Week</TabsTrigger>
                 <TabsTrigger value="month">Month</TabsTrigger>
                 <TabsTrigger value="year">Year</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
             </Tabs>
+            {timeRange === "custom" && (
+                <div className="flex gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
+                          !customDateRange.from && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {customDateRange.from ? format(customDateRange.from, "MMM d") : <span>From date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={customDateRange.from}
+                        onSelect={(date) => setCustomDateRange((prev) => ({ ...prev, from: date }))}
+                        disabled={(date) => date > new Date() || (customDateRange.to && date > customDateRange.to)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
+                          !customDateRange.to && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {customDateRange.to ? format(customDateRange.to, "MMM d") : <span>To date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={customDateRange.to}
+                        onSelect={(date) => setCustomDateRange((prev) => ({ ...prev, to: date }))}
+                        disabled={(date) => date > new Date() || (customDateRange.from && date < customDateRange.from)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
+          </div>
           </div>
 
           {isLoading ? (
