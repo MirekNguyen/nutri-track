@@ -93,7 +93,7 @@ export function CaloriesChart({ data }: Props) {
           Average calories: {avg} kcal
         </div>
         <div className="flex gap-2 leading-none font-medium">
-          Total Deficit: {avg * daysSpan} kcal
+          Total Deficit: {avg * daysSpan} kcal ({(avg * daysSpan / 7700).toFixed(2)} kg)
         </div>
         </div>
         <div className="text-muted-foreground leading-none">
