@@ -189,7 +189,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             inputMode="decimal"
             lang="en"
             value={newAmount}
-            onChange={(e) => setNewAmount(e.target.value)}
+            onChange={(e) => setNewAmount(e.target.value.replace(/,/g, '.'))}
             className="flex-1"
           />
           {selectedMealId && (
