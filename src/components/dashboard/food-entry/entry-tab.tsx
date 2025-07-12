@@ -187,6 +187,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             placeholder="1"
             pattern="^[0-9]+(\.[0-9]*)?$"
             inputMode="decimal"
+            lang="en"
             value={newAmount}
             onChange={(e) => setNewAmount(e.target.value)}
             className="flex-1"
