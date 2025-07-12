@@ -26,6 +26,7 @@ import { CaloriesChart } from "./calories-chart";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { MacronutrientChart } from "./macronutrient-chart";
 
 interface NutritionGoal {
   calorieGoal: number;
@@ -411,155 +412,9 @@ export default function StatisticsPage() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Protein Intake</CardTitle>
-                    <CardDescription>Daily protein consumption</CardDescription>
-                  </CardHeader>
-                  <CardContent className="h-60 flex items-center justify-center">
-                    {proteinData.length > 0 &&
-                    proteinData.some((d) => d.value > 0) ? (
-                      <div className="w-full h-full">
-                        <div className="flex flex-col h-full">
-                          <div className="flex-1 relative">
-                            {proteinData.map((day, index) => {
-                              const maxValue = Math.max(
-                                ...proteinData.map((d) => d.value),
-                                nutritionGoals.proteinGoal || 0,
-                              );
-                              const height =
-                                day.value > 0
-                                  ? (day.value / maxValue) * 100
-                                  : 0;
-
-                              return (
-                                <div
-                                  key={day.date}
-                                  className="absolute bottom-0 flex flex-col items-center"
-                                  style={{
-                                    left: `${(index / (proteinData.length - 1)) * 100}%`,
-                                    transform: "translateX(-50%)",
-                                    width: `${80 / proteinData.length}%`,
-                                    maxWidth: "20px",
-                                    minWidth: "8px",
-                                  }}
-                                >
-                                  <div className="w-full bg-gray-100 rounded-sm relative h-full">
-                                    <div
-                                      className="absolute bottom-0 w-full rounded-sm bg-blue-500"
-                                      style={{ height: `${height}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">No protein data available</p>
-                    )}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Carbohydrate Intake</CardTitle>
-                    <CardDescription>Daily carb consumption</CardDescription>
-                  </CardHeader>
-                  <CardContent className="h-60 flex items-center justify-center">
-                    {carbsData.length > 0 &&
-                    carbsData.some((d) => d.value > 0) ? (
-                      <div className="w-full h-full">
-                        <div className="flex flex-col h-full">
-                          <div className="flex-1 relative">
-                            {carbsData.map((day, index) => {
-                              const maxValue = Math.max(
-                                ...carbsData.map((d) => d.value),
-                                nutritionGoals.carbsGoal || 0,
-                              );
-                              const height =
-                                day.value > 0
-                                  ? (day.value / maxValue) * 100
-                                  : 0;
-
-                              return (
-                                <div
-                                  key={day.date}
-                                  className="absolute bottom-0 flex flex-col items-center"
-                                  style={{
-                                    left: `${(index / (carbsData.length - 1)) * 100}%`,
-                                    transform: "translateX(-50%)",
-                                    width: `${80 / carbsData.length}%`,
-                                    maxWidth: "20px",
-                                    minWidth: "8px",
-                                  }}
-                                >
-                                  <div className="w-full bg-gray-100 rounded-sm relative h-full">
-                                    <div
-                                      className="absolute bottom-0 w-full rounded-sm bg-purple-500"
-                                      style={{ height: `${height}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">No carbs data available</p>
-                    )}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Fat Intake</CardTitle>
-                    <CardDescription>Daily fat consumption</CardDescription>
-                  </CardHeader>
-                  <CardContent className="h-60 flex items-center justify-center">
-                    {fatData.length > 0 && fatData.some((d) => d.value > 0) ? (
-                      <div className="w-full h-full">
-                        <div className="flex flex-col h-full">
-                          <div className="flex-1 relative">
-                            {fatData.map((day, index) => {
-                              const maxValue = Math.max(
-                                ...fatData.map((d) => d.value),
-                                nutritionGoals.fatGoal || 0,
-                              );
-                              const height =
-                                day.value > 0
-                                  ? (day.value / maxValue) * 100
-                                  : 0;
-
-                              return (
-                                <div
-                                  key={day.date}
-                                  className="absolute bottom-0 flex flex-col items-center"
-                                  style={{
-                                    left: `${(index / (fatData.length - 1)) * 100}%`,
-                                    transform: "translateX(-50%)",
-                                    width: `${80 / fatData.length}%`,
-                                    maxWidth: "20px",
-                                    minWidth: "8px",
-                                  }}
-                                >
-                                  <div className="w-full bg-gray-100 rounded-sm relative h-full">
-                                    <div
-                                      className="absolute bottom-0 w-full rounded-sm bg-orange-500"
-                                      style={{ height: `${height}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">No fat data available</p>
-                    )}
-                  </CardContent>
-                </Card>
+                <MacronutrientChart title="Protein intake" chartData={proteinData} description="Daily protein consumption"/>
+                <MacronutrientChart title="Carbohydrate intake" chartData={carbsData} description="Daily carb consumption"/>
+                <MacronutrientChart title="Fat intake" chartData={fatData} description="Daily fat consumption"/>
               </div>
             </>
           )}

@@ -88,7 +88,7 @@ export function CaloriesChart({ data }: Props) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between flex-col md:flex-row gap-2 w-full">
         <div className="flex gap-2 leading-none font-medium">
           Average calories: {avg} kcal
         </div>
