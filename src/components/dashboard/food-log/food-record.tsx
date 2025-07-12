@@ -22,11 +22,11 @@ const formatEntryDateTime = (dateStr: string, timeStr: string) => {
 
 export const FoodRecord = ({ entry, meals }: Props) => {
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-gray-50 transition-colors">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-muted/50 transition-colors">
       <div className="flex items-center gap-3">
         <div>
-          <h3 className="font-medium text-gray-800">{entry.foodName}</h3>
-          <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 mt-1">
+          <h3 className="font-medium text-foreground">{entry.foodName}</h3>
+          <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground mt-1">
             <span>{formatEntryDateTime(entry.entryDate, entry.entryTime)}</span>
             <span className="font-medium">
               {entry.amount}{" "}
@@ -35,23 +35,23 @@ export const FoodRecord = ({ entry, meals }: Props) => {
                 : "serving"}
             </span>
             {entry.protein && (
-              <span className="text-blue-600">
+              <span className="text-blue-600 dark:text-blue-400">
                 {parseFloat(entry.protein).toFixed(0)}g protein
               </span>
             )}
             {entry.carbs && (
-              <span className="text-purple-600">
+              <span className="text-purple-600 dark:text-purple-400">
                 {parseFloat(entry.carbs).toFixed(0)}g carbs
               </span>
             )}
             {entry.fat && (
-              <span className="text-yellow-600">{entry.fat}g fat</span>
+              <span className="text-yellow-600 dark:text-yellow-400">{entry.fat}g fat</span>
             )}
           </div>
         </div>
       </div>
       <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
-        <span className="font-semibold text-gray-800">
+        <span className="font-semibold text-foreground">
           {parseFloat(entry.calories).toFixed(0)} kcal
         </span>
         <DeleteEntryButton entry={entry} />

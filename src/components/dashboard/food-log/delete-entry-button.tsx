@@ -35,7 +35,7 @@ export const DeleteEntryButton = ({ entry }: Props) => {
       variant="ghost"
       size="icon"
       onClick={() => handleDeleteEntry(entry.id)}
-      className="text-gray-400 hover:text-red-500 hover:bg-red-50"
+      className="text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
     >
       <Trash2 className="h-4 w-4" />
     </Button>

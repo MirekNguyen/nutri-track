@@ -421,7 +421,7 @@ export default function MealsPage() {
                     <Label className="text-right">Macros (g)</Label>
                     <div className="col-span-3 grid grid-cols-3 gap-2">
                       <div>
-                        <Label htmlFor="protein" className="text-xs text-gray-500 mb-1 block">
+                        <Label htmlFor="protein" className="text-xs text-muted-foreground mb-1 block">
                           Protein
                         </Label>
                         <Input
@@ -433,7 +433,7 @@ export default function MealsPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="carbs" className="text-xs text-gray-500 mb-1 block">
+                        <Label htmlFor="carbs" className="text-xs text-muted-foreground mb-1 block">
                           Carbs
                         </Label>
                         <Input
@@ -445,7 +445,7 @@ export default function MealsPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="fat" className="text-xs text-gray-500 mb-1 block">
+                        <Label htmlFor="fat" className="text-xs text-muted-foreground mb-1 block">
                           Fat
                         </Label>
                         <Input
@@ -506,7 +506,7 @@ export default function MealsPage() {
           <div className="mb-6 space-y-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
                 <Input
                   placeholder="Search meals..."
                   className="pl-10"

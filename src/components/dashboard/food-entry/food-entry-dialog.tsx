@@ -643,7 +643,7 @@ export const FoodEntryDialog = ({
               <Button
                 variant="outline"
                 size="sm"
-                className="text-green-600"
+                className="text-green-600 dark:text-green-400 bg-transparent"
                 onClick={() => setNewMealDialogOpen(true)}
               >
                 <Plus className="h-4 w-4 mr-1" /> Save as Meal

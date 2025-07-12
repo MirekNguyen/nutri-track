@@ -107,7 +107,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
       <div className="flex justify-between items-center">
         <div className="relative flex-1">
           <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
             size={16}
           />
           <Input
@@ -132,24 +132,24 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
               {filteredMeals.map((meal) => (
                 <div
                   key={meal.id}
-                  className={`p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors ${
+                  className={`p-3 flex justify-between items-center cursor-pointer hover:bg-muted/50 transition-colors ${
                     selectedMealId === meal.id
-                      ? "bg-green-50 border-l-4 border-green-600"
-                      : ""
-                  }`}
+                    ? "bg-green-50 dark:bg-green-950/20 border-l-4 border-green-600 dark:border-green-400"
+                    : ""
+                    }`}
                   onClick={() => setSelectedMealId(meal.id)}
                 >
                   <div>
-                    <h4 className="font-medium">{meal.name}</h4>
-                    <div className="text-sm text-gray-500 flex gap-3 mt-1">
+                      <h4 className="font-medium text-foreground">{meal.name}</h4>
+                      <div className="text-sm text-muted-foreground flex gap-3 mt-1">
                       <span>{meal.calories} cal</span>
-                      <span className="text-blue-600">
+                      <span className="text-blue-600 dark:text-blue-400">
                         {meal.protein}g protein
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-muted-foreground">
                       <span>C: {meal.carbs}g</span> •{" "}
                       <span>F: {meal.fat}g</span>
                     </div>
@@ -158,12 +158,12 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full p-4 text-gray-500">
+            <div className="flex flex-col items-center justify-center h-full p-4 text-muted-foreground">
               <p>No meals found</p>
               <div className="flex gap-2 mt-2">
                 <Button
                   variant="link"
-                  className="text-green-600"
+                  className="text-green-600 dark:text-green-400"
                   onClick={() => setAddFoodTab("custom")}
                 >
                   Add a custom entry
@@ -190,7 +190,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             className="flex-1"
           />
           {selectedMealId && (
-            <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md text-sm text-gray-700 min-w-24">
+            <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
               <span className="font-medium">
                 {meals.find((m) => m.id === selectedMealId)?.unit || "serving"}
               </span>
