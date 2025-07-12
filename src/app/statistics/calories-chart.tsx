@@ -40,7 +40,7 @@ export function CaloriesChart({ data }: Props) {
   const minDate = new Date(Math.min(...data.map(entry => new Date(entry.date).getTime())));
   const maxDate = new Date(Math.max(...data.map(entry => new Date(entry.date).getTime())));
   const daysSpan = differenceInCalendarDays(maxDate, minDate) + 1;
-  const maintenanceCalories = 2000;
+  const maintenanceCalories = 2400;
 
   return (
     <Card>
@@ -93,7 +93,7 @@ export function CaloriesChart({ data }: Props) {
           Average calories: {avg} kcal
         </div>
         <div className="flex gap-2 leading-none font-medium">
-          Total Deficit: {avg * daysSpan} kcal ({(avg * daysSpan / 7700).toFixed(2)} kg)
+          Total Deficit: {(maintenanceCalories - avg) * daysSpan} kcal ({((maintenanceCalories - avg) * daysSpan / 7700).toFixed(2)} kg)
         </div>
         </div>
         <div className="text-muted-foreground leading-none">
