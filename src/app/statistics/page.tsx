@@ -1,18 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { format, subDays, eachDayOfInterval } from "date-fns";
 import { Header } from "../../components/header";
 import { Sidebar } from "../../components/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { getFoodEntries, getFoodEntriesRange } from "../../actions/food-entry-actions";
+import { getFoodEntriesRange } from "../../actions/food-entry-actions";
 import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/hooks/use-sidebar";
-import { FoodEntry } from "@/db/schema";
 import { CaloriesChart } from "./calories-chart";
 import {
   Popover,
@@ -23,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { MacronutrientChart } from "./macronutrient-chart";
 import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
+import { useQuery } from "@tanstack/react-query";
 
 interface DateRange {
   from: Date | undefined;
@@ -33,16 +31,23 @@ export default function StatisticsPage() {
   const [timeRange, setTimeRange] = useState<
     "week" | "month" | "year" | "custom"
   >("week");
-  const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading } = useQuery({
+    queryKey: ["foodEntries", timeRange, customDateRange],
+    queryFn: async () => {
+      const { start, end } = getDateRange();
+      return await getFoodEntriesRange(
+        format(start, "yyyy-MM-dd"),
+        format(end, "yyyy-MM-dd"),
+      );
+    },
+  });
+  const entries = data || [];
 
   const isMobile = useMobile();
-  // Inside the StatisticsPage component, add:
-  const { collapsed } = useSidebar();
 
   // Calculate date range based on selected time range
   const getDateRange = () => {
@@ -64,32 +69,6 @@ export default function StatisticsPage() {
     }
   };
 
-  // Load data from the database
-  useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        // Load food entries for the selected date range
-        const { start, end } = getDateRange();
-        const allEntries = await getFoodEntriesRange(format(start, "yyyy-MM-dd"), format(end, "yyyy-MM-dd"));
-
-        setEntries(allEntries);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load data. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadData();
-  }, [timeRange, customDateRange]);
-
-  // Calculate daily calorie data for the chart
   const getDailyCalorieData = () => {
     const { start, end } = getDateRange();
     const days = eachDayOfInterval({ start, end });
@@ -205,7 +184,7 @@ export default function StatisticsPage() {
         <main
           className={cn(
             "flex-1 p-4 md:p-6 overflow-auto",
-            !isMobile && (collapsed ? "md:ml-16" : "md:ml-64"),
+            !isMobile ? "md:ml-16" : "md:ml-64",
             "transition-all duration-300",
           )}
         >
