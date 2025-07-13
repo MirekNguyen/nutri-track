@@ -4,41 +4,40 @@ import { useState, useEffect } from "react";
 import { format, subDays, eachDayOfInterval } from "date-fns";
 import { Header } from "../../components/header";
 import { Sidebar } from "../../components/sidebar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { getFoodEntries } from "../../actions/food-entry-actions";
+import { getFoodEntries, getFoodEntriesRange } from "../../actions/food-entry-actions";
 import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { FoodEntry } from "@/db/schema";
 import { CaloriesChart } from "./calories-chart";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { MacronutrientChart } from "./macronutrient-chart";
 import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
 
 interface DateRange {
-  from: Date | undefined
-  to: Date | undefined
+  from: Date | undefined;
+  to: Date | undefined;
 }
 
 export default function StatisticsPage() {
-  const [timeRange, setTimeRange] = useState<"week" | "month" | "year" | "custom">("week");
+  const [timeRange, setTimeRange] = useState<
+    "week" | "month" | "year" | "custom"
+  >("week");
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [customDateRange, setCustomDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
-  })
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   const isMobile = useMobile();
@@ -57,11 +56,11 @@ export default function StatisticsPage() {
         return { start: subDays(today, 364), end: today };
       case "custom":
         if (customDateRange.from && customDateRange.to) {
-          return { start: customDateRange.from, end: customDateRange.to }
+          return { start: customDateRange.from, end: customDateRange.to };
         }
-        return { start: subDays(today, 6), end: today }
+        return { start: subDays(today, 6), end: today };
       default:
-        return { start: subDays(today, 6), end: today }
+        return { start: subDays(today, 6), end: today };
     }
   };
 
@@ -72,15 +71,7 @@ export default function StatisticsPage() {
       try {
         // Load food entries for the selected date range
         const { start, end } = getDateRange();
-        const days = eachDayOfInterval({ start, end });
-
-        const allEntries: FoodEntry[] = [];
-
-        // Fetch entries for each day in the range
-        for (const day of days) {
-          const entriesForDay = await getFoodEntries(format(day, "yyyy-MM-dd"));
-          allEntries.push(...entriesForDay);
-        }
+        const allEntries = await getFoodEntriesRange(format(start, "yyyy-MM-dd"), format(end, "yyyy-MM-dd"));
 
         setEntries(allEntries);
       } catch (error) {
@@ -223,19 +214,19 @@ export default function StatisticsPage() {
               Statistics
             </h1>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Tabs
-              value={timeRange}
-              onValueChange={(v) => setTimeRange(v as any)}
-              className="w-full sm:w-auto"
-            >
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="week">Week</TabsTrigger>
-                <TabsTrigger value="month">Month</TabsTrigger>
-                <TabsTrigger value="year">Year</TabsTrigger>
-                <TabsTrigger value="custom">Custom</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            {timeRange === "custom" && (
+              <Tabs
+                value={timeRange}
+                onValueChange={(v) => setTimeRange(v as any)}
+                className="w-full sm:w-auto"
+              >
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="week">Week</TabsTrigger>
+                  <TabsTrigger value="month">Month</TabsTrigger>
+                  <TabsTrigger value="year">Year</TabsTrigger>
+                  <TabsTrigger value="custom">Custom</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {timeRange === "custom" && (
                 <div className="flex gap-2">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -247,15 +238,30 @@ export default function StatisticsPage() {
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {customDateRange.from ? format(customDateRange.from, "MMM d") : <span>From date</span>}
+                        {customDateRange.from ? (
+                          format(customDateRange.from, "MMM d")
+                        ) : (
+                          <span>From date</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={customDateRange.from}
-                        onSelect={(date) => setCustomDateRange((prev) => ({ ...prev, from: date }))}
-                        disabled={(date) => date > new Date() || (customDateRange.to && date > customDateRange.to)}
+                        onSelect={(date) =>
+                          setCustomDateRange((prev) => ({
+                            ...prev,
+                            from: date,
+                          }))
+                        }
+                        disabled={(date) =>
+                          date > new Date() ||
+                          (customDateRange.to && date > customDateRange.to)
+                        }
                         initialFocus
                       />
                     </PopoverContent>
@@ -271,22 +277,34 @@ export default function StatisticsPage() {
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {customDateRange.to ? format(customDateRange.to, "MMM d") : <span>To date</span>}
+                        {customDateRange.to ? (
+                          format(customDateRange.to, "MMM d")
+                        ) : (
+                          <span>To date</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={customDateRange.to}
-                        onSelect={(date) => setCustomDateRange((prev) => ({ ...prev, to: date }))}
-                        disabled={(date) => date > new Date() || (customDateRange.from && date < customDateRange.from)}
+                        onSelect={(date) =>
+                          setCustomDateRange((prev) => ({ ...prev, to: date }))
+                        }
+                        disabled={(date) =>
+                          date > new Date() ||
+                          (customDateRange.from && date < customDateRange.from)
+                        }
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
                 </div>
               )}
-          </div>
+            </div>
           </div>
 
           {isLoading ? (
@@ -304,13 +322,27 @@ export default function StatisticsPage() {
                     (entry) => entry.calories >= 1000,
                   )}
                 />
-                  <MacronutrientDistributionChart macroDistribution={macroDistribution} />
+                <MacronutrientDistributionChart
+                  macroDistribution={macroDistribution}
+                />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <MacronutrientChart title="Protein intake" chartData={proteinData} description="Daily protein consumption"/>
-                <MacronutrientChart title="Carbohydrate intake" chartData={carbsData} description="Daily carb consumption"/>
-                <MacronutrientChart title="Fat intake" chartData={fatData} description="Daily fat consumption"/>
+                <MacronutrientChart
+                  title="Protein intake"
+                  chartData={proteinData}
+                  description="Daily protein consumption"
+                />
+                <MacronutrientChart
+                  title="Carbohydrate intake"
+                  chartData={carbsData}
+                  description="Daily carb consumption"
+                />
+                <MacronutrientChart
+                  title="Fat intake"
+                  chartData={fatData}
+                  description="Daily fat consumption"
+                />
               </div>
             </>
           )}

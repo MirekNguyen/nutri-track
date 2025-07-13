@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { foodEntries, FoodEntry, type NewFoodEntry } from "@/db/schema";
-import { eq, and, asc } from "drizzle-orm";
+import { eq, and, asc, between } from "drizzle-orm";
 import { getCurrentUser } from "./user-actions";
 import { revalidatePath } from "next/cache";
 
@@ -25,6 +25,27 @@ export async function getFoodEntries(
     return entries;
   } catch {
     throw new Error("Failed to get food entries");
+  }
+}
+
+export const getFoodEntriesRange = async (from: string, to: string) => {
+  try {
+    const user = await getCurrentUser();
+
+    const entries = await db
+      .select()
+      .from(foodEntries)
+      .where(
+        and(
+          eq(foodEntries.userId, user.id),
+          between(foodEntries.entryDate, from, to),
+        ),
+      )
+      .orderBy(asc(foodEntries.entryTime));
+    return entries;
+  } catch (error) {
+    console.error("Error fetching food entries range:", error);
+    throw new Error("Failed to get food entries range");
   }
 }
 
