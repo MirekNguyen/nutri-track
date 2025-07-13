@@ -8,7 +8,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { getFoodEntriesRange } from "../../actions/food-entry-actions";
-import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { CaloriesChart } from "./calories-chart";
 import {
@@ -22,10 +21,10 @@ import { MacronutrientChart } from "./macronutrient-chart";
 import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
 import { useQuery } from "@tanstack/react-query";
 
-interface DateRange {
+type DateRange = {
   from: Date | undefined;
   to: Date | undefined;
-}
+};
 
 export default function StatisticsPage() {
   const [timeRange, setTimeRange] = useState<
@@ -47,8 +46,6 @@ export default function StatisticsPage() {
   });
   const entries = data || [];
 
-  const isMobile = useMobile();
-
   // Calculate date range based on selected time range
   const getDateRange = () => {
     const today = new Date();
@@ -69,6 +66,7 @@ export default function StatisticsPage() {
     }
   };
 
+  // Calculate daily calorie data for the chart
   const getDailyCalorieData = () => {
     const { start, end } = getDateRange();
     const days = eachDayOfInterval({ start, end });
@@ -168,11 +166,8 @@ export default function StatisticsPage() {
   };
 
   const dailyCalorieData = getDailyCalorieData();
-  console.log("Daily Calorie Data:", dailyCalorieData);
   const macroDistribution = getMacroDistribution();
-  console.log("Macro Distribution:", macroDistribution);
   const proteinData = getDailyMacroData("protein");
-  console.log("Protein Data:", proteinData);
   const carbsData = getDailyMacroData("carbs");
   const fatData = getDailyMacroData("fat");
 
@@ -184,7 +179,7 @@ export default function StatisticsPage() {
         <main
           className={cn(
             "flex-1 p-4 md:p-6 overflow-auto",
-            !isMobile ? "md:ml-16" : "md:ml-64",
+            "md:ml-64",
             "transition-all duration-300",
           )}
         >
