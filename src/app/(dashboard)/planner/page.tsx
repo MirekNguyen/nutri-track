@@ -21,8 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useMobile } from "@/hooks/use-mobile";
-import { useSidebar } from "@/hooks/use-sidebar";
 
 export default function PlannerPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -30,10 +28,6 @@ export default function PlannerPage() {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const isMobile = useMobile();
-  const { collapsed } = useSidebar();
-
-  // Generate week days starting from Sunday
   const weekStart = startOfWeek(currentDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 

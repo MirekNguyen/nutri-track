@@ -25,12 +25,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { useMobile } from "@/hooks/use-mobile";
-
-// Import the useSidebar hook
-import { useSidebar } from "@/hooks/use-sidebar";
-import { getBodyMeasurements, createBodyMeasurement, deleteBodyMeasurement } from "@/actions/measurement-actions";
-import { getWeightEntries, createWeightEntry, deleteWeightEntry } from "@/actions/weight-actions";
+import {
+  getBodyMeasurements,
+  createBodyMeasurement,
+  deleteBodyMeasurement,
+} from "@/actions/measurement-actions";
+import {
+  getWeightEntries,
+  createWeightEntry,
+  deleteWeightEntry,
+} from "@/actions/weight-actions";
 
 interface WeightEntry {
   id: number;
@@ -66,11 +70,6 @@ export default function ProgressPage() {
   const [newHips, setNewHips] = useState("");
   const [newArms, setNewArms] = useState("");
   const [newThighs, setNewThighs] = useState("");
-
-  const isMobile = useMobile();
-
-  // Inside the ProgressPage component, add:
-  const { collapsed } = useSidebar();
 
   // Load data from the database
   useEffect(() => {

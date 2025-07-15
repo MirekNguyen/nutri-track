@@ -21,17 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pencil } from "lucide-react";
-import { useMobile } from "@/hooks/use-mobile";
-
-// Import the useSidebar hook
-import { useSidebar } from "@/hooks/use-sidebar";
 
 export default function ProfilePage() {
-  const isMobile = useMobile();
-
-  // Inside the ProfilePage component, add:
-  const { collapsed } = useSidebar();
-
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
