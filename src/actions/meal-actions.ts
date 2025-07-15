@@ -96,7 +96,6 @@ export async function updateMeal(
     if (!updatedMeal) {
       throw new Error("Meal not found");
     }
-    revalidatePath("/");
     revalidatePath("/meals");
 
     return updatedMeal;
