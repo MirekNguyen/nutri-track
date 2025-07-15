@@ -71,6 +71,8 @@ import {
   createMeal,
   deleteMeal,
 } from "@/actions/meal-actions";
+import { NewMealDialog } from "@/components/dashboard/meal/new-meal-dialog";
+import { EditMealDialog } from "@/components/dashboard/meal/edit-meal-dialog";
 
 // Update the Meal interface to include the unit field
 interface Meal {
@@ -88,7 +90,6 @@ interface Meal {
 }
 
 export default function MealsPage() {
-  const isMobile = useMobile();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -381,10 +382,12 @@ export default function MealsPage() {
             if (!isOpen) resetForm();
           }}
         >
-          <DialogTrigger asChild>
+          <NewMealDialog>
             <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
               <PlusCircle className="mr-2 h-4 w-4" /> Add Meal
             </Button>
+          </NewMealDialog>
+          <DialogTrigger asChild>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-w-[95vw]">
             <DialogHeader>
@@ -762,14 +765,15 @@ export default function MealsPage() {
                     ))}
                 </div>
                 <div className="flex gap-1">
+                      <EditMealDialog id={meal.id} meal={meal}>
                   <Button
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-gray-500 hover:text-blue-500"
-                    onClick={() => handleEditMeal(meal)}
                   >
                     <Edit size={16} />
                   </Button>
+                      </EditMealDialog>
                   <Button
                     variant="ghost"
                     size="icon"

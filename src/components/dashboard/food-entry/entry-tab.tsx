@@ -15,8 +15,8 @@ import { getMeals } from "@/actions/meal-actions";
 import { createFoodEntry } from "@/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { NewMealDialog } from "./new-meal-dialog";
-import { MealTypeDropdown } from "./meal-type-dropdown";
+import { NewMealDialog } from "../meal/new-meal-dialog";
+import { MealTypeDropdown } from "../meal/meal-type-dropdown";
 
 type Props = {
   submitAction: () => void;

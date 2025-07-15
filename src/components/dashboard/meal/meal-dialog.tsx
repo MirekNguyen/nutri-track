@@ -10,66 +10,46 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { createMeal } from "@/actions/meal-actions";
-import { toast } from "@/components/ui/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import { NewMeal } from "@/db/schema";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UnitDropdown } from "./unit-dropdown";
+import { UnitDropdown } from "../food-entry/unit-dropdown";
+import { ReactNode, useState } from "react";
+import { mealZodSchema } from "./meal-schema";
 
-const newMealSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().nullable(),
-  unit: z.string().default("serving"),
-  calories: z.number({ message: "Number is required" }).min(0),
-  protein: z.number({ message: "Number is required" }).min(0),
-  carbs: z.number({ message: "Number is required" }).min(0),
-  fat: z.number({ message: "Number is required" }).min(0),
-});
+type Props = {
+  defaultValues: Partial<NewMeal>;
+  title: string;
+  onSubmitAction: (data: NewMeal) => Promise<void>;
+  submitText: string;
+  children: ReactNode;
+};
 
-export const NewMealDialog = () => {
-  const defaultValues: Partial<NewMeal> = {
-    unit: "serving",
-  };
+export const MealDialog = ({
+  defaultValues,
+  onSubmitAction,
+  title,
+  submitText,
+  children,
+}: Props) => {
+  const [open, setOpen] = useState(false);
 
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<NewMeal>({ defaultValues, resolver: zodResolver(newMealSchema) });
+  } = useForm<NewMeal>({ defaultValues, resolver: zodResolver(mealZodSchema) });
 
-  const [open, setOpen] = useState(false);
-
-  const onSubmit = async (data: NewMeal) => {
-    try {
-      await createMeal({ ...data });
-
-      queryClient.invalidateQueries({ queryKey: ["getMeals"] });
-      reset(defaultValues);
-      setOpen(false);
-
-      toast({
-        title: "Success",
-        description: "Meal created successfully",
-      });
-    } catch (error) {
-      console.error("Error creating new meal:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create meal. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handleFormSubmit = async (data: NewMeal) => {
+    await onSubmitAction(data);
+    reset(defaultValues);
+    setOpen(false);
   };
 
   return (
@@ -80,20 +60,16 @@ export const NewMealDialog = () => {
         if (!isOpen) reset(defaultValues);
       }}
     >
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-2 whitespace-nowrap">
-          <Plus className="h-4 w-4 mr-1" /> New Meal
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-w-[95vw]">
         <DialogHeader>
-          <DialogTitle>Add New Meal</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             Enter the details of your meal including nutritional information.
           </DialogDescription>
         </DialogHeader>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleFormSubmit)}
           className="space-y-4"
           noValidate
         >
@@ -253,7 +229,7 @@ export const NewMealDialog = () => {
                   Saving...
                 </>
               ) : (
-                "Save"
+                submitText
               )}
             </Button>
           </DialogFooter>

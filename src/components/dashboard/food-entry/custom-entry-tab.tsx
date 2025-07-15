@@ -18,7 +18,7 @@ import { FC } from "react";
 import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MealTypeDropdown } from "./meal-type-dropdown";
+import { MealTypeDropdown } from "../meal/meal-type-dropdown";
 
 const customEntrySchema = z.object({
   foodName: z.string().min(1, "Food name is required"),
