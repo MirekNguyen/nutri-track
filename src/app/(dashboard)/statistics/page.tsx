@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { format, subDays, eachDayOfInterval } from "date-fns";
-import { Header } from "../../components/header";
-import { Sidebar } from "../../components/sidebar";
+import { Header } from "../../../components/header";
+import { Sidebar } from "../../../components/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
-import { getFoodEntriesRange } from "../../actions/food-entry-actions";
 import { cn } from "@/lib/utils";
 import { CaloriesChart } from "./calories-chart";
 import {
@@ -20,6 +19,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { MacronutrientChart } from "./macronutrient-chart";
 import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
 import { useQuery } from "@tanstack/react-query";
+import { getFoodEntriesRange } from "@/actions/food-entry-actions";
 
 type DateRange = {
   from: Date | undefined;
