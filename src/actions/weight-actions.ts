@@ -60,3 +60,4 @@ export async function deleteWeightEntry(id: number) {
     throw new Error("Failed to delete weight entry")
   }
 }
+

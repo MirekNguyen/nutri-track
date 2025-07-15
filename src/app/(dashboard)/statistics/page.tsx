@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import { format, subDays, eachDayOfInterval } from "date-fns";
-import { Header } from "../../../components/header";
-import { Sidebar } from "../../../components/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { CaloriesChart } from "./calories-chart";
 import {
@@ -172,157 +169,144 @@ export default function StatisticsPage() {
   const fatData = getDailyMacroData("fat");
 
   return (
-    <div className="min-h-screen bg-inherit flex flex-col">
-      <Header />
-      <div className="flex flex-col md:flex-row flex-1">
-        <Sidebar />
-        <main
-          className={cn(
-            "flex-1 p-4 md:p-6 overflow-auto",
-            "md:ml-64",
-            "transition-all duration-300",
-          )}
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Statistics
-            </h1>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Tabs
-                value={timeRange}
-                onValueChange={(v) => setTimeRange(v as "week" | "month" | "year" | "custom")}
-                className="w-full sm:w-auto"
-              >
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="week">Week</TabsTrigger>
-                  <TabsTrigger value="month">Month</TabsTrigger>
-                  <TabsTrigger value="year">Year</TabsTrigger>
-                  <TabsTrigger value="custom">Custom</TabsTrigger>
-                </TabsList>
-              </Tabs>
-              {timeRange === "custom" && (
-                <div className="flex gap-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
-                          !customDateRange.from && "text-muted-foreground",
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {customDateRange.from ? (
-                          format(customDateRange.from, "MMM d")
-                        ) : (
-                          <span>From date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
-                      align="start"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={customDateRange.from}
-                        onSelect={(date) =>
-                          setCustomDateRange((prev) => ({
-                            ...prev,
-                            from: date,
-                          }))
-                        }
-                        disabled={(date) =>
-                          date > new Date() ||
-                          (customDateRange.to && date > customDateRange.to)
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+    <>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          Statistics
+        </h1>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Tabs
+            value={timeRange}
+            onValueChange={(v) =>
+              setTimeRange(v as "week" | "month" | "year" | "custom")
+            }
+            className="w-full sm:w-auto"
+          >
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="week">Week</TabsTrigger>
+              <TabsTrigger value="month">Month</TabsTrigger>
+              <TabsTrigger value="year">Year</TabsTrigger>
+              <TabsTrigger value="custom">Custom</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          {timeRange === "custom" && (
+            <div className="flex gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
+                      !customDateRange.from && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {customDateRange.from ? (
+                      format(customDateRange.from, "MMM d")
+                    ) : (
+                      <span>From date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={customDateRange.from}
+                    onSelect={(date) =>
+                      setCustomDateRange((prev) => ({
+                        ...prev,
+                        from: date,
+                      }))
+                    }
+                    disabled={(date) =>
+                      date > new Date() ||
+                      (customDateRange.to && date > customDateRange.to)
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
 
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
-                          !customDateRange.to && "text-muted-foreground",
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {customDateRange.to ? (
-                          format(customDateRange.to, "MMM d")
-                        ) : (
-                          <span>To date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
-                      align="start"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={customDateRange.to}
-                        onSelect={(date) =>
-                          setCustomDateRange((prev) => ({ ...prev, to: date }))
-                        }
-                        disabled={(date) =>
-                          date > new Date() ||
-                          (customDateRange.from && date < customDateRange.from)
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              )}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-[140px] justify-start text-left font-normal border-2 border-gray-300 dark:border-gray-600",
+                      !customDateRange.to && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {customDateRange.to ? (
+                      format(customDateRange.to, "MMM d")
+                    ) : (
+                      <span>To date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto p-0 border-2 border-gray-200 dark:border-gray-600"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={customDateRange.to}
+                    onSelect={(date) =>
+                      setCustomDateRange((prev) => ({ ...prev, to: date }))
+                    }
+                    disabled={(date) =>
+                      date > new Date() ||
+                      (customDateRange.from && date < customDateRange.from)
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
+          )}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <span className="ml-2 text-lg text-gray-600">
+            Loading statistics...
+          </span>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <CaloriesChart
+              data={dailyCalorieData.filter((entry) => entry.calories >= 1000)}
+            />
+            <MacronutrientDistributionChart
+              macroDistribution={macroDistribution}
+            />
           </div>
 
-          {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-green-600" />
-              <span className="ml-2 text-lg text-gray-600">
-                Loading statistics...
-              </span>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <CaloriesChart
-                  data={dailyCalorieData.filter(
-                    (entry) => entry.calories >= 1000,
-                  )}
-                />
-                <MacronutrientDistributionChart
-                  macroDistribution={macroDistribution}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <MacronutrientChart
-                  title="Protein intake"
-                  chartData={proteinData}
-                  description="Daily protein consumption"
-                />
-                <MacronutrientChart
-                  title="Carbohydrate intake"
-                  chartData={carbsData}
-                  description="Daily carb consumption"
-                />
-                <MacronutrientChart
-                  title="Fat intake"
-                  chartData={fatData}
-                  description="Daily fat consumption"
-                />
-              </div>
-            </>
-          )}
-        </main>
-      </div>
-      <Toaster />
-    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <MacronutrientChart
+              title="Protein intake"
+              chartData={proteinData}
+              description="Daily protein consumption"
+            />
+            <MacronutrientChart
+              title="Carbohydrate intake"
+              chartData={carbsData}
+              description="Daily carb consumption"
+            />
+            <MacronutrientChart
+              title="Fat intake"
+              chartData={fatData}
+              description="Daily fat consumption"
+            />
+          </div>
+        </>
+      )}
+    </>
   );
 }
