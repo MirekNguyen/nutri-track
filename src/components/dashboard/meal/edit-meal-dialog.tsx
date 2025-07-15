@@ -3,13 +3,13 @@
 import { updateMeal } from "@/actions/meal-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Meal, NewMeal } from "@/db/schema";
+import { NewMeal } from "@/db/schema";
 import { MealDialog } from "../meal/meal-dialog";
 import { FC, ReactNode } from "react";
 
 type Props = {
   id: number;
-  meal: Meal;
+  meal: Partial<NewMeal>;
   children: ReactNode;
 };
 

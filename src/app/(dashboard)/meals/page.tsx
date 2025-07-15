@@ -1,11 +1,8 @@
 "use client";
 
-import { DialogTrigger } from "@/components/ui/dialog";
-
 import { useState, useEffect } from "react";
 import {
   Search,
-  PlusCircle,
   Filter,
   ChevronDown,
   X,
@@ -23,17 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -54,45 +42,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/use-toast";
-import { useMobile } from "@/hooks/use-mobile";
-
-// Add these imports
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   getMeals,
   toggleFavoriteMeal,
-  updateMeal,
-  createMeal,
   deleteMeal,
 } from "@/actions/meal-actions";
-import { NewMealDialog } from "@/components/dashboard/meal/new-meal-dialog";
 import { EditMealDialog } from "@/components/dashboard/meal/edit-meal-dialog";
-
-// Update the Meal interface to include the unit field
-interface Meal {
-  id: number;
-  name: string;
-  unit: string;
-  description: string | null;
-  calories: number;
-  protein: number | null;
-  carbs: number | null;
-  fat: number | null;
-  tags: string[] | null;
-  isFavorite: boolean;
-  createdAt: string;
-}
+import { Meal } from "@/db/schema";
 
 export default function MealsPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -100,26 +60,9 @@ export default function MealsPage() {
   const [sortBy, setSortBy] = useState<
     "name" | "calories" | "protein" | "createdAt"
   >("createdAt");
-  const [open, setOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [currentMealId, setCurrentMealId] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<Meal | null>(null);
 
-  // Form state
-  const [newName, setNewName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newCalories, setNewCalories] = useState("");
-  const [newProtein, setNewProtein] = useState("");
-  const [newCarbs, setNewCarbs] = useState("");
-  const [newFat, setNewFat] = useState("");
-  const [newTags, setNewTags] = useState("");
-
-  // Add state for the new unit field
-  // Add this after the other state declarations
-  const [newUnit, setNewUnit] = useState("serving");
-
-  // All available tags from meals
   const allTags = Array.from(
     new Set(
       meals
@@ -212,102 +155,6 @@ export default function MealsPage() {
     }
   };
 
-  // Update the handleAddMeal function to include the unit field
-  const handleAddMeal = async () => {
-    if (newName.trim() === "" || newCalories.trim() === "") return;
-
-    setIsSubmitting(true);
-
-    try {
-      const calories = Number.parseFloat(newCalories);
-      const protein = newProtein ? Number.parseFloat(newProtein) : null;
-      const carbs = newCarbs ? Number.parseFloat(newCarbs) : null;
-      const fat = newFat ? Number.parseFloat(newFat) : null;
-
-      if (isNaN(calories)) throw new Error("Invalid calories value");
-
-      // Parse tags
-      const tags = newTags.trim()
-        ? newTags.split(",").map((tag) => tag.trim())
-        : [];
-
-      if (editMode && currentMealId) {
-        console.log("Updating meal with ID:", currentMealId);
-        console.log("Calories:", calories);
-        console.log("Protein:", protein);
-        // Update existing meal
-        const updatedMeal = await updateMeal(currentMealId, {
-          name: newName,
-          unit: newUnit,
-          description: newDescription || null,
-          calories,
-          protein,
-          carbs,
-          fat,
-          tags: tags.length > 0 ? tags : null,
-        });
-
-        // Update the meal in the list
-        setMeals(
-          meals.map((meal) => (meal.id === currentMealId ? updatedMeal : meal)),
-        );
-
-        toast({
-          title: "Success",
-          description: "Meal updated successfully",
-        });
-      } else {
-        // Create new meal
-        const newMeal = await createMeal({
-          name: newName,
-          unit: newUnit,
-          description: newDescription || null,
-          calories,
-          protein,
-          carbs,
-          fat,
-          tags: tags.length > 0 ? tags : null,
-          isFavorite: false,
-        });
-
-        // Add the new meal to the list
-        setMeals([newMeal, ...meals]);
-
-        toast({
-          title: "Success",
-          description: "Meal added successfully",
-        });
-      }
-
-      resetForm();
-      setOpen(false);
-    } catch (error) {
-      console.error("Error adding/updating meal:", error);
-      toast({
-        title: "Error",
-        description: `Failed to ${editMode ? "update" : "add"} meal. Please try again.`,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Update the handleEditMeal function to set the unit field
-  const handleEditMeal = (meal: Meal) => {
-    setEditMode(true);
-    setCurrentMealId(meal.id);
-    setNewName(meal.name);
-    setNewUnit(meal.unit || "serving");
-    setNewDescription(meal.description || "");
-    setNewCalories(meal.calories.toString());
-    setNewProtein(meal.protein?.toString() || "");
-    setNewCarbs(meal.carbs?.toString() || "");
-    setNewFat(meal.fat?.toString() || "");
-    setNewTags(meal.tags?.join(", ") || "");
-    setOpen(true);
-  };
-
   const handleDeleteMeal = async () => {
     if (!mealToDelete) return;
 
@@ -352,209 +199,10 @@ export default function MealsPage() {
     setSortBy("createdAt");
   };
 
-  // Update the resetForm function to reset the unit field
-  const resetForm = () => {
-    setNewName("");
-    setNewDescription("");
-    setNewCalories("");
-    setNewProtein("");
-    setNewCarbs("");
-    setNewFat("");
-    setNewTags("");
-    setNewUnit("serving");
-    setEditMode(false);
-    setCurrentMealId(null);
-  };
-
-  // Add the unit field to the meal form in the DialogContent
-  // Add this after the name input and before the description textarea
-  // Remove this line:
-  // const { SelectContent, SelectItem, SelectTrigger, SelectValue } = require("@radix-ui/react-select")
-
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Meals</h1>
-        <Dialog
-          open={open}
-          onOpenChange={(isOpen) => {
-            setOpen(isOpen);
-            if (!isOpen) resetForm();
-          }}
-        >
-          <NewMealDialog>
-            <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" /> Add Meal
-            </Button>
-          </NewMealDialog>
-          <DialogTrigger asChild>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] max-w-[95vw]">
-            <DialogHeader>
-              <DialogTitle>
-                {editMode ? "Edit Meal" : "Add New Meal"}
-              </DialogTitle>
-              <DialogDescription>
-                {editMode
-                  ? "Update the details of your meal"
-                  : "Enter the details of your meal including nutritional information."}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  placeholder="e.g., Grilled Chicken Salad"
-                  className="col-span-3"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="unit" className="text-right">
-                  Unit
-                </Label>
-                <Select
-                  value={newUnit}
-                  onValueChange={(value) => setNewUnit(value)}
-                  className="col-span-3"
-                >
-                  <SelectTrigger id="unit">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="serving">serving</SelectItem>
-                    <SelectItem value="g">grams (g)</SelectItem>
-                    <SelectItem value="ml">milliliters (ml)</SelectItem>
-                    <SelectItem value="oz">ounces (oz)</SelectItem>
-                    <SelectItem value="cup">cup</SelectItem>
-                    <SelectItem value="tbsp">tablespoon</SelectItem>
-                    <SelectItem value="tsp">teaspoon</SelectItem>
-                    <SelectItem value="piece">piece</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="description" className="text-right pt-2">
-                  Description
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder="Describe your meal..."
-                  className="col-span-3"
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="calories" className="text-right">
-                  Calories
-                </Label>
-                <Input
-                  id="calories"
-                  type="number"
-                  placeholder="e.g., 350"
-                  className="col-span-3"
-                  value={newCalories}
-                  onChange={(e) => setNewCalories(e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Macros (g)</Label>
-                <div className="col-span-3 grid grid-cols-3 gap-2">
-                  <div>
-                    <Label
-                      htmlFor="protein"
-                      className="text-xs text-muted-foreground mb-1 block"
-                    >
-                      Protein
-                    </Label>
-                    <Input
-                      id="protein"
-                      type="number"
-                      placeholder="e.g., 30"
-                      value={newProtein}
-                      onChange={(e) => setNewProtein(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="carbs"
-                      className="text-xs text-muted-foreground mb-1 block"
-                    >
-                      Carbs
-                    </Label>
-                    <Input
-                      id="carbs"
-                      type="number"
-                      placeholder="e.g., 40"
-                      value={newCarbs}
-                      onChange={(e) => setNewCarbs(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="fat"
-                      className="text-xs text-muted-foreground mb-1 block"
-                    >
-                      Fat
-                    </Label>
-                    <Input
-                      id="fat"
-                      type="number"
-                      placeholder="e.g., 15"
-                      value={newFat}
-                      onChange={(e) => setNewFat(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="tags" className="text-right">
-                  Tags
-                </Label>
-                <Input
-                  id="tags"
-                  placeholder="e.g., high-protein, lunch (comma separated)"
-                  className="col-span-3"
-                  value={newTags}
-                  onChange={(e) => setNewTags(e.target.value)}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  resetForm();
-                  setOpen(false);
-                }}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="bg-green-600 hover:bg-green-700"
-                onClick={handleAddMeal}
-                disabled={isSubmitting || !newName || !newCalories}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {editMode ? "Updating..." : "Saving..."}
-                  </>
-                ) : editMode ? (
-                  "Update Meal"
-                ) : (
-                  "Save Meal"
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
 
       <div className="mb-6 space-y-4">
@@ -765,15 +413,15 @@ export default function MealsPage() {
                     ))}
                 </div>
                 <div className="flex gap-1">
-                      <EditMealDialog id={meal.id} meal={meal}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-gray-500 hover:text-blue-500"
-                  >
-                    <Edit size={16} />
-                  </Button>
-                      </EditMealDialog>
+                  <EditMealDialog id={meal.id} meal={meal}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-gray-500 hover:text-blue-500"
+                    >
+                      <Edit size={16} />
+                    </Button>
+                  </EditMealDialog>
                   <Button
                     variant="ghost"
                     size="icon"
