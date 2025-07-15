@@ -27,19 +27,20 @@ export const MacronutrientStats = async ({ date }: Props) => {
     <>
       <Card
         className={cn(
-          "shadow-sm hover:shadow-md transition-shadow",
+          "border-l-4 shadow-sm hover:shadow-md transition-shadow",
+          "bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/20 dark:to-green-900/10",
           totalCalories > nutritionGoals.calorieGoal
             ? "border-red-300"
-            : "border-green-300",
+            : "border-green-300 dark:border-green-700",
         )}
       >
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-gray-500 flex items-center justify-between">
+          <CardTitle className="text-sm font-medium text-foreground flex items-center justify-between">
             Calories
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-gray-400"
+              className="h-6 w-6 text-muted-foreground"
             >
               <Info size={14} />
             </Button>
@@ -50,11 +51,11 @@ export const MacronutrientStats = async ({ date }: Props) => {
             <div className="text-2xl md:text-3xl font-bold text-green-600">
               {totalCalories}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted-foreground">
               / {nutritionGoals.calorieGoal}
             </div>
           </div>
-          <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
             <div
               className={`h-full ${totalCalories > nutritionGoals.calorieGoal ? "bg-red-500" : "bg-green-500"}`}
               style={{
@@ -62,29 +63,29 @@ export const MacronutrientStats = async ({ date }: Props) => {
               }}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             {Math.round((totalCalories / nutritionGoals.calorieGoal) * 100)}% of
             daily goal
           </p>
         </CardContent>
       </Card>
 
-      <Card className="border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-l-4 border-blue-600 dark:border-blue-400 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-gray-500">
+          <CardTitle className="text-sm font-medium text-foreground">
             Protein
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-blue-600">
+            <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
               {macrosData.protein.toFixed(0)}g
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted-foreground">
               / {nutritionGoals.proteinGoal}g
             </div>
           </div>
-          <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-500"
               style={{
@@ -92,29 +93,29 @@ export const MacronutrientStats = async ({ date }: Props) => {
               }}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-2 flex items-center">
+          <p className="text-xs text-muted-foreground mt-2 flex items-center">
             <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
             Important for muscle recovery
           </p>
         </CardContent>
       </Card>
 
-      <Card className="border-l-4 border-purple-600 shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-l-4 border-purple-600 dark:border-purple-400 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-gray-500">
+          <CardTitle className="text-sm font-medium text-foreground">
             Carbs
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-purple-600">
+            <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
               {macrosData.carbs.toFixed(0)}g
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted-foreground">
               / {nutritionGoals.carbsGoal}g
             </div>
           </div>
-          <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-purple-500"
               style={{
@@ -122,7 +123,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               }}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             {Math.round(
               (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100,
             )}
@@ -131,22 +132,22 @@ export const MacronutrientStats = async ({ date }: Props) => {
         </CardContent>
       </Card>
 
-      <Card className="border-l-4 border-yellow-600 shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-l-4 border-yellow-600 dark:border-yellow-400 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-gray-500">
+          <CardTitle className="text-sm font-medium text-foreground">
             Fats
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-yellow-600">
+            <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
               {macrosData.fat}g
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted-foreground">
               / {nutritionGoals.fatGoal}g
             </div>
           </div>
-          <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-yellow-500"
               style={{
@@ -154,7 +155,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               }}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}
             % of daily goal
           </p>
