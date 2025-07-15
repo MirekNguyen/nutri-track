@@ -42,13 +42,12 @@ import { Toaster } from "@/components/ui/toaster"
 import { useMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 
-import { Header } from "../../components/header"
-import { Sidebar } from "../../components/sidebar"
-
-import { getMeals, createMeal, toggleFavoriteMeal, updateMeal, deleteMeal } from "../../actions/meal-actions"
 
 // Add these imports
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Header } from "@/components/header"
+import { Sidebar } from "@/components/sidebar"
+import { getMeals, toggleFavoriteMeal, updateMeal, createMeal, deleteMeal } from "@/actions/meal-actions"
 
 // Update the Meal interface to include the unit field
 interface Meal {

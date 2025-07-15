@@ -190,7 +190,7 @@ export default function StatisticsPage() {
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Tabs
                 value={timeRange}
-                onValueChange={(v) => setTimeRange(v as any)}
+                onValueChange={(v) => setTimeRange(v as "week" | "month" | "year" | "custom")}
                 className="w-full sm:w-auto"
               >
                 <TabsList className="grid w-full grid-cols-4">

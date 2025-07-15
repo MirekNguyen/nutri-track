@@ -1,4 +1,4 @@
-import { CalorieTracker } from "../components/dashboard/calorie-tracker";
+import { CalorieTracker } from "@/components/dashboard/calorie-tracker";
 import { format } from "date-fns";
 
 type Props = {
