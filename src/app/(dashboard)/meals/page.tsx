@@ -442,7 +442,7 @@ export default function MealsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the meal "{mealToDelete?.name}". This
+              This will permanently delete the meal &quot;{mealToDelete?.name}&quot;. This
               action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
