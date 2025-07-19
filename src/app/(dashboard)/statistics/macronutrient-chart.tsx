@@ -35,9 +35,11 @@ type Props = {
   title: string;
   description: string;
   chartData: ChartDataEntry[];
+  footer: string;
+  numberOfDays: number;
 };
 
-export function MacronutrientChart({ chartData, title, description }: Props) {
+export function MacronutrientChart({ chartData, title, description, footer, numberOfDays }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -69,10 +71,10 @@ export function MacronutrientChart({ chartData, title, description }: Props) {
       {chartData.length > 0 && (
         <CardFooter className="flex-col items-start gap-2 text-sm">
           <div className="flex gap-2 leading-none font-medium">
-            Trending up by 5.2% this week <TrendingUp className="h-4 w-4" />
+            {footer} <TrendingUp className="h-4 w-4" />
           </div>
           <div className="text-muted-foreground leading-none">
-            Showing values for the last 7 days
+            Showing values for the last {numberOfDays} days
           </div>
         </CardFooter>
       )}

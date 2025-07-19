@@ -293,15 +293,21 @@ export default function StatisticsPage() {
               title="Protein intake"
               chartData={proteinData}
               description="Daily protein consumption"
+              footer={`Average protein intake ${macroDistribution.protein} g`}
+              numberOfDays={dailyCalorieData.length}
             />
             <MacronutrientChart
               title="Carbohydrate intake"
               chartData={carbsData}
               description="Daily carb consumption"
+              footer={`Average carb intake ${macroDistribution.protein} g`}
+              numberOfDays={dailyCalorieData.length}
             />
             <MacronutrientChart
               title="Fat intake"
               chartData={fatData}
+              footer={`Average fat intake ${macroDistribution.protein} g`}
+              numberOfDays={dailyCalorieData.length}
               description="Daily fat consumption"
             />
           </div>
