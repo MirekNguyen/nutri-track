@@ -15,7 +15,7 @@ export async function getUserProfile() {
 
     if (!profile) {
       // Return null if no profile exists
-      return null
+      throw new Error("User profile not found")
     }
 
     return profile

@@ -1,43 +1,68 @@
-"use server"
+"use server";
 
-import { db } from "@/db"
-import { users } from "@/db/schema"
-import { auth } from "@clerk/nextjs/server"
-import { eq } from "drizzle-orm"
+import { db } from "@/db";
+import { User, users, weightEntries } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 
-// For demo purposes, we'll use a fixed user ID
-// In a real app, you would get this from authentication
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<User> {
   try {
-    // Use db.select instead of db.query for type safety
-    const result = await db.select().from(users).limit(1)
-    const clerkUser = await auth();
-    console.log("Clerk user:", clerkUser.userId);
-    const user = result[0]
+    // const clerkUser = await auth();
+    const result = await db.select().from(users).limit(1);
+    const user = result[0];
 
     if (!user) {
-      throw new Error("User not found")
+      throw new Error("User not found");
     }
 
-    return user
+    return user;
   } catch (error) {
-    console.error("Error getting current user:", error)
-    throw new Error("Failed to get current user")
+    console.error("Error getting current user:", error);
+    throw new Error("Failed to get current user");
   }
 }
 
 export async function getUserById(id: number) {
   try {
-    const result = await db.select().from(users).where(eq(users.id, id))
-    const user = result[0]
+    const result = await db.select().from(users).where(eq(users.id, id));
+    const user = result[0];
 
     if (!user) {
-      throw new Error("User not found")
+      throw new Error("User not found");
     }
 
-    return user
+    return user;
   } catch (error) {
-    console.error("Error getting user:", error)
-    throw new Error("Failed to get user")
+    console.error("Error getting user:", error);
+    throw new Error("Failed to get user");
   }
 }
+
+export const getUserData = async () => {
+  try {
+    const user = await db.query.users.findFirst({
+      with: {
+        weightEntries: {
+          orderBy: desc(weightEntries.entryDate),
+        },
+      },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const weight = parseFloat(user?.weightEntries[0]?.weight ?? "0");
+    const height = user?.height || 0;
+    const age = user?.age || 0;
+    const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    const tdee = bmr * 1.4;
+    const proteinGoal = 1.8 * weight;
+    return {
+      weight,
+      bmr,
+      tdee,
+      proteinGoal,
+      user,
+    }
+  } catch (error) {
+    console.error("Error getting user data:", error);
+  }
+};

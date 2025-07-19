@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   serial,
@@ -203,3 +204,14 @@ export type NewMealPlan = z.infer<typeof insertMealPlanSchema>;
 
 export type UserSettings = z.infer<typeof selectUserSettingsSchema>;
 export type NewUserSettings = z.infer<typeof insertUserSettingsSchema>;
+
+export const weightEntriesRelations = relations(weightEntries, ({ one }) => ({
+  user: one(users, {
+    fields: [weightEntries.userId],
+    references: [users.id],
+  }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  weightEntries: many(weightEntries),
+}));
