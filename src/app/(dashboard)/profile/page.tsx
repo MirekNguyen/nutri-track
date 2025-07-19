@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,8 +19,11 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pencil } from "lucide-react";
+import { getCurrentUser } from "@/actions/user-actions";
+import { format } from "date-fns";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const user = await getCurrentUser();
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
@@ -41,7 +42,7 @@ export default function ProfilePage() {
               <div className="relative mb-6">
                 <Avatar className="h-32 w-32">
                   <AvatarImage
-                    src="/placeholder.svg?height=128&width=128"
+                    src={"/placeholder.svg?height=128&width=128"}
                     alt="Profile"
                   />
                   <AvatarFallback className="text-4xl">JD</AvatarFallback>
@@ -54,12 +55,12 @@ export default function ProfilePage() {
                   <Pencil className="h-4 w-4" />
                 </Button>
               </div>
-              <h2 className="text-xl font-bold">John Doe</h2>
-              <p className="text-gray-500 mb-4">john.doe@example.com</p>
+              <h2 className="text-xl font-bold">{user.name}</h2>
+              <p className="text-gray-500 mb-4">{user.email}</p>
               <div className="grid grid-cols-2 gap-4 w-full">
                 <div className="bg-gray-50 p-3 rounded-md text-center">
                   <p className="text-sm text-gray-500">Member Since</p>
-                  <p className="font-medium">Jan 2025</p>
+                  <p className="font-medium">{format(user.createdAt ?? new Date(), 'MMM yyyy')}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-md text-center">
                   <p className="text-sm text-gray-500">Streak</p>
