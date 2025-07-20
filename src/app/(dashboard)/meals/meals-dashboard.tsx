@@ -128,7 +128,7 @@ export default function MealsDashboard({ meals }: Props) {
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Meals</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Meals</h1>
         <NewMealDialog>
           <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
             <PlusCircle className="mr-2 h-4 w-4" /> Add Meal
