@@ -45,7 +45,7 @@ export const FoodRecord = ({ entry, meals }: Props) => {
               </span>
             )}
             {entry.fat && (
-              <span className="text-yellow-600 dark:text-yellow-400">{entry.fat}g fat</span>
+              <span className="text-yellow-600 dark:text-yellow-400">{parseFloat(entry.fat).toFixed(0)}g fat</span>
             )}
           </div>
         </div>

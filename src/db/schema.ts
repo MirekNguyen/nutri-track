@@ -65,7 +65,7 @@ export const foodEntries = pgTable("food_entries", {
   calories: numeric("calories", { precision: 10, scale: 2 }).notNull(),
   protein: numeric("protein", { precision: 10, scale: 2 }).notNull(),
   carbs: numeric("carbs", { precision: 10, scale: 2 }).notNull(),
-  fat: integer("fat").notNull(),
+  fat: numeric("fat", {precision: 10, scale: 2}).notNull(),
   entryDate: varchar("entry_date", { length: 10 }).notNull(), // Store as YYYY-MM-DD string
   entryTime: varchar("entry_time", { length: 8 }).notNull(), // Store as HH:MM:SS string
   createdAt: timestamp("created_at").defaultNow(),
