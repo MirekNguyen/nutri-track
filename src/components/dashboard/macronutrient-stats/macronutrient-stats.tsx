@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { macros } from "../helpers/macros";
 import { getFoodEntries } from "@/actions/food-entry-actions";
+import { getUserData } from "@/actions/user-actions";
 
 type Props = {
   date: string;
@@ -11,6 +12,7 @@ type Props = {
 
 export const MacronutrientStats = async ({ date }: Props) => {
   const entries = await getFoodEntries(date);
+  const userData = await getUserData();
   const totalCalories = entries.reduce(
     (sum, entry) => sum + parseFloat(entry.calories),
     0,
@@ -18,8 +20,8 @@ export const MacronutrientStats = async ({ date }: Props) => {
   const macrosData = macros(entries);
 
   const nutritionGoals = {
-    calorieGoal: 2000,
-    proteinGoal: 150,
+    calorieGoal: userData?.calorieGoal ?? 2000,
+    proteinGoal: userData?.proteinGoal ?? 150,
     carbsGoal: 200,
     fatGoal: 65,
   };
@@ -49,10 +51,10 @@ export const MacronutrientStats = async ({ date }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-green-600">
-              {totalCalories}
+              {totalCalories} kcal
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.calorieGoal}
+              / {nutritionGoals.calorieGoal.toFixed(0)} kcal
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
@@ -141,7 +143,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
-              {macrosData.fat}g
+              {parseFloat(macrosData.fat)}g
             </div>
             <div className="text-sm text-muted-foreground">
               / {nutritionGoals.fatGoal}g

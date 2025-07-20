@@ -53,12 +53,14 @@ export const getUserData = async () => {
     const height = user?.height || 0;
     const age = user?.age || 0;
     const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-    const tdee = bmr * 1.4;
+    const tdee = bmr * 1.5;
     const proteinGoal = 1.8 * weight;
+    const calorieGoal = tdee - 500;
     return {
       weight,
       bmr,
       tdee,
+      calorieGoal,
       proteinGoal,
       user,
     }
