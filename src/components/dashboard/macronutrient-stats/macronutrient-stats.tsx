@@ -129,7 +129,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
             {Math.round(
               (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100,
             )}
-            % of daily goal
+            % of daily limit
           </p>
         </CardContent>
       </Card>
@@ -159,7 +159,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}
-            % of daily goal
+            % of daily limit
           </p>
         </CardContent>
       </Card>
