@@ -16,7 +16,8 @@ import type { z } from "zod";
 // Users table
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
+  firstName: varchar("first_name", { length: 100 }),
+  lastName: varchar("last_name", { length: 100 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   age: integer("age"),
   gender: varchar("gender", { length: 50 }),

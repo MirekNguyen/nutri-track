@@ -55,17 +55,13 @@ export default async function ProfilePage() {
                   <Pencil className="h-4 w-4" />
                 </Button>
               </div>
-              <h2 className="text-xl font-bold">{user.name}</h2>
+              <h2 className="text-xl font-bold">{user.firstName + " " + user.lastName}</h2>
               <p className="text-gray-500 mb-4">{user.email}</p>
-              <div className="grid grid-cols-2 gap-4 w-full">
-                <div className="bg-gray-50 p-3 rounded-md text-center">
+              <div className="grid grid-cols-1 gap-4 w-full">
+                <Card className="bg-background p-3 rounded-md text-center">
                   <p className="text-sm text-gray-500">Member Since</p>
                   <p className="font-medium">{format(user.createdAt ?? new Date(), 'MMM yyyy')}</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-md text-center">
-                  <p className="text-sm text-gray-500">Streak</p>
-                  <p className="font-medium">24 days</p>
-                </div>
+                </Card>
               </div>
             </CardContent>
             <CardFooter className="flex justify-center border-t pt-6">
@@ -98,7 +94,7 @@ export default async function ProfilePage() {
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
                         id="firstName"
-                        defaultValue="John"
+                        defaultValue={user.firstName ?? "John"}
                         className="mt-1"
                       />
                     </div>
@@ -106,7 +102,7 @@ export default async function ProfilePage() {
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input
                         id="lastName"
-                        defaultValue="Doe"
+                        defaultValue={user.lastName ?? "Doe"}
                         className="mt-1"
                       />
                     </div>
@@ -116,7 +112,7 @@ export default async function ProfilePage() {
                     <Input
                       id="email"
                       type="email"
-                      defaultValue="john.doe@example.com"
+                      defaultValue={user.email}
                       className="mt-1"
                     />
                   </div>
@@ -126,7 +122,7 @@ export default async function ProfilePage() {
                       <Input
                         id="age"
                         type="number"
-                        defaultValue="32"
+                        defaultValue={user.age ?? 30}
                         className="mt-1"
                       />
                     </div>
@@ -151,7 +147,7 @@ export default async function ProfilePage() {
                       <Input
                         id="height"
                         type="number"
-                        defaultValue="180"
+                        defaultValue={user.height ?? 180}
                         className="mt-1"
                       />
                     </div>
