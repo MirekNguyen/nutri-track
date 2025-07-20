@@ -22,8 +22,8 @@ export const MacronutrientStats = async ({ date }: Props) => {
   const nutritionGoals = {
     calorieGoal: userData?.calorieGoal ?? 2000,
     proteinGoal: userData?.proteinGoal ?? 150,
-    carbsGoal: 200,
-    fatGoal: 65,
+    carbsGoal: userData?.carbsGoal ?? 200,
+    fatGoal: userData?.fatsGoal ?? 65,
   };
   return (
     <>
@@ -114,7 +114,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               {macrosData.carbs.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.carbsGoal}g
+              / {nutritionGoals.carbsGoal.toFixed(1)}g
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
@@ -146,7 +146,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               {macrosData.fat}g
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.fatGoal}g
+              / {nutritionGoals.fatGoal.toFixed(1)}g
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">

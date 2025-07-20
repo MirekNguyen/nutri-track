@@ -56,12 +56,16 @@ export const getUserData = async () => {
     const tdee = bmr * 1.5;
     const proteinGoal = 1.8 * weight;
     const calorieGoal = tdee - 500;
+    const carbsGoal = calorieGoal * 0.35 / 4;
+    const fatsGoal = calorieGoal * 0.35 / 9;
     return {
       weight,
       bmr,
       tdee,
       calorieGoal,
       proteinGoal,
+      carbsGoal,
+      fatsGoal,
       user,
     }
   } catch (error) {
