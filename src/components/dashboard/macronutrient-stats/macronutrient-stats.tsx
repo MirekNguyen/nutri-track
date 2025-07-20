@@ -99,6 +99,10 @@ export const MacronutrientStats = async ({ date }: Props) => {
             <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
             Important for muscle recovery
           </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
+            Protein coeficient {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
+          </p>
         </CardContent>
       </Card>
 
