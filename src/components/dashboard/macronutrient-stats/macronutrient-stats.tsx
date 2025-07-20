@@ -143,7 +143,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
-              {parseFloat(macrosData.fat)}g
+              {macrosData.fat}g
             </div>
             <div className="text-sm text-muted-foreground">
               / {nutritionGoals.fatGoal}g
