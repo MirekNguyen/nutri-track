@@ -67,7 +67,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             {Math.round((totalCalories / nutritionGoals.calorieGoal) * 100)}% of
-            daily goal
+            daily intake
           </p>
         </CardContent>
       </Card>

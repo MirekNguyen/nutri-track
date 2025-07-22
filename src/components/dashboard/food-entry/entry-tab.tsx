@@ -1,22 +1,35 @@
 "use client";
 
-import { Search, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { DialogFooter } from "@/components/ui/dialog";
 import { useSearchParams } from "next/navigation";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { getMeals } from "@/actions/meal-actions";
 import { createFoodEntry } from "@/actions/food-entry-actions";
 import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { NewMealDialog } from "../meal/new-meal-dialog";
 import { MealTypeDropdown } from "../meal/meal-type-dropdown";
+import { Controller, useForm } from "react-hook-form";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import React from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CommandLoading } from "cmdk";
 
 type Props = {
   submitAction: () => void;
@@ -24,41 +37,49 @@ type Props = {
   type: "breakfast" | "lunch" | "dinner" | "snack";
 };
 
+type Entry = {
+  amount: number;
+  mealId: number;
+  mealType: "breakfast" | "lunch" | "dinner" | "snack";
+};
+
+export const EntrySchema = z.object({
+  amount: z
+    .number({ required_error: "Enter an amount." })
+    .positive("Amount must be a positive number."),
+  mealId: z.number({ required_error: "Please select a meal." }),
+  mealType: z.enum(["breakfast", "lunch", "dinner", "snack"], {
+    required_error: "Please select a meal type.",
+  }),
+});
+
 export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const { data: meals = [], isLoading: mealsAreLoading } = useQuery({
+  const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals"],
     queryFn: getMeals,
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 
-  const [newMealType, setNewMealType] = useState<string>(type);
-  const [addFoodTab, setAddFoodTab] = useState("choose");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Food entry dialog state
-  const [mealSearchQuery, setMealSearchQuery] = useState("");
-  const [selectedMealId, setSelectedMealId] = useState<number | null>(null);
-
-  const [newAmount, setNewAmount] = useState(1);
-
-  // Filter meals based on search query
-  const filteredMeals = meals.filter((meal) =>
-    meal.name.toLowerCase().includes(mealSearchQuery.toLowerCase()),
-  );
+  const { register, control, handleSubmit, formState, setValue, watch } =
+    useForm<Entry>({
+      resolver: zodResolver(EntrySchema),
+      defaultValues: {
+        amount: 1,
+        mealType: type,
+      },
+    });
+  const isSubmitting = formState.isSubmitting;
 
   // Update the handleAddMealEntry function to include the amount field
-  const handleAddMealEntry = async () => {
-    if (!selectedMealId) return;
-
-    setIsSubmitting(true);
-
+  const handleAddMealEntry = async ({ amount, mealType, mealId }: Entry) => {
+    console.log("Form values:", { amount, mealType, mealId });
     try {
-      const selectedMeal = meals.find((meal) => meal.id === selectedMealId);
+      const selectedMeal = meals.find((meal) => meal.id === mealId);
       if (!selectedMeal) throw new Error("Meal not found");
 
       // Format date and time for database
@@ -68,15 +89,15 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
       console.log(selectedMeal);
 
       await createFoodEntry({
-        foodName: selectedMeal.name,
-        calories: selectedMeal.calories * newAmount,
-        protein: selectedMeal.protein * newAmount,
-        carbs: selectedMeal.carbs * newAmount,
-        fat: selectedMeal.fat * newAmount,
-        amount: newAmount,
-        mealType: newMealType,
+        amount,
+        mealType,
         entryDate,
         entryTime,
+        foodName: selectedMeal.name,
+        calories: selectedMeal.calories * amount,
+        protein: selectedMeal.protein * amount,
+        carbs: selectedMeal.carbs * amount,
+        fat: selectedMeal.fat * amount,
         mealId: selectedMeal.id,
       });
 
@@ -91,52 +112,46 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
         description: "Failed to add food entry. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
     submitAction();
   };
-
+  const mealId = watch("mealId");
   return (
     <TabsContent value="choose" className="space-y-4 mt-4 overflow-x-hidden">
-      <div className="flex justify-between items-center">
-        <div className="relative flex-1">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-            size={16}
-          />
-          <Input
-            placeholder="Search meals..."
-            className="pl-9"
-            value={mealSearchQuery}
-            onChange={(e) => setMealSearchQuery(e.target.value)}
-          />
-        </div>
-        <NewMealDialog />
-      </div>
-
-      <div className="border rounded-md">
-        <ScrollArea className="h-[200px] w-full">
-          {mealsAreLoading ? (
-            <div className="flex items-center justify-center h-[200px] text-gray-500">
-              <Loader className="animate-spin mr-2" />
-              Loading meals...
-            </div>
-          ) : filteredMeals.length > 0 ? (
-            <div className="divide-y">
-              {filteredMeals.map((meal) => (
-                <div
+      <Command>
+        <CommandInput placeholder="Search meals..." className="h-9" />
+        {isLoading ? (
+          <CommandLoading className="border rounded-md h-[200px]">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <CommandItem
+                key={i}
+                className="flex justify-between items-center cursor-pointer"
+              >
+                <Skeleton className="h-8 w-full" />
+              </CommandItem>
+            ))}
+          </CommandLoading>
+        ) : (
+          <CommandList className="border rounded-md h-[200px]">
+            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandGroup>
+              {meals.map((meal) => (
+                <CommandItem
                   key={meal.id}
-                  className={`p-3 flex justify-between items-center cursor-pointer hover:bg-muted/50 transition-colors ${
-                    selectedMealId === meal.id
-                    ? "bg-green-50 dark:bg-green-950/20 border-l-4 border-green-600 dark:border-green-400"
-                    : ""
-                    }`}
-                  onClick={() => setSelectedMealId(meal.id)}
+                  value={meal.name}
+                  onSelect={() => setValue("mealId", meal.id)}
+                  className={`
+            flex justify-between items-center cursor-pointer
+            ${
+              mealId === meal.id
+                ? "bg-green-50 dark:bg-green-950/20 border-l-4 border-green-600 dark:border-green-400"
+                : ""
+            }
+          `}
                 >
                   <div>
-                      <h4 className="font-medium text-foreground">{meal.name}</h4>
-                      <div className="text-sm text-muted-foreground flex gap-3 mt-1">
+                    <h4 className="font-medium text-foreground">{meal.name}</h4>
+                    <div className="text-sm text-muted-foreground flex gap-3 mt-1">
                       <span>{meal.calories} cal</span>
                       <span className="text-blue-600 dark:text-blue-400">
                         {meal.protein}g protein
@@ -149,25 +164,13 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
                       <span>F: {meal.fat}g</span>
                     </div>
                   </div>
-                </div>
+                </CommandItem>
               ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full p-4 text-muted-foreground">
-              <p>No meals found</p>
-              <div className="flex gap-2 mt-2">
-                <Button
-                  variant="link"
-                  className="text-green-600 dark:text-green-400"
-                  onClick={() => setAddFoodTab("custom")}
-                >
-                  Add a custom entry
-                </Button>
-              </div>
-            </div>
-          )}
-        </ScrollArea>
-      </div>
+            </CommandGroup>
+          </CommandList>
+        )}
+      </Command>
+      <NewMealDialog />
 
       <div className="grid grid-cols-4 items-center gap-4 mt-4">
         <Label htmlFor="amount" className="text-right">
@@ -180,30 +183,40 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             step="0.1"
             min="0.1"
             placeholder="1"
-            value={newAmount}
-            onChange={(e) => setNewAmount(e.target.valueAsNumber)}
+            {...register("amount", { valueAsNumber: true })}
             className="flex-1"
           />
-          {selectedMealId && (
+          {mealId && (
             <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
               <span className="font-medium">
-                {meals.find((m) => m.id === selectedMealId)?.unit || "serving"}
+                {meals.find((m) => m.id === mealId)?.unit || "serving"}
               </span>
             </div>
           )}
         </div>
       </div>
-      <MealTypeDropdown
-        newMealType={newMealType}
-        setNewMealType={setNewMealType}
+      <Controller
+        name="mealType"
+        control={control}
+        render={({ field }) => (
+          <MealTypeDropdown
+            newMealType={field.value ?? type}
+            setNewMealType={field.onChange}
+          />
+        )}
       />
+
       <DialogFooter className="mt-6">
-        <Button variant="outline" disabled={isSubmitting} onClick={cancelAction}>
+        <Button
+          variant="outline"
+          disabled={isSubmitting}
+          onClick={cancelAction}
+        >
           Cancel
         </Button>
         <Button
           className="bg-green-600 hover:bg-green-700"
-          onClick={addFoodTab === "custom" ? () => {} : handleAddMealEntry}
+          onClick={handleSubmit(handleAddMealEntry)}
           disabled={isSubmitting}
         >
           {isSubmitting ? (
@@ -216,6 +229,15 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
           )}
         </Button>
       </DialogFooter>
+      {Object.keys(formState.errors).length > 0 && (
+        <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-destructive space-y-1 text-sm">
+          {Object.entries(formState.errors).map(([field, error]) =>
+            error?.message ? (
+              <div key={field}>{error.message.toString()}</div>
+            ) : null,
+          )}
+        </div>
+      )}
     </TabsContent>
   );
 };
