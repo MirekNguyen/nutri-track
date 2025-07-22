@@ -14,7 +14,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
   const entries = await getFoodEntries(date);
   const userData = await getUserData();
   const totalCalories = entries.reduce(
-    (sum, entry) => sum + parseFloat(entry.calories),
+    (sum, entry) => sum + entry.calories,
     0,
   );
   const macrosData = macros(entries);
@@ -51,7 +51,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-green-600">
-              {totalCalories} kcal
+              {totalCalories.toFixed(0)} kcal
             </div>
             <div className="text-sm text-muted-foreground">
               / {nutritionGoals.calorieGoal.toFixed(0)} kcal
@@ -84,7 +84,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               {macrosData.protein.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.proteinGoal}g
+              / {nutritionGoals.proteinGoal.toFixed(0)}g
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
@@ -118,7 +118,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
               {macrosData.carbs.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.carbsGoal.toFixed(1)}g
+              / {nutritionGoals.carbsGoal.toFixed(0)}g
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
@@ -147,10 +147,10 @@ export const MacronutrientStats = async ({ date }: Props) => {
         <CardContent>
           <div className="flex items-baseline justify-between">
             <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
-              {macrosData.fat}g
+              {macrosData.fat.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.fatGoal.toFixed(1)}g
+              / {nutritionGoals.fatGoal.toFixed(0)}g
             </div>
           </div>
           <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
