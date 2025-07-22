@@ -44,7 +44,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
   const [mealSearchQuery, setMealSearchQuery] = useState("");
   const [selectedMealId, setSelectedMealId] = useState<number | null>(null);
 
-  const [newAmount, setNewAmount] = useState("1");
+  const [newAmount, setNewAmount] = useState(1);
 
   // Filter meals based on search query
   const filteredMeals = meals.filter((meal) =>
@@ -61,24 +61,19 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
       const selectedMeal = meals.find((meal) => meal.id === selectedMealId);
       if (!selectedMeal) throw new Error("Meal not found");
 
-      const amount = Number.parseFloat(newAmount) || 1;
-
       // Format date and time for database
       // const entryDate = selectedDate.toISOString().split("T")[0];
       const entryDate = selectedDate.toLocaleDateString("en-CA");
       const entryTime = new Date().toTimeString().split(" ")[0];
+      console.log(selectedMeal);
 
       await createFoodEntry({
         foodName: selectedMeal.name,
-        calories: Math.round(selectedMeal.calories * amount),
-        protein: selectedMeal.protein
-          ? Math.round(selectedMeal.protein * amount)
-          : null,
-        carbs: selectedMeal.carbs
-          ? Math.round(selectedMeal.carbs * amount)
-          : null,
-        fat: selectedMeal.fat ? Math.round(selectedMeal.fat * amount) : null,
-        amount,
+        calories: selectedMeal.calories * newAmount,
+        protein: selectedMeal.protein * newAmount,
+        carbs: selectedMeal.carbs * newAmount,
+        fat: selectedMeal.fat * newAmount,
+        amount: newAmount,
         mealType: newMealType,
         entryDate,
         entryTime,
@@ -186,7 +181,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             min="0.1"
             placeholder="1"
             value={newAmount}
-            onChange={(e) => setNewAmount(e.target.value)}
+            onChange={(e) => setNewAmount(e.target.valueAsNumber)}
             className="flex-1"
           />
           {selectedMealId && (
