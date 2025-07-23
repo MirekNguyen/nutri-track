@@ -1,24 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMediaQuery } from "./use-media-query"
 
 export const useMobile = () => {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768) // Adjust breakpoint as needed
-    }
-
-    // Set initial value
-    handleResize()
-
-    // Add event listener
-    window.addEventListener("resize", handleResize)
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
-  return isMobile
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+  return !isDesktop;
 }
