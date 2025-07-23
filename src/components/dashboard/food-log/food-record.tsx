@@ -34,25 +34,19 @@ export const FoodRecord = ({ entry, meals }: Props) => {
                 ? meals.find((m) => m.id === entry.mealId)?.unit || "serving"
                 : "serving"}
             </span>
-            {entry.protein && (
               <span className="text-blue-600 dark:text-blue-400">
-                {parseFloat(entry.protein).toFixed(0)}g protein
+                {entry.protein.toFixed(0)}g protein
               </span>
-            )}
-            {entry.carbs && (
               <span className="text-purple-600 dark:text-purple-400">
-                {parseFloat(entry.carbs).toFixed(0)}g carbs
+                {entry.carbs.toFixed(0)}g carbs
               </span>
-            )}
-            {entry.fat && (
-              <span className="text-yellow-600 dark:text-yellow-400">{parseFloat(entry.fat).toFixed(0)}g fat</span>
-            )}
+              <span className="text-yellow-600 dark:text-yellow-400">{entry.fat.toFixed(0)}g fat</span>
           </div>
         </div>
       </div>
       <div className="flex items-center justify-between sm:justify-end gap-4 mt-2 sm:mt-0">
         <span className="font-semibold text-foreground">
-          {parseFloat(entry.calories).toFixed(0)} kcal
+          {entry.calories.toFixed(0)} kcal
         </span>
         <DeleteEntryButton entry={entry} />
       </div>
