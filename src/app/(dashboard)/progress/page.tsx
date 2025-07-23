@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast";
 import {
   getBodyMeasurements,
   createBodyMeasurement,
@@ -35,6 +34,7 @@ import {
   createWeightEntry,
   deleteWeightEntry,
 } from "@/actions/weight-actions";
+import { toast } from "sonner";
 
 interface WeightEntry {
   id: number;
@@ -85,10 +85,8 @@ export default function ProgressPage() {
         }
       } catch (error) {
         console.error("Error loading data:", error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Failed to load data. Please try again.",
-          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
@@ -122,8 +120,7 @@ export default function ProgressPage() {
       setNewWeight("");
       setNewWeightNote("");
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Weight entry added successfully",
       });
     } catch (error) {
@@ -145,16 +142,13 @@ export default function ProgressPage() {
       // Remove the entry from the list
       setWeightEntries(weightEntries.filter((entry) => entry.id !== id));
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Weight entry deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting weight entry:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to delete weight entry. Please try again.",
-        variant: "destructive",
       });
     }
   };
@@ -193,16 +187,13 @@ export default function ProgressPage() {
       setNewArms("");
       setNewThighs("");
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Measurements added successfully",
       });
     } catch (error) {
       console.error("Error adding measurements:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to add measurements. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -218,16 +209,13 @@ export default function ProgressPage() {
         measurements.filter((measurement) => measurement.id !== id),
       );
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Measurement deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting measurement:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to delete measurement. Please try again.",
-        variant: "destructive",
       });
     }
   };

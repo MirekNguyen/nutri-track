@@ -20,12 +20,10 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calculator, TrendingDown, Target, Calendar } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-import { useMobile } from "@/hooks/use-mobile";
-import { useSidebar } from "@/hooks/use-sidebar";
 import { getWeightEntries } from "@/actions/weight-actions";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getNutritionGoals } from "@/actions/nutrition-goal-actions";
+import { toast } from "sonner";
 
 interface WeightEntry {
   id: number;
@@ -84,10 +82,8 @@ export default function WeightLossPage() {
         }
       } catch (error) {
         console.error("Error loading data:", error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Failed to load data. Please try again.",
-          variant: "destructive",
         });
       } finally {
         setIsLoading(false);

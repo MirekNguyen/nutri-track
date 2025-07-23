@@ -39,10 +39,10 @@ import {
   Award,
   CheckCircle,
 } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 import { useMobile } from "@/hooks/use-mobile";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { getWeightEntries } from "@/actions/weight-actions";
+import { toast } from "sonner";
 
 interface WeightEntry {
   id: number;
@@ -127,10 +127,8 @@ export default function GoalsPage() {
         setWeightEntries(weights);
       } catch (error) {
         console.error("Error loading data:", error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Failed to load data. Please try again.",
-          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
@@ -142,10 +140,8 @@ export default function GoalsPage() {
 
   const handleCreateGoal = () => {
     if (!newGoalTitle || !newGoalTarget || !newGoalDeadline) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Please fill in all required fields.",
-        variant: "destructive",
       });
       return;
     }
@@ -173,8 +169,7 @@ export default function GoalsPage() {
     setNewGoalUnit("lbs");
     setNewGoalDeadline("");
 
-    toast({
-      title: "Success",
+    toast("Success", {
       description: "Goal created successfully!",
     });
   };

@@ -8,8 +8,8 @@ import { ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -27,16 +27,13 @@ export default function ForgotPasswordPage() {
 
       setIsSubmitted(true)
 
-      toast({
-        title: "Email sent",
+      toast("Email sent", {
         description: "If an account exists with this email, you'll receive a reset link.",
       })
     } catch (error) {
       console.error("Password reset error:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to send reset email. Please try again.",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)

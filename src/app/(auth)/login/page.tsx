@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { useSignIn } from "@clerk/nextjs";
 import { OAuthStrategy } from "@clerk/types";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,11 +25,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!clerkLoaded) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description:
           "Authentication system is still loading. Please try again.",
-        variant: "destructive",
       });
       return;
     }
@@ -43,26 +41,21 @@ export default function LoginPage() {
       });
 
       if (result.status === "complete") {
-        toast({
-          title: "Success",
+        toast("Success", {
           description: "You have successfully logged in.",
         });
         router.push("/");
       } else {
         // This shouldn't happen with email/password auth, but just in case
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Login process couldn't be completed. Please try again.",
-          variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description:
           "Failed to log in. Please check your credentials and try again.",
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -71,11 +64,9 @@ export default function LoginPage() {
 
   const handleOAuthSignIn = async (strategy: OAuthStrategy) => {
     if (!clerkLoaded) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description:
           "Authentication system is still loading. Please try again.",
-        variant: "destructive",
       });
       return;
     }

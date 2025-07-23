@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { toast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,8 +30,7 @@ export default function SignupPage() {
       // For now, we'll just simulate a signup
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Your account has been created. You can now log in.",
       })
 
@@ -39,10 +38,8 @@ export default function SignupPage() {
       router.push("/login")
     } catch (error) {
       console.error("Signup error:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to create account. Please try again.",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
