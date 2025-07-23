@@ -22,7 +22,7 @@ export const NewMealDialog: FC<PropsWithChildren> = ({ children }) => {
       });
     } catch (error) {
       console.error("Error creating new meal:", error);
-      toast("Error", {
+      toast.error("Error", {
         description: "Failed to create meal. Please try again.",
       });
     }
