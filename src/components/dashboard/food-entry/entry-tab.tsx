@@ -30,6 +30,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommandLoading } from "cmdk";
+import { Meal } from "@/db/schema";
 
 type Props = {
   submitAction: () => void;
@@ -39,7 +40,7 @@ type Props = {
 
 type Entry = {
   amount: number;
-  mealId: number;
+  meal: Meal;
   mealType: "breakfast" | "lunch" | "dinner" | "snack";
 };
 
@@ -47,7 +48,7 @@ export const EntrySchema = z.object({
   amount: z
     .number({ required_error: "Enter an amount." })
     .positive("Amount must be a positive number."),
-  mealId: z.number({ required_error: "Please select a meal." }),
+  meal: z.unknown(),
   mealType: z.enum(["breakfast", "lunch", "dinner", "snack"], {
     required_error: "Please select a meal type.",
   }),
@@ -76,29 +77,25 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
   const isSubmitting = formState.isSubmitting;
 
   // Update the handleAddMealEntry function to include the amount field
-  const handleAddMealEntry = async ({ amount, mealType, mealId }: Entry) => {
-    console.log("Form values:", { amount, mealType, mealId });
+  const handleAddMealEntry = async ({ amount, mealType, meal }: Entry) => {
     try {
-      const selectedMeal = meals.find((meal) => meal.id === mealId);
-      if (!selectedMeal) throw new Error("Meal not found");
-
       // Format date and time for database
       // const entryDate = selectedDate.toISOString().split("T")[0];
       const entryDate = selectedDate.toLocaleDateString("en-CA");
       const entryTime = new Date().toTimeString().split(" ")[0];
-      console.log(selectedMeal);
 
       await createFoodEntry({
+        foodName: meal.name,
+        mealId: meal.id,
+        calories: meal.calories,
+        protein: meal.protein,
+        carbs: meal.carbs,
+        fat: meal.fat,
         amount,
         mealType,
         entryDate,
         entryTime,
-        foodName: selectedMeal.name,
-        calories: selectedMeal.calories * amount,
-        protein: selectedMeal.protein * amount,
-        carbs: selectedMeal.carbs * amount,
-        fat: selectedMeal.fat * amount,
-        mealId: selectedMeal.id,
+        createdAt: selectedDate,
       });
 
       toast({
@@ -115,7 +112,7 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
     }
     submitAction();
   };
-  const mealId = watch("mealId");
+  const selectedMeal = watch("meal");
   return (
     <TabsContent value="choose" className="space-y-4 mt-4 overflow-x-hidden">
       <Command>
@@ -133,17 +130,17 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
           </CommandLoading>
         ) : (
           <CommandList className="border rounded-md h-[200px]">
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No meal found.</CommandEmpty>
             <CommandGroup>
               {meals.map((meal) => (
                 <CommandItem
                   key={meal.id}
                   value={meal.name}
-                  onSelect={() => setValue("mealId", meal.id)}
+                  onSelect={() => setValue("meal", meal)}
                   className={`
             flex justify-between items-center cursor-pointer
             ${
-              mealId === meal.id
+              selectedMeal?.id === meal.id
                 ? "bg-green-50 dark:bg-green-950/20 border-l-4 border-green-600 dark:border-green-400"
                 : ""
             }
@@ -186,13 +183,11 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
             {...register("amount", { valueAsNumber: true })}
             className="flex-1"
           />
-          {mealId && (
-            <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
-              <span className="font-medium">
-                {meals.find((m) => m.id === mealId)?.unit || "serving"}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
+            <span className="font-medium">
+              {meals.find((m) => m.id === selectedMeal?.id)?.unit || "serving"}
+            </span>
+          </div>
         </div>
       </div>
       <Controller

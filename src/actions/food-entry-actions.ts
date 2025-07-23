@@ -50,7 +50,7 @@ export const getFoodEntriesRange = async (from: string, to: string) => {
 }
 
 export async function createFoodEntry(
-  entryData: Omit<NewFoodEntry, "id" | "userId" | "createdAt">,
+  entryData: Omit<NewFoodEntry, "id" | "userId">,
 ) {
   try {
     const user = await getCurrentUser();
