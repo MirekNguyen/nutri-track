@@ -34,7 +34,7 @@ type Props = {
 };
 
 export const CalorieBreadownChart: FC<Props> = ({ chartData }) => {
-  const totalCalories = chartData.reduce((sum, entry) => sum + entry.calories, 0);
+  const totalCalories = chartData.reduce((sum, entry) => sum + entry.calories, 0).toFixed(0);
 
   return (
     <ChartContainer
