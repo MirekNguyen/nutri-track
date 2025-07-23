@@ -341,7 +341,7 @@ export default function GoalsPage() {
               return (
                 <Card
                   key={goal.id}
-                  className="border-2 border-blue-200 dark:border-blue-700 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30"
+                  className="border-2 border-blue-200 dark:border-blue-700 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30"
                 >
                   <CardHeader className="border-b-2 border-blue-200 dark:border-blue-700">
                     <div className="flex items-start justify-between">
@@ -437,7 +437,7 @@ export default function GoalsPage() {
             {completedGoals.map((goal) => (
               <Card
                 key={goal.id}
-                className="border-2 border-green-200 dark:border-green-700 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30"
+                className="border-2 border-green-200 dark:border-green-700 bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30"
               >
                 <CardHeader className="border-b-2 border-green-200 dark:border-green-700">
                   <div className="flex items-start justify-between">
@@ -482,7 +482,7 @@ export default function GoalsPage() {
 
         <TabsContent value="overview" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="border-2 border-blue-200 dark:border-blue-700 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+            <Card className="border-2 border-blue-200 dark:border-blue-700 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
@@ -495,7 +495,7 @@ export default function GoalsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200 dark:border-green-700 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30">
+            <Card className="border-2 border-green-200 dark:border-green-700 bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30">
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
@@ -508,7 +508,7 @@ export default function GoalsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-200 dark:border-purple-700 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30">
+            <Card className="border-2 border-purple-200 dark:border-purple-700 bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30">
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
@@ -530,7 +530,7 @@ export default function GoalsPage() {
             </Card>
           </div>
 
-          <Card className="border-2 border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+          <Card className="border-2 border-gray-200 dark:border-gray-700 bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
             <CardHeader className="border-b-2 border-gray-200 dark:border-gray-700">
               <CardTitle>Goal Progress Overview</CardTitle>
               <CardDescription>

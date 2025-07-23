@@ -30,7 +30,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
       <Card
         className={cn(
           "border-l-4 shadow-sm hover:shadow-md transition-shadow",
-          "bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/20 dark:to-green-900/10",
+          "bg-linear-to-br from-green-50 to-green-100/50 dark:from-green-950/20 dark:to-green-900/10",
           totalCalories > nutritionGoals.calorieGoal
             ? "border-red-300"
             : "border-green-300 dark:border-green-700",

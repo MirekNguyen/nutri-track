@@ -200,7 +200,7 @@ export default function WeightLossPage() {
 
         <TabsContent value="calculator" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-2 border-blue-200 dark:border-blue-700 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+            <Card className="border-2 border-blue-200 dark:border-blue-700 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
               <CardHeader className="border-b-2 border-blue-200 dark:border-blue-700">
                 <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
                   <Calculator className="h-5 w-5" />
@@ -314,7 +314,7 @@ export default function WeightLossPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200 dark:border-green-700 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30">
+            <Card className="border-2 border-green-200 dark:border-green-700 bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30">
               <CardHeader className="border-b-2 border-green-200 dark:border-green-700">
                 <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
                   <Target className="h-5 w-5" />
@@ -385,7 +385,7 @@ export default function WeightLossPage() {
 
         <TabsContent value="progress" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="border-2 border-purple-200 dark:border-purple-700 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30">
+            <Card className="border-2 border-purple-200 dark:border-purple-700 bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30">
               <CardHeader className="border-b-2 border-purple-200 dark:border-purple-700">
                 <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
                   <TrendingDown className="h-5 w-5" />
@@ -436,7 +436,7 @@ export default function WeightLossPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-orange-200 dark:border-orange-700 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30">
+            <Card className="border-2 border-orange-200 dark:border-orange-700 bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30">
               <CardHeader className="border-b-2 border-orange-200 dark:border-orange-700">
                 <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
                   <Calendar className="h-5 w-5" />
@@ -490,7 +490,7 @@ export default function WeightLossPage() {
         </TabsContent>
 
         <TabsContent value="insights" className="mt-6">
-          <Card className="border-2 border-indigo-200 dark:border-indigo-700 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30">
+          <Card className="border-2 border-indigo-200 dark:border-indigo-700 bg-linear-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30">
             <CardHeader className="border-b-2 border-indigo-200 dark:border-indigo-700">
               <CardTitle className="text-indigo-700 dark:text-indigo-300">
                 Weight Loss Insights & Tips
