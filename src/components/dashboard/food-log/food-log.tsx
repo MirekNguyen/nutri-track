@@ -17,7 +17,7 @@ export const FoodLog: FC<Props> = async ({ date }) => {
 
   return (
     <>
-      <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
+      <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow bg-background">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today&apos;s Food Log</CardTitle>
           <AddFoodEntry>

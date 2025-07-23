@@ -18,7 +18,7 @@ export const CalorieBreakdown: FC<Props> = async ({ selectedDate }) => {
   const totals = mealTotal(entriesData);
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col bg-background">
       <CardHeader className="items-center pb-0">
         <CardTitle>Calorie breakdown</CardTitle>
       </CardHeader>
