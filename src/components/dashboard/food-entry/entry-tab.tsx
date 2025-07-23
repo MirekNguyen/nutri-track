@@ -12,7 +12,6 @@ import { useSearchParams } from "next/navigation";
 import { FC } from "react";
 import { getMeals } from "@/actions/meal-actions";
 import { createFoodEntry } from "@/actions/food-entry-actions";
-import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { NewMealDialog } from "../meal/new-meal-dialog";
 import { MealTypeDropdown } from "../meal/meal-type-dropdown";
@@ -31,6 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommandLoading } from "cmdk";
 import { Meal } from "@/db/schema";
+import { toast } from "sonner";
 
 type Props = {
   submitAction: () => void;
@@ -98,16 +98,13 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
         createdAt: selectedDate,
       });
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Food entry added successfully",
       });
     } catch (error) {
       console.error("Error adding meal entry:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to add food entry. Please try again.",
-        variant: "destructive",
       });
     }
     submitAction();

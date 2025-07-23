@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { PropsWithChildren } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {

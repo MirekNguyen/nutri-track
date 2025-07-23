@@ -1,11 +1,11 @@
 "use client";
 
 import { updateMeal } from "@/actions/meal-actions";
-import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { NewMeal } from "@/db/schema";
 import { MealDialog } from "../meal/meal-dialog";
 import { FC, ReactNode } from "react";
+import { toast } from "sonner";
 
 type Props = {
   id: number;
@@ -23,16 +23,13 @@ export const EditMealDialog: FC<Props> = ({ id, children, meal }) => {
     try {
       await updateMeal(id, { ...data });
       queryClient.invalidateQueries({ queryKey: ["getMeals"] });
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Meal updated successfully",
       });
     } catch (error) {
       console.error("Error updating new meal:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to update meal. Please try again.",
-        variant: "destructive",
       });
     }
   };

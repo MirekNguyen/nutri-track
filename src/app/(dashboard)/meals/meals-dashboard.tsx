@@ -31,12 +31,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
-import { toast } from "@/components/ui/use-toast";
 import { toggleFavoriteMeal } from "@/actions/meal-actions";
 import { EditMealDialog } from "@/components/dashboard/meal/edit-meal-dialog";
 import { Meal } from "@/db/schema";
 import { NewMealDialog } from "@/components/dashboard/meal/new-meal-dialog";
 import { DeleteMeal } from "@/components/dashboard/meal/delete-meal";
+import { toast } from "sonner";
 
 type Props = {
   meals: Meal[];
@@ -96,18 +96,17 @@ export default function MealsDashboard({ meals }: Props) {
     try {
       const updatedMeal = await toggleFavoriteMeal(id);
 
-      toast({
-        title: updatedMeal.isFavorite
+      toast(
+        updatedMeal.isFavorite
           ? "Added to favorites"
           : "Removed from favorites",
+        {
         description: `${updatedMeal.name} has been ${updatedMeal.isFavorite ? "added to" : "removed from"} your favorites.`,
       });
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to update favorite status. Please try again.",
-        variant: "destructive",
       });
     }
   };

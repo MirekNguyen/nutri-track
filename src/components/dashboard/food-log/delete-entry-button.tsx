@@ -2,9 +2,9 @@
 
 import { deleteFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 import { FoodEntry } from "@/db/schema";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 type Props = {
   entry: FoodEntry;
@@ -16,16 +16,13 @@ export const DeleteEntryButton = ({ entry }: Props) => {
 
       // Refresh the entries list
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Food entry deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting food entry:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to delete food entry. Please try again.",
-        variant: "destructive",
       });
     }
   };

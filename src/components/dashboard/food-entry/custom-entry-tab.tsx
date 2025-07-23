@@ -12,20 +12,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
-import { toast } from "@/components/ui/use-toast";
 import { useSearchParams } from "next/navigation";
 import { FC } from "react";
 import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MealTypeDropdown } from "../meal/meal-type-dropdown";
+import { toast } from "sonner";
 
 const customEntrySchema = z.object({
   foodName: z.string().min(1, "Food name is required"),
-  calories: z.string().min(1, "Calories is required"),
-  protein: z.string().min(0, "Protein must be a positive number"),
-  carbs: z.string().min(0, "Carbs must be a positive number"),
-  fat: z.string().min(0, "Fat must be a positive integer"),
+  calories: z.number().min(1, "Calories is required"),
+  protein: z.number().min(0, "Protein must be a positive number"),
+  carbs: z.number().min(0, "Carbs must be a positive number"),
+  fat: z.number().min(0, "Fat must be a positive integer"),
   amount: z.number().min(0.1, "Amount must be at least 0.1"),
   unit: z.string(),
   mealType: z.string(),
@@ -74,24 +74,20 @@ export const CustomEntryTab: FC = () => {
       });
 
       reset();
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Food entry added successfully",
       });
     } catch (error) {
       console.error("Error adding custom entry:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to add food entry. Please try again.",
-        variant: "destructive",
       });
     }
   };
 
   const onError = (errors: FieldErrors<CustomEntryFormData>) => {
     console.log("Form validation errors:", errors);
-    toast({
-      title: "Validation Error",
+    toast("Validation Error", {
       description: "Please fix the errors in the form before submitting.",
       variant: "destructive",
     });
@@ -220,6 +216,7 @@ export const CustomEntryTab: FC = () => {
                     {...field}
                     id="fat"
                     type="number"
+                    onChange={e => e.target.valueAsNumber}
                     step="1"
                     placeholder="e.g., 8"
                   />

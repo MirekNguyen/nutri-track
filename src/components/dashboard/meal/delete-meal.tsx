@@ -12,10 +12,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 import { Meal } from "@/db/schema";
 import { Trash2 } from "lucide-react";
 import { FC, useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   meal: Meal;
@@ -28,17 +28,14 @@ export const DeleteMeal: FC<Props> = ({ meal }) => {
     try {
       await deleteMeal(meal.id);
 
-      toast({
-        title: "Success",
+      toast("Success", {
         description: "Meal deleted successfully",
       });
       setOpen(false);
     } catch (error) {
       console.error("Error deleting meal:", error);
-      toast({
-        title: "Error",
+      toast("Error", {
         description: "Failed to delete meal. Please try again.",
-        variant: "destructive",
       });
     }
   };
