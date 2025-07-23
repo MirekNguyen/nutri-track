@@ -116,9 +116,6 @@ export default function GoalsPage() {
   const [newGoalUnit, setNewGoalUnit] = useState("lbs");
   const [newGoalDeadline, setNewGoalDeadline] = useState("");
 
-  const isMobile = useMobile();
-  const { collapsed } = useSidebar();
-
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
