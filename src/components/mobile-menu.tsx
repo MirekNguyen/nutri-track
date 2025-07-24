@@ -3,6 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BarChart3, Home, User, Utensils } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const items = [
   {
@@ -29,13 +30,15 @@ const items = [
 
 export const MobileMenu = () => {
   const isMobile = useIsMobile();
+  const pathname = usePathname();
+  console.log("MobileMenu rendered", { isMobile, pathname });
   if (!isMobile) return null;
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 w-full items-center justify-around shadow-t bg-transparent backdrop-blur-md border dark:bg-background/50 dark:backdrop-blur-3xl rounded-3xl dark:shadow-t-gray-800">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 mb-8 w-full items-center justify-around shadow-t bg-transparent backdrop-blur-md border dark:bg-background/50 dark:backdrop-blur-3xl rounded-2xl dark:shadow-t-gray-800">
       {items.map((item) => (
         <Link
           href={item.url}
-          className="flex flex-col items-center justify-center gap-1 text-gray-500 transition-colors hover:text-gray-900 focus:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 dark:focus:text-gray-50"
+          className={`flex flex-col items-center justify-center gap-1 ${pathname !== item.url ? "text-muted-foreground" : "text-foreground"} transition-colors hover:text-foreground`}
           key={item.title}
         >
           <item.icon className="text-xs"/>
