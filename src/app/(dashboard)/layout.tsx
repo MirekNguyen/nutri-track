@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { MobileMenu } from "@/components/mobile-menu";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { cookies } from "next/headers";
@@ -14,13 +15,14 @@ export default async function Layout({ children }: PropsWithChildren) {
         <AppSidebar />
         <div className="min-h-screen bg-background flex flex-col w-full">
           {/* <Header /> */}
-          <div className="flex flex-col md:flex-row flex-1">
+          <div className="flex flex-col md:flex-row flex-1 pb-14 md:pb-0">
             {/* <Sidebar /> */}
             <main className="flex-1 p-4 md:p-6 overflow-auto transition-all duration-300">
               <SidebarTrigger />
               {children}
             </main>
           </div>
+          <MobileMenu />
           <Toaster />
         </div>
       </SidebarProvider>
