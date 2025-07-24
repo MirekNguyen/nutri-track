@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 
-import { DialogFooter } from "@/components/ui/dialog";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useSearchParams } from "next/navigation";
 import { FC } from "react";
 import { getMeals } from "@/actions/meal-actions";
@@ -34,7 +34,6 @@ import { toast } from "sonner";
 
 type Props = {
   submitAction: () => void;
-  cancelAction: () => void;
   type: "breakfast" | "lunch" | "dinner" | "snack";
 };
 
@@ -54,7 +53,7 @@ export const EntrySchema = z.object({
   }),
 });
 
-export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
+export const EntryTab: FC<Props> = ({ submitAction, type }) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
@@ -199,13 +198,11 @@ export const EntryTab: FC<Props> = ({ submitAction, cancelAction, type }) => {
       />
 
       <DialogFooter className="mt-6">
-        <Button
-          variant="outline"
-          disabled={isSubmitting}
-          onClick={cancelAction}
-        >
-          Cancel
-        </Button>
+        <DialogClose asChild>
+          <Button variant="outline" disabled={isSubmitting}>
+            Cancel
+          </Button>
+        </DialogClose>
         <Button
           className="bg-green-600 hover:bg-green-700"
           onClick={handleSubmit(handleAddMealEntry)}

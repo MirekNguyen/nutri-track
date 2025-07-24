@@ -20,7 +20,7 @@ export const CalorieTracker = async ({ selectedDate }: Props) => {
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
           <DateSelector date={new Date(selectedDate)} />
           <AddFoodEntry>
-            <Button className="bg-green-600 hover:bg-green-700 text-sm text-white w-full sm:w-auto">
+            <Button className="bg-green-600 hover:bg-green-700 text-sm text-white sm:w-auto">
               <PlusCircle className="mr-2 h-4 w-4" /> Add Entry
             </Button>
           </AddFoodEntry>

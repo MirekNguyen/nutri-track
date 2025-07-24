@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { FC, ReactNode, useState } from "react";
 import { AddDialog } from "./add-dialog";
 type Props = {
@@ -15,11 +15,13 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <AddDialog
           submitAction={() => setIsOpen(false)}
-          cancelAction={() => setIsOpen(false)}
           type={type}
         />
+          <DialogTrigger asChild>
+            {children}
+          </DialogTrigger>
       </Dialog>
-      <div onClick={() => setIsOpen(true)}>{children}</div>
+      {/* <div onClick={() => setIsOpen(true)}>{children}</div> */}
     </>
   );
 };
