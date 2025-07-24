@@ -32,7 +32,7 @@ export const FoodRecordSection: FC<Props> = async ({
           <span className="ml-2 font-medium">{title}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{totals} kcal</span>
+          <span className="text-sm font-medium">{totals.toFixed(0)} kcal</span>
           <AddFoodEntry type={type}>
             <Button
               variant="ghost"
