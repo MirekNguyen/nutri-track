@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Sheet,
   SheetContent,
@@ -25,7 +25,7 @@ import { useUser, useClerk } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Header() {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useUser();

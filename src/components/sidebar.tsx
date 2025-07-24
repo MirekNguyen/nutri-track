@@ -14,10 +14,10 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useMobile } from "@/hooks/use-mobile";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface NavItem {
   icon: React.ElementType;
@@ -33,7 +33,7 @@ export const SidebarContext = React.createContext<{ collapsed: boolean }>({
 export function SidebarContent() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const navItems: NavItem[] = [
     { icon: Home, label: "Dashboard", href: "/" },
