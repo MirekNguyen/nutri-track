@@ -31,7 +31,6 @@ const items = [
 export const MobileMenu = () => {
   const isMobile = useIsMobile();
   const pathname = usePathname();
-  console.log("MobileMenu rendered", { isMobile, pathname });
   if (!isMobile) return null;
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 pb-4 w-full items-center justify-around shadow-t bg-transparent backdrop-blur-md border dark:bg-background/50 dark:backdrop-blur-3xl rounded-2xl dark:shadow-t-gray-800">
