@@ -65,8 +65,8 @@ export const CustomEntryTab: FC = () => {
         calories: data.calories,
         protein: data.protein,
         carbs: data.carbs,
-        fat: parseInt(data.fat),
-        amount: data.amount.toString(),
+        fat: data.fat,
+        amount: data.amount,
         mealType: data.mealType,
         entryDate: selectedDate.toISOString().split("T")[0],
         entryTime: new Date().toTimeString().split(" ")[0],
@@ -87,9 +87,8 @@ export const CustomEntryTab: FC = () => {
 
   const onError = (errors: FieldErrors<CustomEntryFormData>) => {
     console.log("Form validation errors:", errors);
-    toast("Validation Error", {
+    toast.error("Validation Error", {
       description: "Please fix the errors in the form before submitting.",
-      variant: "destructive",
     });
   };
 
