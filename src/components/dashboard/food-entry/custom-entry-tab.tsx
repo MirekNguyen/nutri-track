@@ -133,7 +133,8 @@ export const CustomEntryTab: FC = () => {
                   id="calories"
                   type="number"
                   step="0.01"
-                  value={field.value || ""}
+                  value={field.value}
+                  onChange={e => field.onChange(e.target.valueAsNumber)}
                   placeholder="Enter calories (e.g., 450)"
                 />
               )}
@@ -165,7 +166,8 @@ export const CustomEntryTab: FC = () => {
                     id="protein"
                     type="number"
                     step="0.01"
-                    value={field.value || ""}
+                    value={field.value}
+                    onChange={e => field.onChange(e.target.valueAsNumber)}
                     placeholder="e.g., 25.5"
                   />
                 )}
@@ -192,7 +194,8 @@ export const CustomEntryTab: FC = () => {
                     id="carbs"
                     type="number"
                     step="0.01"
-                    value={field.value || ""}
+                    value={field.value}
+                    onChange={e => field.onChange(e.target.valueAsNumber)}
                     placeholder="e.g., 15.2"
                   />
                 )}
@@ -215,8 +218,8 @@ export const CustomEntryTab: FC = () => {
                     {...field}
                     id="fat"
                     type="number"
-                    onChange={e => e.target.valueAsNumber}
-                    step="1"
+                    onChange={e => field.onChange(e.target.valueAsNumber)}
+                    step="0.01"
                     placeholder="e.g., 8"
                   />
                 )}
