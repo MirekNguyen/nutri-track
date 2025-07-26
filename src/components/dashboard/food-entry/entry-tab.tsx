@@ -115,7 +115,7 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
       <Command>
         <CommandInput placeholder="Search meals..." className="h-9" />
         {isLoading ? (
-          <CommandLoading className="border rounded-md h-[200px]">
+          <CommandLoading className="border rounded-md md:h-[200px] h-[150px]">
             {Array.from({ length: 5 }).map((_, i) => (
               <CommandItem
                 key={i}
@@ -126,7 +126,7 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
             ))}
           </CommandLoading>
         ) : (
-          <CommandList className="border rounded-md h-[200px]">
+          <CommandList className="border rounded-md md:h-[200px] h-[150px]">
             <CommandEmpty>No meal found.</CommandEmpty>
             <CommandGroup>
               {meals.map((meal) => (
