@@ -46,6 +46,7 @@ export const meals = pgTable("meals", {
   protein: numeric("protein", { precision: 10, scale: 2, mode: 'number' }).notNull(),
   carbs: numeric("carbs", { precision: 10, scale: 2, mode: 'number' }).notNull(),
   fat: numeric("fat", { precision: 10, scale: 2, mode: 'number' }).notNull(),
+  caffeine: numeric("caffeine", {precision: 10, scale: 2, mode: 'number' }),
   tags: text("tags").array(),
   isFavorite: boolean("is_favorite").default(false),
   createdAt: timestamp("created_at").defaultNow(),
@@ -67,6 +68,7 @@ export const foodEntries = pgTable("food_entries", {
   protein: numeric("protein", { precision: 10, scale: 2, mode: 'number' }).notNull(),
   carbs: numeric("carbs", { precision: 10, scale: 2, mode: 'number' }).notNull(),
   fat: numeric("fat", {precision: 10, scale: 2, mode: 'number' }).notNull(),
+  caffeine: numeric("caffeine", {precision: 10, scale: 2, mode: 'number' }),
   entryDate: varchar("entry_date", { length: 10 }).notNull(), // Store as YYYY-MM-DD string
   entryTime: varchar("entry_time", { length: 8 }).notNull(), // Store as HH:MM:SS string
   createdAt: timestamp("created_at").defaultNow(),
