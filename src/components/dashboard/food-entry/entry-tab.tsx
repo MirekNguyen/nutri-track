@@ -198,7 +198,7 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
         )}
       />
 
-      <DialogFooter className="mt-6">
+      <DialogFooter className="mt-6 gap-2 md:gap-0">
         <DialogClose asChild>
           <Button variant="outline" disabled={isSubmitting}>
             Cancel
