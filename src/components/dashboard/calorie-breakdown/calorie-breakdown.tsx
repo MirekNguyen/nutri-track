@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FC } from "react";
 import { getFoodEntries } from "@/actions/food-entry-actions";
-import { mealTotal } from "../helpers/meal-total";
+import { useMealTotal } from "../../../hooks/use-meal-total";
 import { CalorieBreadownChart } from "./calorie-breakdown-chart";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export const CalorieBreakdown: FC<Props> = async ({ selectedDate }) => {
   const entriesData = await getFoodEntries(selectedDate);
-  const totals = mealTotal(entriesData);
+  const totals = useMealTotal(entriesData);
   const caffeine = entriesData.reduce((sum, entry) => {
     return sum + (entry.caffeine || 0);
   }, 0);

@@ -3,9 +3,9 @@
 import { createMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { NewMeal } from "@/db/schema";
-import { MealDialog } from "../meal/meal-dialog";
 import { FC, PropsWithChildren } from "react";
 import { toast } from "sonner";
+import { MealDialog } from "./meal-dialog";
 
 export const NewMealDialog: FC<PropsWithChildren> = ({ children }) => {
   const defaultValues: Partial<NewMeal> = {

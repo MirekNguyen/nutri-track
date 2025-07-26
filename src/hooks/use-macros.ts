@@ -1,6 +1,6 @@
 import { FoodEntry } from "@/db/schema";
 
-export const macros = (entries: FoodEntry[]) => {
+export const useMacros = (entries: FoodEntry[]) => {
   return entries.reduce(
     (acc, entry) => {
       return {

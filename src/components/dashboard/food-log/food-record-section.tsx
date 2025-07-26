@@ -1,4 +1,4 @@
-import { MealTypeIcon } from "@/components/meal-type-icon";
+import { MealTypeIcon } from "@/components/common/meal-type-icon";
 import { FoodEntry } from "@/db/schema";
 import { FC } from "react";
 import { AddFoodEntry } from "../food-entry/add-food-entry";

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
-import { macros } from "../helpers/macros";
+import { useMacros } from "../../../hooks/use-macros";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getUserData } from "@/actions/user-actions";
 
@@ -17,7 +17,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
     (sum, entry) => sum + entry.calories,
     0,
   );
-  const macrosData = macros(entries);
+  const macrosData = useMacros(entries);
 
   const nutritionGoals = {
     calorieGoal: userData?.calorieGoal ?? 2000,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ThemeToggle } from "../theme-toggle";
+import { ThemeToggle } from "../common/theme-toggle";
 
 export const MobileHeader = () => {
   const isMobile = useIsMobile();

@@ -11,8 +11,6 @@ import { FC } from "react";
 import { getMeals } from "@/actions/meal-actions";
 import { createFoodEntry } from "@/actions/food-entry-actions";
 import { useQuery } from "@tanstack/react-query";
-import { NewMealDialog } from "../meal/new-meal-dialog";
-import { MealTypeDropdown } from "../meal/meal-type-dropdown";
 import { useForm } from "react-hook-form";
 import {
   Command,
@@ -37,6 +35,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { NewMealDialog } from "@/components/meals/new-meal-dialog";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
 
 type Props = {
   submitAction: () => void;

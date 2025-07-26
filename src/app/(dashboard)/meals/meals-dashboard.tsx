@@ -32,11 +32,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { toggleFavoriteMeal } from "@/actions/meal-actions";
-import { EditMealDialog } from "@/components/dashboard/meal/edit-meal-dialog";
 import { Meal } from "@/db/schema";
-import { NewMealDialog } from "@/components/dashboard/meal/new-meal-dialog";
-import { DeleteMeal } from "@/components/dashboard/meal/delete-meal";
 import { toast } from "sonner";
+import { DeleteMeal } from "@/components/meals/delete-meal";
+import { EditMealDialog } from "@/components/meals/edit-meal-dialog";
+import { NewMealDialog } from "@/components/meals/new-meal-dialog";
 
 type Props = {
   meals: Meal[];

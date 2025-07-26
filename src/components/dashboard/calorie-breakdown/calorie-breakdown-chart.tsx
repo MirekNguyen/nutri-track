@@ -7,7 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { MealTotal } from "../helpers/meal-total";
+import { MealTotal } from "../../../hooks/use-meal-total";
 import { FC } from "react";
 
 const chartConfig = {

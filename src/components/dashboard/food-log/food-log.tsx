@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlusCircle } from "lucide-react";
-import { mealTypeTotals } from "../helpers/mealtype-totals";
+import { useMealTypeTotals } from "../../../hooks/use-mealtype-totals";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { FoodRecordSection } from "./food-record-section";
 import { getFoodEntries } from "@/actions/food-entry-actions";
@@ -13,7 +13,7 @@ type Props = {
 
 export const FoodLog: FC<Props> = async ({ date }) => {
   const entries = await getFoodEntries(date);
-  const mealTypeTotalsData = mealTypeTotals(entries);
+  const mealTypeTotalsData = useMealTypeTotals(entries);
 
   return (
     <>

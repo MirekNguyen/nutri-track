@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/sidebar";
 import { AppHeader } from "./header";
 import { usePathname } from "next/navigation";
-import { UserAvatar } from "../user-avatar";
+import { UserAvatar } from "../common/user-avatar";
 
 const items = [
   {

@@ -19,7 +19,7 @@ import { NewMeal } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UnitDropdown } from "./unit-dropdown";
 import { ReactNode, useState } from "react";
-import { mealZodSchema } from "./meal-schema";
+import { mealZodSchema } from "./meal-zod-schema";
 
 type Props = {
   defaultValues: Partial<NewMeal>;

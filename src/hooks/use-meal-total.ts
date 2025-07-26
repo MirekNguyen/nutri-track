@@ -7,7 +7,7 @@ export type MealTotal = {
   calories: number;
 }
 
-export const mealTotal = (entries: FoodEntry[]): MealTotal[] => {
+export const useMealTotal = (entries: FoodEntry[]): MealTotal[] => {
   return mealTypes.map((mealType) => {
     const calories = entries
       .filter((entry) => entry.mealType === mealType)

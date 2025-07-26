@@ -3,9 +3,9 @@
 import { updateMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { NewMeal } from "@/db/schema";
-import { MealDialog } from "../meal/meal-dialog";
 import { FC, ReactNode } from "react";
 import { toast } from "sonner";
+import { MealDialog } from "./meal-dialog";
 
 type Props = {
   id: number;

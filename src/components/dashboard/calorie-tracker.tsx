@@ -1,6 +1,6 @@
 import { MacronutrientStats } from "./macronutrient-stats/macronutrient-stats";
 import { FoodLog } from "./food-log/food-log";
-import { DateSelector } from "./date-selector/date-selector";
+import { DateSelector } from "../common/date-selector";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";

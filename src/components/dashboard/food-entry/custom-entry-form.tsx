@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { useSearchParams } from "next/navigation";
 import { FC } from "react";
-import { MealTypeDropdown } from "../meal/meal-type-dropdown";
 import {
   Form,
   FormControl,
@@ -23,6 +22,7 @@ import {
 import {
   useCustomEntryForm,
 } from "@/hooks/use-custom-entry-form";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
 
 export const CustomEntryForm: FC = () => {
   const searchParams = useSearchParams();
