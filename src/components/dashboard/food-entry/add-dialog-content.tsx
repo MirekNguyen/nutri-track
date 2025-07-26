@@ -16,7 +16,7 @@ type Props = {
   submitAction: () => void;
   type: "breakfast" | "lunch" | "dinner" | "snack";
 }
-export const AddDialog: FC<Props> = ({submitAction, type}) => {
+export const AddDialogContent: FC<Props> = ({submitAction, type}) => {
   const [foodTab, setFoodTab] = useState<string>("choose");
 
   return (

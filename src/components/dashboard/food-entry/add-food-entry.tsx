@@ -2,7 +2,7 @@
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { FC, ReactNode, useState } from "react";
-import { AddDialog } from "./add-dialog";
+import { AddDialogContent } from "./add-dialog-content";
 type Props = {
   type?: "breakfast" | "lunch" | "dinner" | "snack";
   children: ReactNode;
@@ -13,7 +13,7 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <AddDialog
+        <AddDialogContent
           submitAction={() => setIsOpen(false)}
           type={type}
         />

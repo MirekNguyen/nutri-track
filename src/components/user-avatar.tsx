@@ -20,14 +20,6 @@ export const UserAvatar = () => {
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  // Get user initials for avatar fallback
-  const getInitials = () => {
-    if (!user) return "U";
-    const firstName = user.firstName || "";
-    const lastName = user.lastName || "";
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || "U";
-  };
-
   const handleSignOut = async () => {
     await signOut();
     router.push("/login");
