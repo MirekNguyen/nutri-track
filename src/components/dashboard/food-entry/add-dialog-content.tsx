@@ -16,19 +16,19 @@ import { useIsMobile } from "@/hooks/use-mobile";
 type Props = {
   submitAction: () => void;
   type: "breakfast" | "lunch" | "dinner" | "snack";
-}
-export const AddDialogContent: FC<Props> = ({submitAction, type}) => {
+};
+export const AddDialogContent: FC<Props> = ({ submitAction, type }) => {
   const [foodTab, setFoodTab] = useState<string>("choose");
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
 
   return (
     <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]">
       <DialogHeader>
         <DialogTitle>Add Food Entry</DialogTitle>
         {!isMobile && (
-        <DialogDescription>
-          Choose from your saved meals or add a custom entry
-        </DialogDescription>
+          <DialogDescription>
+            Choose from your saved meals or add a custom entry
+          </DialogDescription>
         )}
       </DialogHeader>
       <Tabs value={foodTab} onValueChange={setFoodTab} className="mt-2">
@@ -36,7 +36,7 @@ export const AddDialogContent: FC<Props> = ({submitAction, type}) => {
           <TabsTrigger value="choose">Choose Meal</TabsTrigger>
           <TabsTrigger value="custom">Custom Entry</TabsTrigger>
         </TabsList>
-        <EntryTab submitAction={submitAction} type={type}/>
+        <EntryTab submitAction={submitAction} type={type} />
         <CustomEntryTab />
       </Tabs>
     </DialogContent>
