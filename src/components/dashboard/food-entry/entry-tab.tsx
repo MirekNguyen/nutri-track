@@ -54,18 +54,22 @@ export const EntrySchema = z.object({
   amount: z
     .number("Enter an amount.")
     .positive("Amount must be a positive number."),
-  meal: z.object({
-    id: z.coerce.number(),
-    name: z.string(),
-    calories: z.coerce.number(),
-    carbs: z.coerce.number(),
-    protein: z.coerce.number(),
-    fat: z.coerce.number(),
-    caffeine: z.coerce.number(),
-  }, "Please select a meal"),
-  mealType: z.enum(["breakfast", "lunch", "dinner", "snack"], {
-    required_error: "Please select a meal type.",
-  }),
+  meal: z.object(
+    {
+      id: z.coerce.number(),
+      name: z.string(),
+      calories: z.coerce.number(),
+      carbs: z.coerce.number(),
+      protein: z.coerce.number(),
+      fat: z.coerce.number(),
+      caffeine: z.coerce.number(),
+    },
+    "Please select a meal",
+  ),
+  mealType: z.enum(
+    ["breakfast", "lunch", "dinner", "snack"],
+    "Please select a meal type.",
+  ),
 });
 
 export const EntryTab: FC<Props> = ({ submitAction, type }) => {
@@ -186,9 +190,9 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
           </Command>
           {formState.errors.meal && (
             <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-destructive space-y-1 text-sm">
-            <p className="text-red-500 text-xs mt-1">
-              {formState.errors.meal.message}
-            </p>
+              <p className="text-red-500 text-xs mt-1">
+                {formState.errors.meal.message}
+              </p>
             </div>
           )}
           <NewMealDialog />
