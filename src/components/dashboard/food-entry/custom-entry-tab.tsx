@@ -185,7 +185,7 @@ export const CustomEntryTab: FC = () => {
             />
           </div>
 
-          <div className="col-span-2 flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
             <FormField
               name="amount"
               control={form.control}
