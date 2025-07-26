@@ -90,6 +90,7 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
         protein: meal.protein * amount,
         carbs: meal.carbs * amount,
         fat: meal.fat * amount,
+        caffeine: meal.caffeine ? meal.caffeine * amount : 0,
         amount,
         mealType,
         entryDate,

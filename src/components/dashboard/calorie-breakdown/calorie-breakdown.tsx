@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FC } from "react";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { mealTotal } from "../helpers/meal-total";
@@ -16,6 +11,9 @@ type Props = {
 export const CalorieBreakdown: FC<Props> = async ({ selectedDate }) => {
   const entriesData = await getFoodEntries(selectedDate);
   const totals = mealTotal(entriesData);
+  const caffeine = entriesData.reduce((sum, entry) => {
+    return sum + (entry.caffeine || 0);
+  }, 0);
 
   return (
     <Card className="flex flex-col bg-background">
@@ -24,6 +22,11 @@ export const CalorieBreakdown: FC<Props> = async ({ selectedDate }) => {
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <CalorieBreadownChart chartData={totals} />
+        {caffeine > 0 && (
+          <div className="mt-4 text-sm text-muted-foreground">
+            Total caffeine intake: {caffeine} mg
+          </div>
+        )}
       </CardContent>
     </Card>
   );
