@@ -4,7 +4,6 @@ import { Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -15,7 +14,7 @@ import { createFoodEntry } from "@/actions/food-entry-actions";
 import { useQuery } from "@tanstack/react-query";
 import { NewMealDialog } from "../meal/new-meal-dialog";
 import { MealTypeDropdown } from "../meal/meal-type-dropdown";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Command,
   CommandEmpty,
@@ -31,6 +30,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CommandLoading } from "cmdk";
 import { Meal } from "@/db/schema";
 import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 type Props = {
   submitAction: () => void;
@@ -45,9 +52,11 @@ type Entry = {
 
 export const EntrySchema = z.object({
   amount: z
-    .number({ required_error: "Enter an amount." })
+    .number("Enter an amount.")
     .positive("Amount must be a positive number."),
-  meal: z.unknown(),
+  meal: z.object({
+    name: z.string(),
+  }, "Please select a meal"),
   mealType: z.enum(["breakfast", "lunch", "dinner", "snack"], {
     required_error: "Please select a meal type.",
   }),
@@ -65,14 +74,15 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
     retry: 1,
   });
 
-  const { register, control, handleSubmit, formState, setValue, watch } =
-    useForm<Entry>({
-      resolver: zodResolver(EntrySchema),
-      defaultValues: {
-        amount: 1,
-        mealType: type,
-      },
-    });
+  const form = useForm<Entry>({
+    resolver: zodResolver(EntrySchema),
+    defaultValues: {
+      amount: 1,
+      mealType: type,
+    },
+  });
+  const { register, control, handleSubmit, formState, setValue, watch } = form;
+
   const isSubmitting = formState.isSubmitting;
 
   // Update the handleAddMealEntry function to include the amount field
@@ -111,30 +121,32 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
   };
   const selectedMeal = watch("meal");
   return (
-    <TabsContent value="choose" className="space-y-4 mt-4 overflow-x-hidden">
-      <Command>
-        <CommandInput placeholder="Search meals..." className="h-9" />
-        {isLoading ? (
-          <CommandLoading className="border rounded-md md:h-[200px] h-[150px]">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <CommandItem
-                key={i}
-                className="flex justify-between items-center cursor-pointer"
-              >
-                <Skeleton className="h-8 w-full" />
-              </CommandItem>
-            ))}
-          </CommandLoading>
-        ) : (
-          <CommandList className="border rounded-md md:h-[200px] h-[150px]">
-            <CommandEmpty>No meal found.</CommandEmpty>
-            <CommandGroup>
-              {meals.map((meal) => (
-                <CommandItem
-                  key={meal.id}
-                  value={meal.name}
-                  onSelect={() => setValue("meal", meal)}
-                  className={`
+    <TabsContent value="choose">
+      <Form {...form}>
+        <form onSubmit={handleSubmit(handleAddMealEntry)} className="space-y-2">
+          <Command>
+            <CommandInput placeholder="Search meals..." className="h-9" />
+            {isLoading ? (
+              <CommandLoading className="border rounded-md md:h-[200px] h-[150px]">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <CommandItem
+                    key={i}
+                    className="flex justify-between items-center cursor-pointer"
+                  >
+                    <Skeleton className="h-8 w-full" />
+                  </CommandItem>
+                ))}
+              </CommandLoading>
+            ) : (
+              <CommandList className="border rounded-md md:h-[200px] h-[150px]">
+                <CommandEmpty>No meal found.</CommandEmpty>
+                <CommandGroup>
+                  {meals.map((meal) => (
+                    <CommandItem
+                      key={meal.id}
+                      value={meal.name}
+                      onSelect={() => setValue("meal", meal)}
+                      className={`
             flex justify-between items-center cursor-pointer
             ${
               selectedMeal?.id === meal.id
@@ -142,92 +154,99 @@ export const EntryTab: FC<Props> = ({ submitAction, type }) => {
                 : ""
             }
           `}
-                >
-                  <div>
-                    <h4 className="font-medium text-foreground">{meal.name}</h4>
-                    <div className="text-sm text-muted-foreground flex gap-3 mt-1">
-                      <span>{meal.calories} cal</span>
-                      <span className="text-blue-600 dark:text-blue-400">
-                        {meal.protein}g protein
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-muted-foreground">
-                      <span>C: {meal.carbs}g</span> •{" "}
-                      <span>F: {meal.fat}g</span>
-                    </div>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        )}
-      </Command>
-      <NewMealDialog />
-
-      <div className="grid grid-cols-4 items-center gap-4 mt-4">
-        <Label htmlFor="amount" className="text-right">
-          Amount
-        </Label>
-        <div className="col-span-3 flex gap-2 items-center">
-          <Input
-            id="amount"
-            type="number"
-            step="0.1"
-            min="0.1"
-            placeholder="1"
-            {...register("amount", { valueAsNumber: true })}
-            className="flex-1"
-          />
-          <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
-            <span className="font-medium">
-              {meals.find((m) => m.id === selectedMeal?.id)?.unit || "serving"}
-            </span>
-          </div>
-        </div>
-      </div>
-      <Controller
-        name="mealType"
-        control={control}
-        render={({ field }) => (
-          <MealTypeDropdown
-            newMealType={field.value ?? type}
-            setNewMealType={field.onChange}
-          />
-        )}
-      />
-
-      <DialogFooter className="mt-6 gap-2 md:gap-0">
-        <DialogClose asChild>
-          <Button variant="outline" disabled={isSubmitting}>
-            Cancel
-          </Button>
-        </DialogClose>
-        <Button
-          className="bg-green-600 hover:bg-green-700"
-          onClick={handleSubmit(handleAddMealEntry)}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Add Entry"
+                    >
+                      <div>
+                        <h4 className="font-medium text-foreground">
+                          {meal.name}
+                        </h4>
+                        <div className="text-sm text-muted-foreground flex gap-3 mt-1">
+                          <span>{meal.calories} cal</span>
+                          <span className="text-blue-600 dark:text-blue-400">
+                            {meal.protein}g protein
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-muted-foreground">
+                          <span>C: {meal.carbs}g</span> •{" "}
+                          <span>F: {meal.fat}g</span>
+                        </div>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            )}
+          </Command>
+          {formState.errors.meal && (
+            <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-destructive space-y-1 text-sm">
+            <p className="text-red-500 text-xs mt-1">
+              {formState.errors.meal.message}
+            </p>
+            </div>
           )}
-        </Button>
-      </DialogFooter>
-      {Object.keys(formState.errors).length > 0 && (
-        <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-destructive space-y-1 text-sm">
-          {Object.entries(formState.errors).map(([field, error]) =>
-            error?.message ? (
-              <div key={field}>{error.message.toString()}</div>
-            ) : null,
-          )}
-        </div>
-      )}
+          <NewMealDialog />
+
+          <FormField
+            name="amount"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Amount</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g. 3.0"
+                    {...register("amount", { valueAsNumber: true })}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="mealType"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meal type</FormLabel>
+                <FormControl>
+                  <MealTypeDropdown
+                    newMealType={field.value ?? type}
+                    setNewMealType={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <DialogFooter className="mt-6 gap-2 md:gap-0">
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isSubmitting}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              className="bg-green-600 hover:bg-green-700"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Add Entry"
+              )}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
     </TabsContent>
   );
 };

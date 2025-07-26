@@ -3,7 +3,6 @@ import { createFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,19 +13,27 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { useSearchParams } from "next/navigation";
 import { FC } from "react";
-import { useForm, Controller, FieldErrors } from "react-hook-form";
+import { useForm, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MealTypeDropdown } from "../meal/meal-type-dropdown";
 import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const customEntrySchema = z.object({
-  foodName: z.string().min(1, "Food name is required"),
-  calories: z.number().min(1, "Calories is required"),
-  protein: z.number().min(0, "Protein must be a positive number"),
-  carbs: z.number().min(0, "Carbs must be a positive number"),
-  fat: z.number().min(0, "Fat must be a positive integer"),
-  amount: z.number().min(0.1, "Amount must be at least 0.1"),
+  foodName: z.string().min(2, "Food name is required"),
+  calories: z.coerce.number("Calories are required").min(1, "Calories must be a positive number"),
+  protein: z.coerce.number("Protein is required").min(0, "Protein must be a positive number"),
+  carbs: z.coerce.number("Carbs are required").min(0, "Carbs must be a positive number"),
+  fat: z.coerce.number("Fat is required").min(0, "Fat must be a positive integer"),
+  amount: z.coerce.number("Amount is required").min(0.1, "Amount must be at least 0.1"),
   unit: z.string(),
   mealType: z.string(),
 });
@@ -38,26 +45,16 @@ export const CustomEntryTab: FC = () => {
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<CustomEntryFormData>({
+  const form = useForm<CustomEntryFormData>({
     resolver: zodResolver(customEntrySchema),
     mode: "onSubmit",
     defaultValues: {
       foodName: "",
-      calories: undefined,
-      protein: undefined,
-      carbs: undefined,
-      fat: undefined,
       amount: 1,
       unit: "serving",
       mealType: "breakfast",
     },
   });
-
   const onSubmit = async (data: CustomEntryFormData) => {
     try {
       await createFoodEntry({
@@ -73,7 +70,7 @@ export const CustomEntryTab: FC = () => {
         mealId: null,
       });
 
-      reset();
+      form.reset();
       toast("Success", {
         description: "Food entry added successfully",
       });
@@ -93,221 +90,179 @@ export const CustomEntryTab: FC = () => {
   };
 
   return (
-    <TabsContent value="custom" className="space-y-4 mt-4">
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4">
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="foodName" className="text-right">
-            Food Name
-          </Label>
-          <div className="col-span-3">
-            <Controller
-              name="foodName"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="foodName"
-                  placeholder="Enter food name (e.g., Grilled Chicken Salad)"
-                />
-              )}
-            />
-            {errors.foodName && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.foodName.message}
-              </p>
+    <TabsContent value="custom">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit, onError)}
+          className="space-y-4"
+        >
+          <FormField
+            name="foodName"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Food name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. Chicken Salad" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="calories" className="text-right">
-            Calories
-          </Label>
-          <div className="col-span-3">
-            <Controller
-              name="calories"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="calories"
-                  type="number"
-                  step="0.01"
-                  value={field.value}
-                  onChange={e => field.onChange(e.target.valueAsNumber)}
-                  placeholder="Enter calories (e.g., 450)"
-                />
-              )}
-            />
-            {errors.calories && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.calories.message}
-              </p>
+          />
+          <FormField
+            name="calories"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Calories</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    step="0.01"
+                    placeholder="e.g. 250"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-        </div>
+          />
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-right">Macros (g)</Label>
           <div className="col-span-3 grid grid-cols-3 gap-2">
-            <div>
-              <Label
-                htmlFor="protein"
-                className="text-xs text-gray-500 mb-1 block"
-              >
-                Protein *
-              </Label>
-              <Controller
-                name="protein"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="protein"
-                    type="number"
-                    step="0.01"
-                    value={field.value}
-                    onChange={e => field.onChange(e.target.valueAsNumber)}
-                    placeholder="e.g., 25.5"
-                  />
-                )}
-              />
-              {errors.protein && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.protein.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label
-                htmlFor="carbs"
-                className="text-xs text-gray-500 mb-1 block"
-              >
-                Carbs *
-              </Label>
-              <Controller
-                name="carbs"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="carbs"
-                    type="number"
-                    step="0.01"
-                    value={field.value}
-                    onChange={e => field.onChange(e.target.valueAsNumber)}
-                    placeholder="e.g., 15.2"
-                  />
-                )}
-              />
-              {errors.carbs && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.carbs.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="fat" className="text-xs text-gray-500 mb-1 block">
-                Fat *
-              </Label>
-              <Controller
-                name="fat"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="fat"
-                    type="number"
-                    onChange={e => field.onChange(e.target.valueAsNumber)}
-                    step="0.01"
-                    placeholder="e.g., 8"
-                  />
-                )}
-              />
-              {errors.fat && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.fat.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="amount" className="text-right">
-            Amount
-          </Label>
-          <div className="col-span-3 flex gap-2 items-center">
-            <div className="flex-1">
-              <Controller
-                name="amount"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="amount"
-                    type="number"
-                    step="0.01"
-                    min="0.1"
-                    onChange={e => field.onChange(e.target.valueAsNumber)}
-                    placeholder="1.5"
-                  />
-                )}
-              />
-              {errors.amount && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.amount.message}
-                </p>
-              )}
-            </div>
-            <Controller
-              name="unit"
-              control={control}
+            <FormField
+              name="protein"
+              control={form.control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-[130px]">
-                    <SelectValue placeholder="Unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="serving">serving</SelectItem>
-                    <SelectItem value="g">grams (g)</SelectItem>
-                    <SelectItem value="ml">milliliters (ml)</SelectItem>
-                    <SelectItem value="oz">ounces (oz)</SelectItem>
-                    <SelectItem value="cup">cup</SelectItem>
-                    <SelectItem value="tbsp">tablespoon</SelectItem>
-                    <SelectItem value="tsp">teaspoon</SelectItem>
-                    <SelectItem value="piece">piece</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormItem>
+                  <FormLabel>Protein</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 3.0"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="carbs"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Carbs</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 2.8"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="fat"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fat</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 8.8"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
           </div>
-        </div>
 
-        <Controller
-          name="mealType"
-          control={control}
-          render={({ field }) => (
-            <MealTypeDropdown
-              newMealType={field.value}
-              setNewMealType={field.onChange}
+          <div className="col-span-2 flex gap-2 items-center">
+            <FormField
+              name="amount"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 8.8"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          )}
-        />
+            <FormField
+              name="unit"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="serving">serving</SelectItem>
+                        <SelectItem value="g">grams (g)</SelectItem>
+                        <SelectItem value="ml">milliliters (ml)</SelectItem>
+                        <SelectItem value="oz">ounces (oz)</SelectItem>
+                        <SelectItem value="cup">cup</SelectItem>
+                        <SelectItem value="tbsp">tablespoon</SelectItem>
+                        <SelectItem value="tsp">teaspoon</SelectItem>
+                        <SelectItem value="piece">piece</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            name="mealType"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meal type</FormLabel>
+                <FormControl>
+                  <MealTypeDropdown
+                    newMealType={field.value}
+                    setNewMealType={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <DialogFooter className="mt-6">
-          <Button type="button" variant="outline" onClick={() => reset()}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Adding..." : "Add Entry"}
-          </Button>
-        </DialogFooter>
-      </form>
+          <DialogFooter className="mt-6 gap-2 md:gap-0">
+            <Button type="button" variant="outline" onClick={() => form.reset()}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Adding..." : "Add Entry"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
     </TabsContent>
   );
 };
