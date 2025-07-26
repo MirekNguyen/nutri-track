@@ -22,9 +22,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AppHeader } from "./app-header";
-import { UserAvatar } from "./user-avatar";
+import { AppHeader } from "./header";
 import { usePathname } from "next/navigation";
+import { UserAvatar } from "../user-avatar";
 
 const items = [
   {

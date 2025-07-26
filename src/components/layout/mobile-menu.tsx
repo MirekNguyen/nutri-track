@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { BarChart3, Home, Plus, User, Utensils } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { AddFoodEntry } from "./dashboard/food-entry/add-food-entry"
+import { AddFoodEntry } from "../dashboard/food-entry/add-food-entry"
 
 const items = [
   {

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useForm, Controller } from "react-hook-form";
 import { NewMeal } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UnitDropdown } from "../food-entry/unit-dropdown";
+import { UnitDropdown } from "./unit-dropdown";
 import { ReactNode, useState } from "react";
 import { mealZodSchema } from "./meal-schema";
 
