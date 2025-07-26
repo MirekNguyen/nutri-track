@@ -55,7 +55,13 @@ export const EntrySchema = z.object({
     .number("Enter an amount.")
     .positive("Amount must be a positive number."),
   meal: z.object({
+    id: z.coerce.number(),
     name: z.string(),
+    calories: z.coerce.number(),
+    carbs: z.coerce.number(),
+    protein: z.coerce.number(),
+    fat: z.coerce.number(),
+    caffeine: z.coerce.number(),
   }, "Please select a meal"),
   mealType: z.enum(["breakfast", "lunch", "dinner", "snack"], {
     required_error: "Please select a meal type.",
