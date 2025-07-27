@@ -202,6 +202,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
+                <div className="flex items-center gap-2">
                 <Input
                   {...field}
                   type="number"
@@ -209,6 +210,13 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
                   placeholder="e.g. 3.0"
                   {...register("amount", { valueAsNumber: true })}
                 />
+                <div className="flex items-center bg-muted px-3 py-2 rounded-md text-sm text-foreground min-w-24">
+                  <span className="font-medium">
+                    {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
+                      "serving"}
+                  </span>
+                </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

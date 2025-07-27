@@ -125,7 +125,7 @@ export const CustomEntryForm: FC = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2">
           <FormField
             name="amount"
             control={form.control}
@@ -138,6 +138,7 @@ export const CustomEntryForm: FC = () => {
                     type="number"
                     step="0.01"
                     placeholder="e.g. 8.8"
+                    className="w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -152,7 +153,7 @@ export const CustomEntryForm: FC = () => {
                 <FormLabel>Unit</FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Unit" />
                     </SelectTrigger>
                     <SelectContent>

@@ -17,7 +17,7 @@ export const MealTypeDropdown = ({ newMealType, setNewMealType }: Props) => {
       value={newMealType}
       onValueChange={(value) => setNewMealType(value)}
     >
-      <SelectTrigger className="col-span-3">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select meal type" />
       </SelectTrigger>
       <SelectContent>
