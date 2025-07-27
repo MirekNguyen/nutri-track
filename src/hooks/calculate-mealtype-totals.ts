@@ -1,6 +1,6 @@
 import { FoodEntry } from "@/db/schema";
 
-export const useMealTypeTotals = (entries: FoodEntry[]) => {
+export const calculateMealTypeTotals = (entries: FoodEntry[]) => {
   return {
     breakfast: entries
       .filter((entry) => entry.mealType === "breakfast")

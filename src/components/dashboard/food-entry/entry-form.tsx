@@ -240,7 +240,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
           )}
         />
 
-        <DialogFooter className="mt-6 gap-2 md:gap-0">
+        <DialogFooter className="mt-6 gap-2">
           <DialogClose asChild>
             <Button variant="outline" disabled={isSubmitting}>
               Cancel

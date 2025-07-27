@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,21 +19,66 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
+import { FieldErrors } from "react-hook-form";
+import { toast } from "sonner";
+import { createFoodEntry } from "@/actions/food-entry-actions";
 import {
+  CustomEntryFormValues,
   useCustomEntryForm,
 } from "@/hooks/use-custom-entry-form";
-import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
 
-export const CustomEntryForm: FC = () => {
+type Props = {
+  submitAction: () => void;
+}
+export const CustomEntryForm: FC<Props> = ({submitAction}) => {
   const searchParams = useSearchParams();
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const { form, submitAction} = useCustomEntryForm(selectedDate);
+  const form = useCustomEntryForm();
+  const { register } = form;
+
+  const onSubmit = async (data: CustomEntryFormValues) => {
+    console.log("Submitting custom entry:", data);
+    try {
+      await createFoodEntry({
+        foodName: data.foodName,
+        calories: data.calories,
+        protein: data.protein,
+        carbs: data.carbs,
+        fat: data.fat,
+        amount: data.amount,
+        mealType: data.mealType,
+        entryDate: selectedDate.toISOString().split("T")[0],
+        entryTime: new Date().toTimeString().split(" ")[0],
+        mealId: null,
+      });
+
+      form.reset();
+      toast("Success", {
+        description: "Food entry added successfully",
+      });
+      submitAction();
+    } catch (error) {
+      console.error("Error adding custom entry:", error);
+      toast("Error", {
+        description: "Failed to add food entry. Please try again.",
+      });
+    }
+  };
+
+  const onError = (errors: FieldErrors<CustomEntryFormValues>) => {
+    console.log("Form validation errors:", errors);
+    toast.error("Validation Error", {
+      description: "Please fix the errors in the form before submitting.",
+    });
+  };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={submitAction}
+        onSubmit={form.handleSubmit(onSubmit, onError)}
         className="space-y-4"
       >
         <FormField
@@ -61,6 +106,7 @@ export const CustomEntryForm: FC = () => {
                   {...field}
                   step="0.01"
                   placeholder="e.g. 250"
+                  {...register("calories", { valueAsNumber: true })}
                 />
               </FormControl>
               <FormMessage />
@@ -81,6 +127,7 @@ export const CustomEntryForm: FC = () => {
                     type="number"
                     step="0.01"
                     placeholder="e.g. 3.0"
+                    {...register("protein", { valueAsNumber: true })}
                   />
                 </FormControl>
                 <FormMessage />
@@ -99,6 +146,7 @@ export const CustomEntryForm: FC = () => {
                     type="number"
                     step="0.01"
                     placeholder="e.g. 2.8"
+                    {...register("carbs", { valueAsNumber: true })}
                   />
                 </FormControl>
                 <FormMessage />
@@ -117,6 +165,7 @@ export const CustomEntryForm: FC = () => {
                     type="number"
                     step="0.01"
                     placeholder="e.g. 8.8"
+                    {...register("fat", { valueAsNumber: true })}
                   />
                 </FormControl>
                 <FormMessage />
@@ -190,10 +239,16 @@ export const CustomEntryForm: FC = () => {
           )}
         />
 
-        <DialogFooter className="mt-6 gap-2 md:gap-0">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Cancel
-          </Button>
+        <DialogFooter className="mt-6 gap-2">
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => form.reset()}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
           <Button
             type="submit"
             className="bg-green-600 hover:bg-green-700"

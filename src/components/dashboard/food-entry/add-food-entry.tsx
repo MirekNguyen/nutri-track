@@ -44,7 +44,7 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
               <EntryForm submitAction={() => setIsOpen(false)} type={type} />
             </TabsContent>
             <TabsContent value="custom">
-              <CustomEntryForm />
+              <CustomEntryForm submitAction={() => setIsOpen(false)}  />
             </TabsContent>
           </Tabs>
         </DialogContent>
