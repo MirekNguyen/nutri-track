@@ -87,7 +87,7 @@ export default function MealsDashboard({ meals }: Props) {
         case "createdAt":
         default:
           return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(b.createdAt ?? new Date()).getTime() - new Date(a.createdAt ?? new Date()).getTime()
           );
       }
     });

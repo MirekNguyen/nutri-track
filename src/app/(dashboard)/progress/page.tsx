@@ -35,23 +35,7 @@ import {
   deleteWeightEntry,
 } from "@/actions/weight-actions";
 import { toast } from "sonner";
-
-interface WeightEntry {
-  id: number;
-  weight: number;
-  entryDate: Date;
-  note: string | null;
-}
-
-interface BodyMeasurement {
-  id: number;
-  entryDate: Date;
-  chest: number | null;
-  waist: number | null;
-  hips: number | null;
-  arms: number | null;
-  thighs: number | null;
-}
+import { BodyMeasurement, WeightEntry } from "@/db/schema";
 
 export default function ProgressPage() {
   const [activeTab, setActiveTab] = useState("weight");
@@ -108,8 +92,8 @@ export default function ProgressPage() {
       const today = new Date();
 
       const newEntry = await createWeightEntry({
-        weight,
-        entryDate: today,
+        weight: weight.toString(),
+        entryDate: today.toISOString(),
         note: newWeightNote || null,
       });
 
@@ -153,10 +137,8 @@ export default function ProgressPage() {
 
   const handleAddMeasurement = async () => {
     if (!newChest && !newWaist && !newHips && !newArms && !newThighs) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Please enter at least one measurement",
-        variant: "destructive",
       });
       return;
     }
@@ -167,12 +149,12 @@ export default function ProgressPage() {
       const today = new Date();
 
       const newMeasurement = await createBodyMeasurement({
-        entryDate: today,
-        chest: newChest ? Number.parseFloat(newChest) : null,
-        waist: newWaist ? Number.parseFloat(newWaist) : null,
-        hips: newHips ? Number.parseFloat(newHips) : null,
-        arms: newArms ? Number.parseFloat(newArms) : null,
-        thighs: newThighs ? Number.parseFloat(newThighs) : null,
+        entryDate: new Date(today).toISOString(),
+        chest: newChest,
+        waist: newWaist,
+        hips: newHips,
+        arms: newArms,
+        thighs: newThighs,
       });
 
       // Add the new measurement to the list
