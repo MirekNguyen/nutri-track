@@ -8,7 +8,8 @@ import { toast } from "sonner";
 import { MealDialog } from "./meal-dialog";
 
 export const NewMealDialog: FC<PropsWithChildren> = ({ children }) => {
-  const defaultValues: Partial<NewMeal> = {
+  const defaultValues = {
+    description: null,
     unit: "serving",
   };
 
