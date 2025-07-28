@@ -39,8 +39,6 @@ import {
   Award,
   CheckCircle,
 } from "lucide-react";
-import { useMobile } from "@/hooks/use-mobile";
-import { useSidebar } from "@/hooks/use-sidebar";
 import { getWeightEntries } from "@/actions/weight-actions";
 import { toast } from "sonner";
 
@@ -104,14 +102,12 @@ export default function GoalsPage() {
       createdAt: new Date(),
     },
   ]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [,setIsLoading] = useState(true);
 
   // New goal form state
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalDescription, setNewGoalDescription] = useState("");
-  const [newGoalType, setNewGoalType] = useState<
-    "weight" | "calorie" | "exercise" | "habit"
-  >("weight");
+  const [newGoalType, setNewGoalType] = useState<string>("weight");
   const [newGoalTarget, setNewGoalTarget] = useState("");
   const [newGoalUnit, setNewGoalUnit] = useState("lbs");
   const [newGoalDeadline, setNewGoalDeadline] = useState("");
@@ -258,7 +254,7 @@ export default function GoalsPage() {
                   <Label htmlFor="goalType">Goal Type</Label>
                   <Select
                     value={newGoalType}
-                    onValueChange={(value: any) => setNewGoalType(value)}
+                    onValueChange={(value) => setNewGoalType(value)}
                   >
                     <SelectTrigger className="border-2 border-gray-300 dark:border-gray-600">
                       <SelectValue />

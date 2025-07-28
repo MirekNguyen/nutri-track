@@ -80,10 +80,8 @@ export default function LoginPage() {
       });
     } catch (error) {
       console.error("OAuth error:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to authenticate with provider.",
-        variant: "destructive",
       });
       setIsLoading(false);
     }

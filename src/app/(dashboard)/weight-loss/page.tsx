@@ -48,7 +48,7 @@ export default function WeightLossPage() {
   const [weightEntries, setWeightEntries] = useState<WeightEntry[]>([]);
   const [foodEntries, setFoodEntries] = useState<FoodEntry[]>([]);
   const [nutritionGoals, setNutritionGoals] = useState({ calorieGoal: 2000 });
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   // Calculator state
   const [currentWeight, setCurrentWeight] = useState("");
@@ -512,7 +512,7 @@ export default function WeightLossPage() {
                         Calorie Intake Too High
                       </h4>
                       <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                        You're consuming{" "}
+                        You&apos;re consuming{" "}
                         {averageDailyCalories - nutritionGoals.calorieGoal}{" "}
                         calories above your target. Consider reducing portion
                         sizes or choosing lower-calorie alternatives.
@@ -526,7 +526,7 @@ export default function WeightLossPage() {
                         Rapid Weight Loss
                       </h4>
                       <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
-                        You're losing weight faster than recommended. Consider
+                        You&apos;re losing weight faster than recommended. Consider
                         increasing your calorie intake slightly to ensure
                         sustainable and healthy weight loss.
                       </p>

@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AppHeader } from "./header";
+import { Header } from "./header";
 import { usePathname } from "next/navigation";
 import { UserAvatar } from "../common/user-avatar";
 
@@ -68,7 +68,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             { (state === "expanded" || isMobile) && (
-            <AppHeader />
+            <Header />
             )}
           </SidebarMenuItem>
         </SidebarMenu>

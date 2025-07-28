@@ -74,7 +74,7 @@ export default function StatisticsPage() {
         (entry) => entry.entryDate === dateStr,
       );
       const calories = entriesForDay.reduce(
-        (sum, entry) => sum + parseFloat(entry.calories),
+        (sum, entry) => sum + entry.calories,
         0,
       );
 
@@ -99,19 +99,19 @@ export default function StatisticsPage() {
           (entry) => entry.entryDate === dateStr,
         );
         const calories = entriesForDay.reduce(
-          (sum, entry) => sum + parseFloat(entry.calories),
+          (sum, entry) => sum + entry.calories,
           0,
         );
         const proteins = entriesForDay.reduce(
-          (sum, entry) => sum + (parseFloat(entry.protein) || 0),
+          (sum, entry) => sum + entry.protein,
           0,
         );
         const carbs = entriesForDay.reduce(
-          (sum, entry) => sum + (parseFloat(entry.carbs) || 0),
+          (sum, entry) => sum + entry.carbs,
           0,
         );
         const fat = entriesForDay.reduce(
-          (sum, entry) => sum + (entry.fat || 0),
+          (sum, entry) => sum + entry.fat,
           0,
         );
 
@@ -150,7 +150,7 @@ export default function StatisticsPage() {
         (entry) => entry.entryDate === dateStr,
       );
       const macroValue = entriesForDay.reduce(
-        (sum, entry) => sum + (parseFloat(entry[macroType]) || 0),
+        (sum, entry) => sum + (entry[macroType] || 0),
         0,
       );
 
@@ -221,11 +221,6 @@ export default function StatisticsPage() {
                         from: date,
                       }))
                     }
-                    disabled={(date) =>
-                      date > new Date() ||
-                      (customDateRange.to && date > customDateRange.to)
-                    }
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -257,11 +252,6 @@ export default function StatisticsPage() {
                     onSelect={(date) =>
                       setCustomDateRange((prev) => ({ ...prev, to: date }))
                     }
-                    disabled={(date) =>
-                      date > new Date() ||
-                      (customDateRange.from && date < customDateRange.from)
-                    }
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>

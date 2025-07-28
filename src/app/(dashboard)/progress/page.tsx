@@ -125,10 +125,8 @@ export default function ProgressPage() {
       });
     } catch (error) {
       console.error("Error adding weight entry:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to add weight entry. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);

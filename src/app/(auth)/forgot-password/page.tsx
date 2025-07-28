@@ -74,14 +74,14 @@ export default function ForgotPasswordPage() {
 
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Reset your password</h2>
           <p className="text-gray-600 mb-6">
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
 
           {isSubmitted ? (
             <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
               <h3 className="text-sm font-medium text-green-800">Check your email</h3>
               <p className="text-sm text-green-700 mt-1">
-                We've sent a password reset link to {email}. The link will expire in 10 minutes.
+                We&apos;ve sent a password reset link to {email}. The link will expire in 10 minutes.
               </p>
               <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => setIsSubmitted(false)}>
                 Send another email
