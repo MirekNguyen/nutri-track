@@ -41,19 +41,13 @@ import {
 } from "lucide-react";
 import { getWeightEntries } from "@/actions/weight-actions";
 import { toast } from "sonner";
-
-interface WeightEntry {
-  id: number;
-  weight: number;
-  entryDate: Date;
-  note: string | null;
-}
+import { WeightEntry } from "@/db/schema";
 
 interface Goal {
   id: string;
   title: string;
   description: string;
-  type: "weight" | "calorie" | "exercise" | "habit";
+  type: string;
   targetValue: number;
   currentValue: number;
   unit: string;
@@ -169,9 +163,9 @@ export default function GoalsPage() {
 
   const calculateProgress = (goal: Goal) => {
     if (goal.type === "weight" && weightEntries.length > 0) {
-      const startWeight = weightEntries[weightEntries.length - 1]?.weight || 0;
-      const currentWeight = weightEntries[0]?.weight || 0;
-      const weightLost = startWeight - currentWeight;
+      const startWeight = weightEntries[weightEntries.length - 1]?.weight;
+      const currentWeight = weightEntries[0]?.weight;
+      const weightLost = parseFloat(startWeight) - parseFloat(currentWeight);
       return Math.min((weightLost / goal.targetValue) * 100, 100);
     }
     return Math.min((goal.currentValue / goal.targetValue) * 100, 100);
