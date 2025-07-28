@@ -24,25 +24,7 @@ import { getWeightEntries } from "@/actions/weight-actions";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getNutritionGoals } from "@/actions/nutrition-goal-actions";
 import { toast } from "sonner";
-
-interface WeightEntry {
-  id: number;
-  weight: number;
-  entryDate: Date;
-  note: string | null;
-}
-
-interface FoodEntry {
-  id: number;
-  foodName: string;
-  calories: number;
-  mealType: string;
-  protein: number | null;
-  carbs: number | null;
-  fat: number | null;
-  entryDate: string;
-  entryTime: string;
-}
+import { FoodEntry, WeightEntry } from "@/db/schema";
 
 export default function WeightLossPage() {
   const [weightEntries, setWeightEntries] = useState<WeightEntry[]>([]);
@@ -69,7 +51,7 @@ export default function WeightLossPage() {
 
         // Load recent food entries (last 30 days)
         const thirtyDaysAgo = subDays(new Date(), 30);
-        const entries = await getFoodEntries(thirtyDaysAgo);
+        const entries = await getFoodEntries(thirtyDaysAgo.toISOString());
         setFoodEntries(entries);
 
         // Load nutrition goals
@@ -153,7 +135,7 @@ export default function WeightLossPage() {
 
     const latestWeight = weightEntries[0].weight;
     const oldestWeight = weightEntries[weightEntries.length - 1].weight;
-    const weightLoss = oldestWeight - latestWeight;
+    const weightLoss = parseFloat(oldestWeight) - parseFloat(latestWeight);
     const daysBetween = differenceInDays(
       new Date(weightEntries[0].entryDate),
       new Date(weightEntries[weightEntries.length - 1].entryDate),
