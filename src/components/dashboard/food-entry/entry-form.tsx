@@ -55,13 +55,19 @@ export const EntrySchema = z.object({
     .positive("Amount must be a positive number."),
   meal: z.object(
     {
-      id: z.coerce.number(),
+      id: z.number(),
+      userId: z.number().nullable(),
       name: z.string(),
-      calories: z.coerce.number(),
-      carbs: z.coerce.number(),
-      protein: z.coerce.number(),
-      fat: z.coerce.number(),
-      caffeine: z.coerce.number(),
+      unit: z.string().nullable(),
+      description: z.string().nullable(),
+      calories: z.number(),
+      protein: z.number(),
+      carbs: z.number(),
+      fat: z.number(),
+      caffeine: z.number().nullable(),
+      tags: z.array(z.string()).nullable(),
+      isFavorite: z.boolean().nullable(),
+      createdAt: z.date().nullable(),
     },
     "Please select a meal",
   ),
@@ -83,7 +89,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
     retry: 1,
   });
 
-  const form = useForm<Entry>({
+  const form = useForm({
     resolver: zodResolver(EntrySchema),
     defaultValues: {
       amount: 1,

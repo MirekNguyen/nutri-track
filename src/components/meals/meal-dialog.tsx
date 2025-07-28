@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UnitDropdown } from "./unit-dropdown";
 import { ReactNode, useState } from "react";
 import { mealZodSchema } from "./meal-zod-schema";
+import { Form } from "../ui/form";
 
 type Props = {
   defaultValues: Partial<NewMeal>;
@@ -38,13 +39,14 @@ export const MealDialog = ({
 }: Props) => {
   const [open, setOpen] = useState(false);
 
+  const form = useForm<NewMeal>({ defaultValues, resolver: zodResolver(mealZodSchema) });
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm<NewMeal>({ defaultValues, resolver: zodResolver(mealZodSchema) });
+    formState: { errors, isSubmitting }
+  } = form;
 
   const handleFormSubmit = async (data: NewMeal) => {
     await onSubmitAction(data);
@@ -68,6 +70,7 @@ export const MealDialog = ({
             Enter the details of your meal including nutritional information.
           </DialogDescription>
         </DialogHeader>
+        <Form {...form}>
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
           className="space-y-4"
@@ -234,6 +237,7 @@ export const MealDialog = ({
             </Button>
           </DialogFooter>
         </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
