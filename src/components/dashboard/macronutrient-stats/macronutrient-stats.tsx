@@ -44,7 +44,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-muted-foreground"
+              className="h-4 w-4 text-muted-foreground"
             >
               <Info size={14} />
             </Button>
@@ -99,7 +99,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
-            Protein coeficient {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
+            Coeficient {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
           </p>
         </CardContent>
       </Card>
