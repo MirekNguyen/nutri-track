@@ -1,9 +1,10 @@
 "use client";
 import { ThemeToggle } from "@/components/common/theme-toggle";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export function Header() {
   return (
-    <header className="bg-background border-b border-border px-4 md:px-6 py-3 shadow-sm">
+    <header className="bg-background border-b border-border px-4 py-3 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="bg-green-600 text-white p-1.5 rounded">
@@ -28,8 +29,9 @@ export function Header() {
             NutriTrack
           </h1>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center">
           <ThemeToggle />
+          <SidebarTrigger />
         </div>
       </div>
     </header>

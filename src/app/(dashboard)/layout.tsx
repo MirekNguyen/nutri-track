@@ -1,14 +1,14 @@
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { MobileHeader } from "@/components/layout/mobile-header";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { cookies } from "next/headers";
 import { PropsWithChildren } from "react";
 import { AppSidebar } from "@/components/layout/sidebar";
 
 export default async function Layout({ children }: PropsWithChildren) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
     <>

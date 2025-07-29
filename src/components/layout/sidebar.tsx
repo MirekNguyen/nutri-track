@@ -20,6 +20,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Header } from "./header";
@@ -69,6 +70,11 @@ export function AppSidebar() {
           <SidebarMenuItem>
             { (state === "expanded" || isMobile) && (
             <Header />
+            )}
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            { (state === "collapsed") && (
+            <SidebarTrigger />
             )}
           </SidebarMenuItem>
         </SidebarMenu>
