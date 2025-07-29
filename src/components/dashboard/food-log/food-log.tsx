@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlusCircle } from "lucide-react";
 import { calculateMealTypeTotals } from "../../../hooks/calculate-mealtype-totals";
@@ -14,23 +13,12 @@ type Props = {
 export const FoodLog: FC<Props> = async ({ date }) => {
   const entries = await getFoodEntries(date);
   const mealTypeTotalsData = calculateMealTypeTotals(entries);
-  console.log("Meal Type Totals Data:", mealTypeTotalsData);
-  console.log("Food Log Entries:", entries);
 
   return (
     <>
       <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow bg-background">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today&apos;s Food Log</CardTitle>
-          <AddFoodEntry>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-green-600 dark:text-green-400 border-green-600 dark:border-green-400 bg-transparent"
-            >
-              <PlusCircle className="mr-2 h-4 w-4" /> Add Food
-            </Button>
-          </AddFoodEntry>
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y">

@@ -38,7 +38,7 @@ export const MacronutrientStats = async ({ date }: Props) => {
             : "border-green-300 dark:border-green-700",
         )}
       >
-        <CardHeader className="pb-2">
+        <CardHeader className="md:pb-2">
           <CardTitle className="text-sm font-medium text-foreground flex items-center justify-between">
             Calories
             <Button
@@ -51,8 +51,8 @@ export const MacronutrientStats = async ({ date }: Props) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-green-600">
+          <div className="flex items-baseline justify-between flex-col md:flex-row">
+            <div className="text-xl md:text-3xl font-bold text-green-600">
               {totalCalories.toFixed(0)} kcal
             </div>
             <div className="text-sm text-muted-foreground">
@@ -75,14 +75,14 @@ export const MacronutrientStats = async ({ date }: Props) => {
       </Card>
 
       <Card className="border-l-4 border-blue-600 dark:border-blue-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
+        <CardHeader className="md:pb-2">
           <CardTitle className="text-sm font-medium text-foreground">
             Protein
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="flex items-baseline justify-between flex-col md:flex-row">
+            <div className="text-xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
               {macrosData.protein.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
@@ -97,10 +97,6 @@ export const MacronutrientStats = async ({ date }: Props) => {
               }}
             />
           </div>
-          <p className="text-xs text-muted-foreground mt-2 flex items-center">
-            <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
-            Important for muscle recovery
-          </p>
           <p className="text-xs text-muted-foreground mt-2">
             <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
             Protein coeficient {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
@@ -109,14 +105,14 @@ export const MacronutrientStats = async ({ date }: Props) => {
       </Card>
 
       <Card className="border-l-4 border-purple-600 dark:border-purple-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
+        <CardHeader className="md:pb-2">
           <CardTitle className="text-sm font-medium text-foreground">
             Carbs
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
+          <div className="flex items-baseline justify-between flex-col md:flex-row">
+            <div className="text-xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
               {macrosData.carbs.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">
@@ -141,14 +137,14 @@ export const MacronutrientStats = async ({ date }: Props) => {
       </Card>
 
       <Card className="border-l-4 border-yellow-600 dark:border-yellow-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
+        <CardHeader className="md:pb-2">
           <CardTitle className="text-sm font-medium text-foreground">
             Fats
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-baseline justify-between">
-            <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+          <div className="flex items-baseline justify-between flex-col md:flex-row">
+            <div className="text-xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
               {macrosData.fat.toFixed(0)}g
             </div>
             <div className="text-sm text-muted-foreground">

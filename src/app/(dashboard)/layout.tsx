@@ -18,7 +18,6 @@ export default async function Layout({ children }: PropsWithChildren) {
           <MobileHeader />
           <div className="flex flex-col md:flex-row flex-1 pb-20 md:pb-0">
             <main className="flex-1 p-4 md:p-6 overflow-auto transition-all duration-300">
-              <SidebarTrigger />
               {children}
             </main>
           </div>
