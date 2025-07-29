@@ -76,10 +76,10 @@ const MobileFoodRecord = ({ entry, meals }: Props) => {
           <AccordionItem value={entry.id.toString()}>
             <AccordionTrigger>
               <div className="flex items-center justify-between w-full">
-                <h3 className="font-medium text-foreground">
+                <h3 className="text-xs font-medium text-foreground">
                   {entry.foodName}
                 </h3>
-                <p>{entry.calories.toFixed(0)} kcal</p>
+                <p className="text-xs text-muted-foreground">{entry.calories.toFixed(0)} kcal</p>
               </div>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
