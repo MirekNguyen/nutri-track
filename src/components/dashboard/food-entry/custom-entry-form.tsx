@@ -1,47 +1,36 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useSearchParams } from "next/navigation";
-import { FC } from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
-import { FieldErrors } from "react-hook-form";
-import { toast } from "sonner";
-import { createFoodEntry } from "@/actions/food-entry-actions";
-import {
-  CustomEntryFormValues,
-  useCustomEntryForm,
-} from "@/hooks/use-custom-entry-form";
-import ImageUploadForm from "@/components/image-upload-form";
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { DialogClose, DialogFooter } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card } from "@/components/ui/card"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { useSearchParams } from "next/navigation"
+import type { FC } from "react"
+import { useState } from "react"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown"
+import type { FieldErrors } from "react-hook-form"
+import { toast } from "sonner"
+import { createFoodEntry } from "@/actions/food-entry-actions"
+import { type CustomEntryFormValues, useCustomEntryForm } from "@/hooks/use-custom-entry-form"
+import { ChevronDown, Edit3 } from "lucide-react"
 
 type Props = {
-  submitAction: () => void;
+  submitAction: () => void
 }
-export const CustomEntryForm: FC<Props> = ({submitAction}) => {
-  const searchParams = useSearchParams();
-  const dateParam = searchParams.get("date");
-  const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
-  const form = useCustomEntryForm();
-  const { register } = form;
+export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
+  const searchParams = useSearchParams()
+  const dateParam = searchParams.get("date")
+  const selectedDate = dateParam ? new Date(dateParam) : new Date()
+  const [showAdvanced, setShowAdvanced] = useState(false)
+
+  const form = useCustomEntryForm()
+  const { register } = form
 
   const onSubmit = async (data: CustomEntryFormValues) => {
-    console.log("Submitting custom entry:", data);
     try {
       await createFoodEntry({
         foodName: data.foodName,
@@ -54,211 +43,229 @@ export const CustomEntryForm: FC<Props> = ({submitAction}) => {
         entryDate: selectedDate.toISOString().split("T")[0],
         entryTime: new Date().toTimeString().split(" ")[0],
         mealId: null,
-      });
-
-      form.reset();
-      toast("Success", {
+      })
+      form.reset()
+      toast.success("Success!", {
         description: "Food entry added successfully",
-      });
-      submitAction();
+      })
+      submitAction()
     } catch (error) {
-      console.error("Error adding custom entry:", error);
-      toast("Error", {
+      console.error("Error adding custom entry:", error)
+      toast.error("Error", {
         description: "Failed to add food entry. Please try again.",
-      });
+      })
     }
-  };
+  }
 
   const onError = (errors: FieldErrors<CustomEntryFormValues>) => {
-    console.log("Form validation errors:", errors);
-    toast.error("Validation Error", {
-      description: "Please fix the errors in the form before submitting.",
-    });
-  };
+    toast.error("Please fix form errors")
+  }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit, onError)}
-        className="space-y-4"
-      >
-        <FormField
-          name="foodName"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Food name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g. Chicken Salad" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="calories"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Calories</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  step="0.01"
-                  placeholder="e.g. 250"
-                  {...register("calories", { valueAsNumber: true })}
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <Edit3 className="w-4 h-4 text-muted-foreground" />
+        <h3 className="font-medium text-foreground">Manual Entry</h3>
+      </div>
+
+      <Card className="p-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+            {/* Essential Fields */}
+            <div className="space-y-4">
+              <FormField
+                name="foodName"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm">Food Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="e.g. Grilled Chicken Breast" className="h-9" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  name="calories"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm">Calories</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          step="0.01"
+                          placeholder="250"
+                          className="h-9"
+                          {...register("calories", { valueAsNumber: true })}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="col-span-3 grid grid-cols-3 gap-2">
-          <FormField
-            name="protein"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Protein</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="e.g. 3.0"
-                    {...register("protein", { valueAsNumber: true })}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="carbs"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Carbs</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="e.g. 2.8"
-                    {...register("carbs", { valueAsNumber: true })}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="fat"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fat</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="e.g. 8.8"
-                    {...register("fat", { valueAsNumber: true })}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="flex gap-2">
-          <FormField
-            name="amount"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="e.g. 8.8"
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="unit"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Unit</FormLabel>
-                <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="serving">serving</SelectItem>
-                      <SelectItem value="g">grams (g)</SelectItem>
-                      <SelectItem value="ml">milliliters (ml)</SelectItem>
-                      <SelectItem value="oz">ounces (oz)</SelectItem>
-                      <SelectItem value="cup">cup</SelectItem>
-                      <SelectItem value="tbsp">tablespoon</SelectItem>
-                      <SelectItem value="tsp">teaspoon</SelectItem>
-                      <SelectItem value="piece">piece</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <FormField
-          name="mealType"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Meal type</FormLabel>
-              <FormControl>
-                <MealTypeDropdown
-                  newMealType={field.value}
-                  setNewMealType={field.onChange}
+                <FormField
+                  name="mealType"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm">Meal Type</FormLabel>
+                      <FormControl>
+                        <MealTypeDropdown newMealType={field.value} setNewMealType={field.onChange} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              </div>
+            </div>
 
-        <DialogFooter className="mt-6 gap-2">
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              Cancel
-            </Button>
-          </DialogClose>
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting ? "Adding..." : "Add Entry"}
-          </Button>
-        </DialogFooter>
-      </form>
-    </Form>
-  );
-};
+            {/* Advanced Fields - Collapsible */}
+            <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+              <CollapsibleTrigger asChild>
+                <Button type="button" variant="ghost" className="w-full h-8 text-xs text-muted-foreground">
+                  Advanced Details
+                  <ChevronDown className={`w-3 h-3 ml-2 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-4 mt-4">
+                {/* Macros */}
+                <div className="space-y-2">
+                  <FormLabel className="text-sm text-muted-foreground">Macronutrients (grams)</FormLabel>
+                  <div className="grid grid-cols-3 gap-2">
+                    <FormField
+                      name="protein"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs">Protein</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              step="0.01"
+                              placeholder="25"
+                              className="h-8 text-xs"
+                              {...register("protein", { valueAsNumber: true })}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="carbs"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs">Carbs</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              step="0.01"
+                              placeholder="5"
+                              className="h-8 text-xs"
+                              {...register("carbs", { valueAsNumber: true })}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="fat"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs">Fat</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              step="0.01"
+                              placeholder="8"
+                              className="h-8 text-xs"
+                              {...register("fat", { valueAsNumber: true })}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Amount and Unit */}
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    name="amount"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm">Amount</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="number" step="0.01" placeholder="1" className="h-9" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="unit"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm">Unit</FormLabel>
+                        <FormControl>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <SelectTrigger className="h-9">
+                              <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="serving">serving</SelectItem>
+                              <SelectItem value="g">grams</SelectItem>
+                              <SelectItem value="ml">ml</SelectItem>
+                              <SelectItem value="oz">oz</SelectItem>
+                              <SelectItem value="cup">cup</SelectItem>
+                              <SelectItem value="tbsp">tbsp</SelectItem>
+                              <SelectItem value="tsp">tsp</SelectItem>
+                              <SelectItem value="piece">piece</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+
+            {/* Footer */}
+            <DialogFooter className="pt-4 gap-2">
+              <DialogClose asChild>
+                <Button type="button" variant="outline" onClick={() => form.reset()} className="h-9 text-sm">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 h-9 text-sm font-medium"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? "Adding..." : "Add Entry"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </Card>
+    </div>
+  )
+}
+
