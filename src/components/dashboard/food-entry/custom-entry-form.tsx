@@ -27,6 +27,7 @@ import {
   CustomEntryFormValues,
   useCustomEntryForm,
 } from "@/hooks/use-custom-entry-form";
+import ImageUploadForm from "@/components/image-upload-form";
 
 type Props = {
   submitAction: () => void;
@@ -76,6 +77,8 @@ export const CustomEntryForm: FC<Props> = ({submitAction}) => {
   };
 
   return (
+    <>
+      <ImageUploadForm valueAction={form.setValue}/>
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
@@ -259,5 +262,6 @@ export const CustomEntryForm: FC<Props> = ({submitAction}) => {
         </DialogFooter>
       </form>
     </Form>
+    </>
   );
 };
