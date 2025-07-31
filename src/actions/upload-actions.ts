@@ -1,6 +1,4 @@
-// app/actions/uploadAndAnalyze.ts
 "use server";
-
 import { OpenAI } from "openai";
 
 export type Macros = {
@@ -13,67 +11,83 @@ export type Macros = {
   unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
 };
 
+// Multi-image upload (up to 3), single OpenAI Vision API call, label-aware prompt!
 export async function uploadAndAnalyze(formData: FormData): Promise<Macros> {
-  // 1. Get the file from FormData and validate it with Zod
-  const imageFile = formData.get("image");
-  // const parseResult = imageUploadSchema.safeParse({ image: imageFile });
-  //
-  // if (!parseResult.success) {
-  //   return { error: parseResult.error.errors[0]?.message ?? "Invalid image" };
-  // }
-  const file = imageFile as File;
+  // Grab all images from FormData ("images" as the field name!)
+  const files = formData.getAll("images").filter(
+    (f): f is File => f instanceof File && f.size > 0
+  );
+  if (files.length < 1 || files.length > 3) {
+    throw new Error("You must upload between 1 and 3 images.");
+  }
 
-  // 2. Read the file as buffer (required for OpenAI vision API)
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  const mimetype = file.type || "image/jpeg";
-  const base64 = buffer.toString("base64");
+  // Prepare images for OpenAI API (base64)
+  const imagesContent = await Promise.all(
+    files.map(async (file) => ({
+      type: "image_url" as const,
+      image_url: {
+        url: `data:${file.type || "image/jpeg"};base64,${Buffer.from(
+          await file.arrayBuffer()
+        ).toString("base64")}`,
+      },
+    }))
+  );
 
-  // 3. OpenAI call (Vision)
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const prompt = `
-Analyze the provided high-resolution food image using expert food recognition and precise portion estimation. Incorporate scale reference objects (if present), metadata (e.g., meal type, cuisine), and visible preparation methods. Identify all meal components, estimate their portions and total amount as accurately as possible, and reference up-to-date, regionally appropriate nutritional databases. Output only a single JSON object with these keys: { name: string, calories: number, protein: number, carbs: number, fats: number, amount: number, unit: \"serving\" | \"g\" | \"ml\" | \"oz\" | \"cup\" | \"tbsp\" | \"tsp\" | \"piece\" }. All values must be precise, realistic, and reflect the standard serving size used. Output only the JSON, with no extra explanation.
+Analyze ALL images of the SAME meal jointly for better accuracy. 
+Use visual recognition, portion estimation (consider known object sizes for scale), AND if visible, any nutrition facts, ingredients lists, manufacturer stickers, or packaging for nutritional values. Prefer label/panel info if visible, otherwise estimate using up-to-date, regionally appropriate nutrition databases. Harmonize your answer if there are discrepancies.
+Output a single JSON object:
+{
+  name: string,
+  calories: number,
+  protein: number,
+  carbs: number,
+  fats: number,
+  amount: number,
+  unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece"
+}
+No explanation. Never output anything but JSON. Don't guess if not plausible.
 `;
 
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+
   const completion = await openai.chat.completions.create({
-    model: "gpt-4.1",
-    max_tokens: 300,
+    model: "gpt-4.1-mini",
+    max_tokens: 350,
     messages: [
       {
         role: "system",
-        content: `You are a nutritionist and image analyst who responds ONLY with the requested JSON. No explanation. The output must be in format of 
+        content: `You are a nutritionist and image analyst. Respond ONLY with JSON of this type:
 type Macros = {
-name: string;
-calories: number;
-protein: number;
-carbs: number;
-fats: number;
-amount: number;
-unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
-}; Name must be the name of the food item, not a description, length is limited to 50 characters. Calories, protein, carbs, and fats must be realistic values based on the food item and its portion size. Amount must be a realistic portion size, and unit must be one of the specified options.
-        `,
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  amount: number;
+  unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
+};
+Name = the primary food name (50 characters max). All values must be realistic, plausible and consistent with the food visible.`,
       },
       {
         role: "user",
         content: [
           { type: "text", text: prompt },
-          {
-            type: "image_url",
-            image_url: { url: `data:${mimetype};base64,${base64}` },
-          },
+          ...imagesContent,
         ],
       },
     ],
   });
-  console.log("OpenAI response:", completion);
 
   const outputText = completion.choices[0].message.content!;
-  console.log("Output text:", completion.choices[0].message);
   const jsonStart = outputText.indexOf("{");
   const jsonEnd = outputText.lastIndexOf("}");
   const jsonText = outputText.slice(jsonStart, jsonEnd + 1);
-  console.log("JSON text:", jsonText);
-  // Dummy-guard, in case parsing fails
-  const parsed = JSON.parse(jsonText);
-  return parsed;
+
+  try {
+    return JSON.parse(jsonText);
+  } catch (err) {
+    console.error("JSON parsing error:", jsonText, err);
+    throw new Error("Could not parse AI result. Try again.");
+  }
 }

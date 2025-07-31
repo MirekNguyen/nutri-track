@@ -1,8 +1,8 @@
+// ImageUploadForm.tsx
 "use client";
-
 import { useForm, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,60 +13,84 @@ import {
   FormMessage,
   FormControl,
 } from "@/components/ui/form";
-import { Macros, uploadAndAnalyze } from "@/actions/upload-actions";
 import z from "zod";
 import { toast } from "sonner";
+import { Macros, uploadAndAnalyze } from "@/actions/upload-actions";
 import { CustomEntryFormValues } from "@/hooks/use-custom-entry-form";
 
+// Zod schema for multiple images field
 export const imageUploadSchema = z.object({
-  image: z
-    .any()
-    .refine(
-      (file) => file instanceof File && file.size > 0,
-      "Image is required",
-    ),
+  images: z
+    .array(z.instanceof(File))
+    .min(1, "Please upload 1–3 photos.")
+    .max(3, "Please upload 1–3 photos."),
 });
+type FormValues = z.infer<typeof imageUploadSchema>;
 
-type FormValues = { image: File | undefined };
-
-type Props = {
+export default function ImageUploadForm({
+  valueAction,
+}: {
   valueAction: UseFormSetValue<CustomEntryFormValues>;
-};
-
-export default function ImageUploadForm({ valueAction }: Props) {
+}) {
   const [result, setResult] = useState<Macros | null>(null);
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(imageUploadSchema),
-    defaultValues: { image: undefined },
+    defaultValues: { images: [] },
+    mode: "onChange",
   });
 
+  // Add files from input
+  const handleFiles = (newFiles: FileList | null) => {
+    if (!newFiles) return;
+    const filesArray = Array.from(newFiles);
+    // Don't exceed 3
+    const prev = form.getValues("images");
+    const stillAllowed = Math.max(0, 3 - prev.length);
+    const toAdd = filesArray.slice(0, stillAllowed);
+    const updated = prev.concat(toAdd);
+    form.setValue("images", updated, { shouldValidate: true });
+  };
+
+  // Remove by index
+  const handleRemove = (idx: number) => {
+    const prev = form.getValues("images");
+    const updated = prev.filter((_, i) => i !== idx);
+    form.setValue("images", updated, { shouldValidate: true });
+  };
+
+  // Submit using RHF values
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     setResult(null);
-
     const formData = new FormData();
-    if (data.image) formData.append("image", data.image);
-
+    data.images.forEach((file) => {
+      formData.append("images", file);
+    });
     try {
       const res = await uploadAndAnalyze(formData);
       setResult(res);
-      valueAction("foodName", res.name);
+      // Use setValue to propagate to parent if using RHF parent, or valueAction as a prop function
+      valueAction("name", res.name);
       valueAction("calories", res.calories);
       valueAction("protein", res.protein);
       valueAction("carbs", res.carbs);
-      valueAction("fat", res.fats);
+      valueAction("fats", res.fats);
       valueAction("amount", res.amount);
       valueAction("unit", res.unit);
     } catch (error) {
-      toast.error("Failed to analyze image. Please try again.");
-      console.error("Error analyzing image:", error);
+      toast.error("Failed to analyze images. Please try again.");
+      console.error("Error analyzing images:", error);
     }
-
     setLoading(false);
   };
+
+  // Previews: from RHF images field
+  const images = form.watch("images") || [];
+  const preview =
+    images.length > 0 ? images.map((file) => URL.createObjectURL(file)) : [];
 
   return (
     <Form {...form}>
@@ -76,53 +100,79 @@ export default function ImageUploadForm({ valueAction }: Props) {
       >
         <FormField
           control={form.control}
-          name="image"
-          render={({ field }) => (
+          name="images"
+          render={() => (
             <FormItem>
-              <FormLabel>Upload Food Image</FormLabel>
+              <FormLabel>Upload 1–3 Meal Photos</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    field.onChange(file);
-                    if (file) {
-                      setPreview(URL.createObjectURL(file));
-                    } else {
-                      setPreview(null);
-                    }
-                  }}
-                  disabled={loading}
-                />
+                <div>
+                  {/* Hidden input for mobile/desktop multiple-pick */}
+                  <Input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    capture="environment"
+                    onChange={(e) => handleFiles(e.target.files)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={loading || images.length >= 3}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {images.length === 0 ? "Add Photo" : "Add Another Photo"}
+                  </Button>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Take or select up to 3 photos (include nutrition labels if
+                    possible).
+                  </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {preview && (
-          <div className="mb-4">
-            <img
-              src={preview}
-              alt="Preview"
-              className="max-h-56 rounded shadow"
-            />
+
+        {/* Previews from form's values array */}
+        {preview.length > 0 && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {preview.map((src, idx) => (
+              <div key={idx} className="relative group">
+                <img
+                  src={src}
+                  alt={`Preview ${idx + 1}`}
+                  className="max-h-32 rounded shadow border"
+                />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  className="absolute top-1 right-1 opacity-80"
+                  onClick={() => handleRemove(idx)}
+                  tabIndex={-1}
+                >
+                  ✕
+                </Button>
+              </div>
+            ))}
           </div>
         )}
-        <Button type="submit" disabled={loading}>
-          {loading ? "Analyzing..." : "Analyze Image"}
+
+        <Button type="submit" disabled={loading || images.length === 0}>
+          {loading ? "Analyzing..." : "Analyze Images"}
         </Button>
         {result && (
           <div className="mt-4">
             <pre className="bg-muted rounded p-4 text-sm">
-              {result.name && <strong>Meal Name:</strong>} {result.name}
+              <strong>Meal Name:</strong> {result.name}
               <br />
               <strong>Calories:</strong> {result.calories}
               <br />
               <strong>Protein:</strong> {result.protein}g<br />
               <strong>Carbs:</strong> {result.carbs}g<br />
-              <strong>Fats:</strong> {result.fats}g
+              <strong>Fats:</strong> {result.fats}g<br />
             </pre>
           </div>
         )}
