@@ -79,6 +79,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
       mealType: type,
     },
   })
+  const amount = form.watch("amount");
 
   const { register, control, handleSubmit, formState, setValue, watch } = form
   const isSubmitting = formState.isSubmitting
@@ -256,23 +257,23 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3">
                 <Card className="p-3 bg-muted/30">
-                  <div className="text-xs text-muted-foreground mb-2">Per serving:</div>
+                  <div className="text-xs text-muted-foreground mb-2">Per {amount} {selectedMeal.unit}:</div>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div className="flex justify-between">
                       <span>Calories:</span>
-                      <span className="font-medium">{selectedMeal.calories}</span>
+                      <span className="font-medium">{(selectedMeal.calories * amount).toFixed(0)} kcal</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Protein:</span>
-                      <span className="font-medium">{selectedMeal.protein}g</span>
+                      <span className="font-medium">{(selectedMeal.protein * amount).toFixed(0)}g</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Carbs:</span>
-                      <span className="font-medium">{selectedMeal.carbs}g</span>
+                      <span className="font-medium">{(selectedMeal.carbs * amount).toFixed(0)}g</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Fat:</span>
-                      <span className="font-medium">{selectedMeal.fat}g</span>
+                      <span className="font-medium">{(selectedMeal.fat * amount).toFixed(0)}g</span>
                     </div>
                   </div>
                 </Card>
