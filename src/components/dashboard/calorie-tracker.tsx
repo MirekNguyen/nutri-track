@@ -21,9 +21,6 @@ export const CalorieTracker = ({ selectedDate, children }: Props) => {
             Dashboard
           </h1>)}
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-between">
-          {isMobile && (<h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Dashboard
-          </h1>)}
           <AISummary date={selectedDate} />
           <DateSelector date={new Date(selectedDate)} />
           {!isMobile && (<AddFoodEntry>
