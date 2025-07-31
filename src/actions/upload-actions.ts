@@ -41,8 +41,7 @@ Analyze the provided high-resolution food image using expert food recognition an
     messages: [
       {
         role: "system",
-        content:
-          `You are a nutritionist and image analyst who responds ONLY with the requested JSON. No explanation. The output must be in format of 
+        content: `You are a nutritionist and image analyst who responds ONLY with the requested JSON. No explanation. The output must be in format of 
 type Macros = {
 name: string;
 calories: number;
@@ -51,8 +50,7 @@ carbs: number;
 fats: number;
 amount: number;
 unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
-};
-
+}; Name must be the name of the food item, not a description, length is limited to 50 characters. Calories, protein, carbs, and fats must be realistic values based on the food item and its portion size. Amount must be a realistic portion size, and unit must be one of the specified options.
         `,
       },
       {
