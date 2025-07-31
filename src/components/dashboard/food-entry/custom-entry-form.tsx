@@ -81,7 +81,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                   <FormItem>
                     <FormLabel className="text-sm">Food Name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="e.g. Grilled Chicken Breast" className="h-9" />
+                      <Input {...field} placeholder="e.g. Grilled Chicken Breast" className="h-9 text-sm" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -101,7 +101,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                           {...field}
                           step="0.01"
                           placeholder="250"
-                          className="h-9"
+                          className="h-9 text-sm"
                           {...register("calories", { valueAsNumber: true })}
                         />
                       </FormControl>
@@ -210,7 +210,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                       <FormItem>
                         <FormLabel className="text-sm">Amount</FormLabel>
                         <FormControl>
-                          <Input {...field} type="number" step="0.01" placeholder="1" className="h-9" />
+                          <Input {...field} type="number" step="0.01" placeholder="1" className="h-9 text-sm" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
