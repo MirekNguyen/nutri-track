@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -244,6 +245,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
                 <FormItem>
                   <FormLabel className="text-sm">Amount</FormLabel>
                   <FormControl>
+                    <div className="flex w-full max-w-sm items-center gap-2">
                     <Input
                       {...field}
                       type="number"
@@ -252,6 +254,12 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
                       className="h-9"
                       {...register("amount", { valueAsNumber: true })}
                     />
+                                    <Button variant="outline" disabled>
+                {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
+                  "serving"}
+              </Button>
+
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -274,17 +282,6 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
               )}
             />
           </div>
-
-          {/* Unit Display */}
-          {selectedMeal && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>Unit:</span>
-              <Badge variant="outline" className="text-xs">
-                {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
-                  "serving"}
-              </Badge>
-            </div>
-          )}
 
           {/* Advanced Details - Collapsible */}
           {selectedMeal && (
