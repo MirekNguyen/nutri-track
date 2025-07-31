@@ -32,7 +32,7 @@ export async function uploadAndAnalyze(
   // 3. OpenAI call (Vision)
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const prompt =
-    "based on image of food gime macronutrients stats and name of meal in JSON format only. The output format must be of { name: string; calories: number; protein: number; carbs: number; fats: number }";
+    "Analyze the provided high-resolution food image, using expert food recognition and portion estimation. Incorporate scale reference objects (if present), metadata (e.g., meal type, cuisine), and preparation method if visible. Identify all meal components, estimate their portions as accurately as possible, and reference up-to-date, regionally appropriate nutritional databases. Output only a single JSON object with these keys: { name: string, calories: number, protein: number, carbs: number, fats: number } All values must be precise, realistic, and reflect standard serving sizes. Output JSON only, with no extra explanation.";
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4.1",
