@@ -27,10 +27,10 @@ export async function uploadAndAnalyze(files: File[]): Promise<Macros> {
       type: "image_url" as const,
       image_url: {
         url: `data:${file.type || "image/jpeg"};base64,${Buffer.from(
-          await file.arrayBuffer()
+          await file.arrayBuffer(),
         ).toString("base64")}`,
       },
-    }))
+    })),
   );
 
   const prompt = `
@@ -59,7 +59,7 @@ No explanation. Never output anything but JSON. Don't guess if not plausible.
         role: "system",
         content: `You are a nutritionist and image analyst. Respond ONLY with JSON of this type:
 type Macros = {
-  name: string;
+  name: string; // max 40 characters
   calories: number;
   protein: number;
   carbs: number;
@@ -67,14 +67,11 @@ type Macros = {
   amount: number;
   unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
 };
-Name = the primary food name (50 characters max). All values must be realistic, plausible and consistent with the food visible.`,
+name = the primary food name (40 characters max). All values must be realistic, plausible and consistent with the food visible.`,
       },
       {
         role: "user",
-        content: [
-          { type: "text", text: prompt },
-          ...imagesContent,
-        ],
+        content: [{ type: "text", text: prompt }, ...imagesContent],
       },
     ],
   });
