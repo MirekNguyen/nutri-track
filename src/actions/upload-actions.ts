@@ -9,6 +9,8 @@ export type Macros = {
   protein: number;
   carbs: number;
   fats: number;
+  amount: number;
+  unit: "serving" | "g" | "ml" | "oz" | "cup" | "tbsp" | "tsp" | "piece";
 };
 
 export async function uploadAndAnalyze(
@@ -32,7 +34,7 @@ export async function uploadAndAnalyze(
   // 3. OpenAI call (Vision)
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const prompt =
-    "Analyze the provided high-resolution food image, using expert food recognition and portion estimation. Incorporate scale reference objects (if present), metadata (e.g., meal type, cuisine), and preparation method if visible. Identify all meal components, estimate their portions as accurately as possible, and reference up-to-date, regionally appropriate nutritional databases. Output only a single JSON object with these keys: { name: string, calories: number, protein: number, carbs: number, fats: number } All values must be precise, realistic, and reflect standard serving sizes. Output JSON only, with no extra explanation.";
+    "Analyze the provided high-resolution food image using expert food recognition and precise portion estimation. Incorporate scale reference objects (if present), metadata (e.g., meal type, cuisine), and visible preparation methods. Identify all meal components, estimate their portions and total amount as accurately as possible, and reference up-to-date, regionally appropriate nutritional databases. Output only a single JSON object with these keys: { name: string, calories: number, protein: number, carbs: number, fats: number, amount: number, unit: \"serving\" | \"g\" | \"ml\" | \"oz\" | \"cup\" | \"tbsp\" | \"tsp\" | \"piece\" }. All values must be precise, realistic, and reflect the standard serving size used. Output only the JSON, with no extra explanation.";
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4.1",

@@ -17,7 +17,6 @@ import { Macros, uploadAndAnalyze } from "@/actions/upload-actions";
 import z from "zod";
 import { toast } from "sonner";
 import { CustomEntryFormValues } from "@/hooks/use-custom-entry-form";
-import Image from "next/image";
 
 export const imageUploadSchema = z.object({
   image: z
@@ -31,7 +30,7 @@ export const imageUploadSchema = z.object({
 type FormValues = { image: File | undefined };
 
 type Props = {
-  valueAction: UseFormSetValue<CustomEntryFormValues>
+  valueAction: UseFormSetValue<CustomEntryFormValues>;
 };
 
 export default function ImageUploadForm({ valueAction }: Props) {
@@ -59,6 +58,8 @@ export default function ImageUploadForm({ valueAction }: Props) {
       valueAction("protein", res.protein);
       valueAction("carbs", res.carbs);
       valueAction("fat", res.fats);
+      valueAction("amount", res.amount);
+      valueAction("unit", res.unit);
     } catch (error) {
       toast.error("Failed to analyze image. Please try again.");
       console.error("Error analyzing image:", error);
@@ -84,7 +85,7 @@ export default function ImageUploadForm({ valueAction }: Props) {
                   type="file"
                   accept="image/*"
                   capture="environment"
-                                    onChange={e => {
+                  onChange={(e) => {
                     const file = e.target.files?.[0];
                     field.onChange(file);
                     if (file) {
@@ -102,7 +103,11 @@ export default function ImageUploadForm({ valueAction }: Props) {
         />
         {preview && (
           <div className="mb-4">
-            <img src={preview} alt="Preview" className="max-h-56 rounded shadow" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="max-h-56 rounded shadow"
+            />
           </div>
         )}
         <Button type="submit" disabled={loading}>
