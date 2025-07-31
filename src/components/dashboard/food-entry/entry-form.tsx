@@ -11,6 +11,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useSearchParams } from "next/navigation";
 import { type FC, useState } from "react";
 import { getMeals } from "@/actions/meal-actions";
@@ -34,7 +39,6 @@ import { toast } from "sonner";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -88,6 +92,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
   const dateParam = searchParams.get("date");
   const selectedDate = dateParam ? new Date(dateParam) : new Date();
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals"],
@@ -169,72 +174,108 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
 
       <Form {...form}>
         <form onSubmit={handleSubmit(handleAddMealEntry)} className="space-y-4">
-          {/* Meal Search */}
-          <Card>
-            <Command>
-              <CommandInput placeholder="Search meals..." className="h-9" />
-              {isLoading ? (
-                <CommandLoading className="border rounded-md h-[180px] mt-2">
-                  <div className="p-2 space-y-2">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
-                    ))}
-                  </div>
-                </CommandLoading>
-              ) : (
-                <CommandList className="rounded-md h-[180px] mt-2">
-                  <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">
-                    No meals found.
-                  </CommandEmpty>
-                  <CommandGroup>
-                    {meals.map((meal) => (
-                      <CommandItem
-                        key={meal.id}
-                        value={meal.name}
-                        onSelect={() => setValue("meal", meal)}
-                        className={`
-                          flex justify-between items-center cursor-pointer md:p-3 rounded-lg my-1
-                          ${
-                            selectedMeal?.id === meal.id
-                              ? "bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800"
-                              : "hover:bg-muted/50"
-                          }
-                        `}
-                      >
-                        <div className="flex-1">
-                          <h4 className="font-medium text-foreground text-sm">
-                            {meal.name}
-                          </h4>
-                          <div className="flex items-center gap-3 mt-1">
-                            <Badge variant="secondary" className="text-xs">
-                              {meal.calories} cal
-                            </Badge>
-                            <span className="text-xs text-blue-600 dark:text-blue-400">
-                              {meal.protein}g protein
-                            </span>
-                          </div>
+          {/* Meal Search with Popover */}
+          <FormField
+            name="meal"
+            control={control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-sm">Select Meal</FormLabel>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={`w-full justify-between h-9 ${!selectedMeal ? "text-muted-foreground" : ""}`}
+                    >
+                      {selectedMeal ? (
+                        <div className="flex items-center gap-2">
+                          <span>{selectedMeal.name}</span>
+                          <Badge variant="secondary" className="text-xs">
+                            {selectedMeal.calories} cal
+                          </Badge>
                         </div>
-                        <div className="text-right">
-                          <div className="text-xs text-muted-foreground">
-                            <div>C: {meal.carbs}g</div>
-                            <div>F: {meal.fat}g</div>
+                      ) : (
+                        "Select a meal..."
+                      )}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-[var(--radix-popover-trigger-width)] p-0"
+                    align="center"
+                  >
+                    <Command>
+                      <CommandInput
+                        placeholder="Search meals..."
+                        className="h-9"
+                      />
+                      {isLoading ? (
+                        <CommandLoading>
+                          <div className="p-2 space-y-2">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                              <Skeleton key={i} className="h-12 w-full" />
+                            ))}
                           </div>
-                        </div>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              )}
-            </Command>
-
-            {formState.errors.meal && (
-              <div className="mt-2 p-2 bg-destructive/10 border border-destructive/30 rounded-md">
-                <p className="text-destructive text-xs">
-                  {formState.errors.meal.message}
-                </p>
-              </div>
+                        </CommandLoading>
+                      ) : (
+                        <CommandList className="max-h-[300px]">
+                          <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">
+                            No meals found.
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {meals.map((meal) => (
+                              <CommandItem
+                                key={meal.id}
+                                value={meal.name}
+                                onSelect={() => {
+                                  setValue("meal", meal);
+                                  field.onChange(meal);
+                                  setOpen(false);
+                                }}
+                                className={`
+                                  flex justify-between items-center cursor-pointer p-2 rounded-lg
+                                  ${
+                                    selectedMeal?.id === meal.id
+                                      ? "bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800"
+                                      : "hover:bg-muted/50"
+                                  }
+                                `}
+                              >
+                                <div className="flex-1">
+                                  <h4 className="font-medium text-foreground text-sm">
+                                    {meal.name}
+                                  </h4>
+                                  <div className="flex items-center gap-3 mt-1">
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {meal.calories} kcal
+                                    </Badge>
+                                    <span className="text-xs text-blue-600 dark:text-blue-400">
+                                      {meal.protein}g protein
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-xs text-muted-foreground">
+                                    <div>C: {meal.carbs}g</div>
+                                    <div>F: {meal.fat}g</div>
+                                  </div>
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      )}
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
             )}
-          </Card>
+          />
 
           {/* Essential Fields */}
           <div className="grid grid-cols-2 gap-3">
@@ -246,19 +287,18 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
                   <FormLabel className="text-sm">Amount</FormLabel>
                   <FormControl>
                     <div className="flex w-full max-w-sm items-center gap-2">
-                    <Input
-                      {...field}
-                      type="number"
-                      step="0.01"
-                      placeholder="1.0"
-                      className="h-9"
-                      {...register("amount", { valueAsNumber: true })}
-                    />
-                                    <Button variant="outline" disabled>
-                {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
-                  "serving"}
-              </Button>
-
+                      <Input
+                        {...field}
+                        type="number"
+                        step="0.01"
+                        placeholder="1.0"
+                        className="h-9"
+                        {...register("amount", { valueAsNumber: true })}
+                      />
+                      <Button variant="outline" disabled>
+                        {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
+                          "serving"}
+                      </Button>
                     </div>
                   </FormControl>
                   <FormMessage />
