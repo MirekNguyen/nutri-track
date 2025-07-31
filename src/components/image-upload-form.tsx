@@ -164,19 +164,6 @@ export default function ImageUploadForm({
         <Button type="submit" disabled={loading || images.length === 0}>
           {loading ? "Analyzing..." : "Analyze Images"}
         </Button>
-        {result && (
-          <div className="mt-4">
-            <pre className="bg-muted rounded p-4 text-sm">
-              <strong>Meal Name:</strong> {result.name}
-              <br />
-              <strong>Calories:</strong> {result.calories}
-              <br />
-              <strong>Protein:</strong> {result.protein}g<br />
-              <strong>Carbs:</strong> {result.carbs}g<br />
-              <strong>Fats:</strong> {result.fats}g<br />
-            </pre>
-          </div>
-        )}
       </form>
     </Form>
   );
