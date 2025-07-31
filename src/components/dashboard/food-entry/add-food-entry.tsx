@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { CustomEntryForm } from "./custom-entry-form";
 import { EntryForm } from "./entry-form";
+import { Card } from "@/components/ui/card";
+import { Sparkles } from "lucide-react";
+import { AIEntryForm } from "./ai-entry-form";
 
 type Props = {
   type?: "breakfast" | "lunch" | "dinner" | "snack";
@@ -36,15 +39,22 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
             )}
           </DialogHeader>
           <Tabs value={foodTab} onValueChange={setFoodTab} className="mt-2">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="choose">Choose Meal</TabsTrigger>
               <TabsTrigger value="custom">Custom Entry</TabsTrigger>
+              <TabsTrigger value="ai" className="text-xs">
+            <Sparkles className="w-3 h-3 mr-1" />
+            AI Upload
+          </TabsTrigger>
             </TabsList>
             <TabsContent value="choose">
               <EntryForm submitAction={() => setIsOpen(false)} type={type} />
             </TabsContent>
             <TabsContent value="custom">
-              <CustomEntryForm submitAction={() => setIsOpen(false)}  />
+                <CustomEntryForm submitAction={() => setIsOpen(false)} />
+            </TabsContent>
+            <TabsContent value="ai">
+              <AIEntryForm submitAction={() => setIsOpen(false)}/>
             </TabsContent>
           </Tabs>
         </DialogContent>

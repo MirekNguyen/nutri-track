@@ -77,8 +77,6 @@ export const CustomEntryForm: FC<Props> = ({submitAction}) => {
   };
 
   return (
-    <>
-      <ImageUploadForm valueAction={form.setValue}/>
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
@@ -262,6 +260,5 @@ export const CustomEntryForm: FC<Props> = ({submitAction}) => {
         </DialogFooter>
       </form>
     </Form>
-    </>
   );
 };
