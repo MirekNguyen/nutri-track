@@ -56,9 +56,11 @@ Recent weights: ${weightText}
 
 1. Calculate and report total calories and macros (protein, carbs, fat) for this day.
 2. Briefly comment on the nutritional balance (e.g., high or low protein, carbs, or fat).
-3. Mention caffeine intake if present.
-4. Observe any weight trends, considering user's age and height if relevant.
-5. Suggest one friendly, simple improvement or tip, tailored to this user's context if possible.
+3. Provide a friendly, concise analysis of what the user ate today—highlighting the overall nutritional quality, balance, and variety of foods (for example, adequacy of protein, fiber, balance of carbohydrates and fats, use of whole versus processed foods, or portion sizes as appropriate).
+4. Assess the user's current weight in context with their height and age, reporting the BMI (Body Mass Index) and commenting on its category (such as normal, overweight, etc.). If possible, link today’s calorie and nutrient intake to their BMI and weight status.
+5. Briefly reflect on whether the overall calorie intake is likely to support, maintain, or change the user's weight based on their BMI and recent entries and incorporate TDEE calculation (do not dwell on weight trend alone, but connect trend/calories and BMI).
+5. Estimate the user’s TDEE (Total Daily Energy Expenditure) using a standard formula (like Mifflin-St Jeor) and compare it to today’s calorie intake. Briefly reflect on whether today's intake is likely to support, maintain, or change the user's weight, taking TDEE and BMI into account.
+6. If you notice a helpful improvement or tip based on these foods or this nutritional pattern, offer one.
 
 Present your advice as a friendly, concise summary of 3–5 short sentences, just as you'd write it for a health app. NO lists, numbers, or extra explanations—just the text for the user to read.
 `;
