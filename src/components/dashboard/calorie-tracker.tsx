@@ -6,6 +6,7 @@ import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AISummary } from "../ai-summary";
 
 type Props = {
   selectedDate: string;
@@ -23,6 +24,7 @@ export const CalorieTracker = ({ selectedDate, children }: Props) => {
           {isMobile && (<h1 className="text-2xl md:text-3xl font-bold text-foreground">
             Dashboard
           </h1>)}
+          <AISummary date={selectedDate} />
           <DateSelector date={new Date(selectedDate)} />
           {!isMobile && (<AddFoodEntry>
             <Button className="bg-green-600 hover:bg-green-700 text-sm text-white sm:w-auto">
