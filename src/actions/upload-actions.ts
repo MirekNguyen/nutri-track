@@ -12,11 +12,11 @@ export type Macros = {
 };
 
 // Multi-image upload (up to 3), single OpenAI Vision API call, label-aware prompt!
-export async function uploadAndAnalyze(formData: FormData): Promise<Macros> {
+export async function uploadAndAnalyze(files: File[]): Promise<Macros> {
   // Grab all images from FormData ("images" as the field name!)
-  const files = formData.getAll("images").filter(
-    (f): f is File => f instanceof File && f.size > 0
-  );
+  // const files = formData.getAll("images").filter(
+  //   (f): f is File => f instanceof File && f.size > 0
+  // );
   if (files.length < 1 || files.length > 3) {
     throw new Error("You must upload between 1 and 3 images.");
   }

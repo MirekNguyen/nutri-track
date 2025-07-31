@@ -64,14 +64,11 @@ export default function ImageUploadForm({
 
   // Submit using RHF values
   const onSubmit = async (data: FormValues) => {
+    console.log("Submitting images:", data.images);
     setLoading(true);
     setResult(null);
-    const formData = new FormData();
-    data.images.forEach((file) => {
-      formData.append("images", file);
-    });
     try {
-      const res = await uploadAndAnalyze(formData);
+      const res = await uploadAndAnalyze(data.images);
       setResult(res);
       // Use setValue to propagate to parent if using RHF parent, or valueAction as a prop function
       valueAction("foodName", res.name);
