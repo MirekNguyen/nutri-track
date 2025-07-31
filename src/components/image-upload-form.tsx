@@ -120,7 +120,6 @@ export default function ImageUploadForm({
                       accept="image/*"
                       multiple
                       className="hidden"
-                      capture="environment"
                       onChange={(e) => handleFiles(e.target.files)}
                     />
 
