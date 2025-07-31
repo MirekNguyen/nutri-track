@@ -79,13 +79,7 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
   return (
     <div className="space-y-4">
       {/* AI Upload Section */}
-      <Card className="p-4 bg-blue-50/50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/50">
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-          <h3 className="font-medium text-foreground">AI Analysis</h3>
-        </div>
-        <ImageUploadForm valueAction={form.setValue} />
-      </Card>
+      <ImageUploadForm valueAction={form.setValue} />
 
       {/* Results Form - Collapsible after analysis */}
       {(hasAnalyzed || foodName) && (
