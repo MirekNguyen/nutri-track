@@ -23,7 +23,13 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]">
+        <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]"
+          style={{
+            height: isMobile ? "80vh" : "600px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <DialogHeader className="pb-2">
             <DialogTitle className="text-lg">Add Food Entry</DialogTitle>
             {!isMobile && (
