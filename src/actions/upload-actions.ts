@@ -52,7 +52,7 @@ No explanation. Never output anything but JSON. Don't guess if not plausible.
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4.1-mini",
+    model: "gpt-4.1",
     max_tokens: 350,
     messages: [
       {

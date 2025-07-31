@@ -17,6 +17,7 @@ import z from "zod";
 import { toast } from "sonner";
 import { Macros, uploadAndAnalyze } from "@/actions/upload-actions";
 import { CustomEntryFormValues } from "@/hooks/use-custom-entry-form";
+import Image from "next/image";
 
 // Zod schema for multiple images field
 export const imageUploadSchema = z.object({
@@ -73,15 +74,15 @@ export default function ImageUploadForm({
       const res = await uploadAndAnalyze(formData);
       setResult(res);
       // Use setValue to propagate to parent if using RHF parent, or valueAction as a prop function
-      valueAction("name", res.name);
+      valueAction("foodName", res.name);
       valueAction("calories", res.calories);
       valueAction("protein", res.protein);
       valueAction("carbs", res.carbs);
-      valueAction("fats", res.fats);
+      valueAction("fat", res.fats);
       valueAction("amount", res.amount);
       valueAction("unit", res.unit);
     } catch (error) {
-      toast.error("Failed to analyze images. Please try again.");
+      toast.error(`Failed to analyze images. Please try again. ${error}`);
       console.error("Error analyzing images:", error);
     }
     setLoading(false);
@@ -140,11 +141,14 @@ export default function ImageUploadForm({
           <div className="mb-4 flex flex-wrap gap-2">
             {preview.map((src, idx) => (
               <div key={idx} className="relative group">
-                <img
-                  src={src}
-                  alt={`Preview ${idx + 1}`}
-                  className="max-h-32 rounded shadow border"
-                />
+                <div className="relative w-32 h-32">
+                  <Image
+                    src={src}
+                    alt={`Preview ${idx + 1}`}
+                    fill
+                    className="object-cover rounded shadow border"
+                  />
+                </div>
                 <Button
                   type="button"
                   size="icon"

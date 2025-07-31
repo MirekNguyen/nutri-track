@@ -2,7 +2,6 @@ import { CalorieBreakdown } from "@/components/dashboard/calorie-breakdown/calor
 import { CalorieTracker } from "@/components/dashboard/calorie-tracker";
 import { FoodLog } from "@/components/dashboard/food-log/food-log";
 import { MacronutrientStats } from "@/components/dashboard/macronutrient-stats/macronutrient-stats";
-import ImageUploadForm from "@/components/image-upload-form";
 import { format } from "date-fns";
 
 type Props = {
@@ -14,7 +13,6 @@ export default async function CalorieTrackerPage({ searchParams }: Props) {
 
   return (
     <CalorieTracker selectedDate={selectedDate}>
-      <ImageUploadForm />
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6">
         <MacronutrientStats date={selectedDate} />
       </div>
