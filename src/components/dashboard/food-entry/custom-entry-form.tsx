@@ -123,27 +123,14 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                   )}
                 />
               </div>
-            </div>
-
-            {/* Advanced Fields - Collapsible */}
-            <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-              <CollapsibleTrigger asChild>
-                <Button type="button" variant="ghost" className="w-full h-8 text-xs text-muted-foreground">
-                  Advanced Details
-                  <ChevronDown className={`w-3 h-3 ml-2 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-4 mt-4">
-                {/* Macros */}
                 <div className="space-y-2">
-                  <FormLabel className="text-sm text-muted-foreground">Macronutrients (grams)</FormLabel>
                   <div className="grid grid-cols-3 gap-2">
                     <FormField
                       name="protein"
                       control={form.control}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs">Protein</FormLabel>
+                          <FormLabel className="text-sm">Protein</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -163,7 +150,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs">Carbs</FormLabel>
+                          <FormLabel className="text-sm">Carbs</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -183,7 +170,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs">Fat</FormLabel>
+                          <FormLabel className="text-sm">Fat</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -200,6 +187,18 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                     />
                   </div>
                 </div>
+            </div>
+
+            {/* Advanced Fields - Collapsible */}
+            <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+              <CollapsibleTrigger asChild>
+                <Button type="button" variant="ghost" className="w-full h-8 text-xs text-muted-foreground">
+                  Advanced Details
+                  <ChevronDown className={`w-3 h-3 ml-2 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-4 mt-4">
+                {/* Macros */}
 
                 {/* Amount and Unit */}
                 <div className="grid grid-cols-2 gap-3">

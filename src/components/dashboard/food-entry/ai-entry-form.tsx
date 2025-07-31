@@ -339,15 +339,15 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
             <Edit3 className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm mb-1">No photos uploaded yet</p>
             <p className="text-xs">Upload photos above or enter details manually</p>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="mt-2 text-xs"
-              onClick={() => setHasAnalyzed(true)}
-            >
-              Enter Manually
-            </Button>
+            {/* <Button */}
+            {/*   type="button" */}
+            {/*   variant="ghost" */}
+            {/*   size="sm" */}
+            {/*   className="mt-2 text-xs" */}
+            {/*   onClick={() => setHasAnalyzed(true)} */}
+            {/* > */}
+            {/*   Enter Manually */}
+            {/* </Button> */}
           </div>
         </Card>
       )}
