@@ -85,9 +85,8 @@ export default function WeightLossPage() {
 
     if (gender === "male") {
       return 10 * weightKg + 6.25 * heightCm - 5 * ageYears + 5;
-    } else {
-      return 10 * weightKg + 6.25 * heightCm - 5 * ageYears - 161;
     }
+      return 10 * weightKg + 6.25 * heightCm - 5 * ageYears - 161;
   };
 
   // Calculate TDEE (Total Daily Energy Expenditure)

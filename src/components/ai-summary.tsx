@@ -50,7 +50,7 @@ export function AISummary({ date }: HealthSummaryDialogProps) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm sm:w-auto"
+          className="bg-blue-50 hover:bg-blue-100 text-blue-700 dark:text-blue-400 text-sm sm:w-auto"
         >
           <Sparkles className="w-4 h-4" />
           AI Summarize

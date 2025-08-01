@@ -261,7 +261,7 @@ export default function ProgressPage() {
                                     transform: "translateX(-50%)",
                                   }}
                                 >
-                                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                  <div className="w-3 h-3 bg-green-500 rounded-full" />
                                   {index === 0 || index === arr.length - 1 ? (
                                     <div className="text-xs font-medium mt-1">
                                       {entry.weight}
@@ -451,9 +451,9 @@ export default function ProgressPage() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               >
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
                               </svg>
                             </Button>
                           </div>
@@ -673,9 +673,9 @@ export default function ProgressPage() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               >
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
                               </svg>
                             </Button>
                           </td>

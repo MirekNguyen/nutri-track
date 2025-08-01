@@ -32,13 +32,12 @@ export const AddFoodEntry: FC<Props> = ({ children, type }) => {
 
     if (currentHour >= 5 && currentHour < 10) {
       return "breakfast";
-    } else if (currentHour >= 10 && currentHour < 16) {
+    }if (currentHour >= 10 && currentHour < 16) {
       return "lunch";
-    } else if (currentHour >= 16 && currentHour < 21) {
+    }if (currentHour >= 16 && currentHour < 21) {
       return "dinner";
-    } else {
-      return "snack";
     }
+      return "snack";
   }, [type]);
 
   return (

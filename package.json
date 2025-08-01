@@ -7,7 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "biome lint ./src"
+    "lint": "biome lint ./src",
+    "lint:fix": "biome lint --write --unsafe ./src"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.14.3",

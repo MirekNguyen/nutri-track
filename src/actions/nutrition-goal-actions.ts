@@ -1,8 +1,8 @@
 "use server";
 
-import { db } from "@/db";
-import { nutritionGoals, type NewNutritionGoal } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { type NewNutritionGoal, nutritionGoals } from "@/db/schema";
 import { getCurrentUser } from "./user-actions";
 
 export async function getNutritionGoals() {

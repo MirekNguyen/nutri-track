@@ -22,6 +22,16 @@
         "noUnusedImports": "error",
         "noUnusedFunctionParameters": "error",
         "noUnusedVariables": "error"
+      },
+      "style": {
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       }
     }
   },
