@@ -1,10 +1,10 @@
 "use server";
 
+import { and, desc, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { meals, type NewMeal } from "@/db/schema";
-import { eq, and, desc } from "drizzle-orm";
 import { getCurrentUser } from "./user-actions";
-import { revalidatePath } from "next/cache";
 
 export const getMeals = async () => {
   try {

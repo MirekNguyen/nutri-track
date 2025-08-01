@@ -1,10 +1,10 @@
+import { Info } from "lucide-react";
+import { getFoodEntries } from "@/actions/food-entry-actions";
+import { getUserData } from "@/actions/user-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Info } from "lucide-react";
 import { useMacros } from "../../../hooks/use-macros";
-import { getFoodEntries } from "@/actions/food-entry-actions";
-import { getUserData } from "@/actions/user-actions";
 
 type Props = {
   date: string;
@@ -22,8 +22,6 @@ export const MacronutrientStats = async ({ date }: Props) => {
     carbsGoal: userData?.carbsGoal ?? 200,
     fatGoal: userData?.fatsGoal ?? 65,
   };
-  console.log("Nutrition Goals:", nutritionGoals);
-  console.log("Macros Data:", macrosData);
   return (
     <>
       <Card
