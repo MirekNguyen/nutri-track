@@ -1,19 +1,20 @@
 "use client";
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Edit3, Search, Sparkles } from "lucide-react";
 import { type FC, type ReactNode, useMemo, useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { AIEntryForm } from "./ai-entry-form";
 import { CustomEntryForm } from "./custom-entry-form";
 import { EntryForm } from "./entry-form";
-import { Sparkles, Search, Edit3 } from "lucide-react";
-import { AIEntryForm } from "./ai-entry-form";
 
 type Props = {
   type?: "breakfast" | "lunch" | "dinner" | "snack";
@@ -32,12 +33,14 @@ export const AddFoodEntry: FC<Props> = ({ children, type }) => {
 
     if (currentHour >= 5 && currentHour < 10) {
       return "breakfast";
-    }if (currentHour >= 10 && currentHour < 16) {
+    }
+    if (currentHour >= 10 && currentHour < 16) {
       return "lunch";
-    }if (currentHour >= 16 && currentHour < 21) {
+    }
+    if (currentHour >= 16 && currentHour < 21) {
       return "dinner";
     }
-      return "snack";
+    return "snack";
   }, [type]);
 
   return (
