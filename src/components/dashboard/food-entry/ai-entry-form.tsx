@@ -17,7 +17,7 @@ import { toast } from "sonner"
 import { createFoodEntry } from "@/actions/food-entry-actions"
 import { type CustomEntryFormValues, useCustomEntryForm } from "@/hooks/use-custom-entry-form"
 import ImageUploadForm from "@/components/image-upload-form"
-import { Sparkles, Edit3, Check, ChevronDown } from "lucide-react"
+import { Edit3, Check, ChevronDown } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 type Props = {
@@ -72,7 +72,7 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
     }
   }
 
-  const onError = (errors: FieldErrors<CustomEntryFormValues>) => {
+  const onError = (_errors: FieldErrors<CustomEntryFormValues>) => {
     toast.error("Please fix form errors")
   }
 

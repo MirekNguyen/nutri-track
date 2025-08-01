@@ -1,5 +1,5 @@
 "use client";
-import { FoodEntry, Meal } from "@/db/schema";
+import type { FoodEntry, Meal } from "@/db/schema";
 import { DeleteEntryButton } from "./delete-entry-button";
 import { format, parseISO } from "date-fns";
 import {

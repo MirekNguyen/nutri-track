@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 import { getWeightEntries } from "@/actions/weight-actions";
 import { toast } from "sonner";
-import { WeightEntry } from "@/db/schema";
+import type { WeightEntry } from "@/db/schema";
 
 interface Goal {
   id: string;

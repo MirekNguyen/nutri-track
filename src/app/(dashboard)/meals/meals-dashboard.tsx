@@ -32,7 +32,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { toggleFavoriteMeal } from "@/actions/meal-actions";
-import { Meal } from "@/db/schema";
+import type { Meal } from "@/db/schema";
 import { toast } from "sonner";
 import { DeleteMeal } from "@/components/meals/delete-meal";
 import { EditMealDialog } from "@/components/meals/edit-meal-dialog";
@@ -63,8 +63,7 @@ export default function MealsDashboard({ meals }: Props) {
       // Search filter
       const matchesSearch =
         meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (meal.description &&
-          meal.description.toLowerCase().includes(searchQuery.toLowerCase()));
+        (meal.description?.toLowerCase().includes(searchQuery.toLowerCase()));
 
       // Tags filter
       const matchesTags =
@@ -84,7 +83,6 @@ export default function MealsDashboard({ meals }: Props) {
           return b.calories - a.calories;
         case "protein":
           return (b.protein || 0) - (a.protein || 0);
-        case "createdAt":
         default:
           return (
             new Date(b.createdAt ?? new Date()).getTime() - new Date(a.createdAt ?? new Date()).getTime()
@@ -328,8 +326,7 @@ export default function MealsDashboard({ meals }: Props) {
               </CardContent>
               <CardFooter className="flex justify-between items-center pt-2 border-t">
                 <div className="flex flex-wrap gap-1">
-                  {meal.tags &&
-                    meal.tags.map((tag) => (
+                  {meal.tags?.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}
                       </Badge>

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useSignIn } from "@clerk/nextjs";
-import { OAuthStrategy } from "@clerk/types";
+import type { OAuthStrategy } from "@clerk/types";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 

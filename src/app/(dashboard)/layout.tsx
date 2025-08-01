@@ -3,7 +3,7 @@ import { MobileHeader } from "@/components/layout/mobile-header";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { cookies } from "next/headers";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { AppSidebar } from "@/components/layout/sidebar";
 
 export default async function Layout({ children }: PropsWithChildren) {
@@ -11,8 +11,7 @@ export default async function Layout({ children }: PropsWithChildren) {
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
-    <>
-      <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar />
         <div className="min-h-screen bg-background flex flex-col w-full">
           <MobileHeader />
@@ -25,6 +24,5 @@ export default async function Layout({ children }: PropsWithChildren) {
           <Toaster />
         </div>
       </SidebarProvider>
-    </>
   );
 }

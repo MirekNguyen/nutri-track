@@ -2,8 +2,8 @@
 
 import { updateMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
-import { NewMeal } from "@/db/schema";
-import { FC, ReactNode } from "react";
+import type { NewMeal } from "@/db/schema";
+import type { FC, ReactNode } from "react";
 import { toast } from "sonner";
 import { MealDialog } from "./meal-dialog";
 

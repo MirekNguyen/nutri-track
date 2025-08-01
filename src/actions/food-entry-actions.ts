@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { foodEntries, FoodEntry, type NewFoodEntry } from "@/db/schema";
+import { foodEntries, type FoodEntry, type NewFoodEntry } from "@/db/schema";
 import { eq, and, asc, between } from "drizzle-orm";
 import { getCurrentUser } from "./user-actions";
 import { revalidatePath } from "next/cache";
@@ -47,7 +47,7 @@ export const getFoodEntriesRange = async (from: string, to: string) => {
     console.error("Error fetching food entries range:", error);
     throw new Error("Failed to get food entries range");
   }
-}
+};
 
 export async function createFoodEntry(
   entryData: Omit<NewFoodEntry, "id" | "userId">,

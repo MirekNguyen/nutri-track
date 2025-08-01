@@ -57,7 +57,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
     }
   }
 
-  const onError = (errors: FieldErrors<CustomEntryFormValues>) => {
+  const onError = (_errors: FieldErrors<CustomEntryFormValues>) => {
     toast.error("Please fix form errors")
   }
 

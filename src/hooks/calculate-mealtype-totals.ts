@@ -1,4 +1,4 @@
-import { FoodEntry } from "@/db/schema";
+import type { FoodEntry } from "@/db/schema";
 
 export const calculateMealTypeTotals = (entries: FoodEntry[]) => {
   return {

@@ -1,4 +1,4 @@
-import { FoodEntry } from "@/db/schema";
+import type { FoodEntry } from "@/db/schema";
 
 const mealTypes = ["breakfast", "lunch", "dinner", "snack"] as const;
 

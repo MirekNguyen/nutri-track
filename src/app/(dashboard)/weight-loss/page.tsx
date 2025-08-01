@@ -24,7 +24,7 @@ import { getWeightEntries } from "@/actions/weight-actions";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getNutritionGoals } from "@/actions/nutrition-goal-actions";
 import { toast } from "sonner";
-import { FoodEntry, WeightEntry } from "@/db/schema";
+import type { FoodEntry, WeightEntry } from "@/db/schema";
 
 export default function WeightLossPage() {
   const [weightEntries, setWeightEntries] = useState<WeightEntry[]>([]);

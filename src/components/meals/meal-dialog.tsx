@@ -14,10 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { NewMeal } from "@/db/schema";
+import type { NewMeal } from "@/db/schema";
 import { UnitDropdown } from "./unit-dropdown";
-import { ReactNode, useState } from "react";
-import { MealFormValues, mealZodSchema } from "./meal-zod-schema";
+import { type ReactNode, useState } from "react";
+import { type MealFormValues, mealZodSchema } from "./meal-zod-schema";
 import {
   Form,
   FormControl,

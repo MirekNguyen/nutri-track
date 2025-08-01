@@ -2,9 +2,9 @@
 
 import { deleteFoodEntry } from "@/actions/food-entry-actions";
 import { Button } from "@/components/ui/button";
-import { FoodEntry } from "@/db/schema";
+import type { FoodEntry } from "@/db/schema";
 import { Trash2 } from "lucide-react";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { toast } from "sonner";
 
 type Props = {

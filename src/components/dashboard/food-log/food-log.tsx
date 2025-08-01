@@ -4,7 +4,7 @@ import { calculateMealTypeTotals } from "../../../hooks/calculate-mealtype-total
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { FoodRecordSection } from "./food-record-section";
 import { getFoodEntries } from "@/actions/food-entry-actions";
-import { FC } from "react";
+import type { FC } from "react";
 
 type Props = {
   date: string;
@@ -15,8 +15,7 @@ export const FoodLog: FC<Props> = async ({ date }) => {
   const mealTypeTotalsData = calculateMealTypeTotals(entries);
 
   return (
-    <>
-      <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow bg-background">
+    <Card className="lg:col-span-2 shadow-sm hover:shadow-md transition-shadow bg-background">
         <CardHeader className="border-b pb-3 flex flex-row justify-between items-center">
           <CardTitle>Today&apos;s Food Log</CardTitle>
         </CardHeader>
@@ -67,6 +66,5 @@ export const FoodLog: FC<Props> = async ({ date }) => {
           </div>
         </CardContent>
       </Card>
-    </>
   );
 };

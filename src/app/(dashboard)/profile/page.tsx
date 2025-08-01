@@ -55,7 +55,7 @@ export default async function ProfilePage() {
                   <Pencil className="h-4 w-4" />
                 </Button>
               </div>
-              <h2 className="text-xl font-bold">{user.firstName + " " + user.lastName}</h2>
+              <h2 className="text-xl font-bold">{`${user.firstName} ${user.lastName}`}</h2>
               <p className="text-gray-500 mb-4">{user.email}</p>
               <div className="grid grid-cols-1 gap-4 w-full">
                 <Card className="bg-background p-3 rounded-md text-center">

@@ -1,6 +1,6 @@
 import { MealTypeIcon } from "@/components/common/meal-type-icon";
-import { FoodEntry } from "@/db/schema";
-import { FC } from "react";
+import type { FoodEntry } from "@/db/schema";
+import type { FC } from "react";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";

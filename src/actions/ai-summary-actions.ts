@@ -81,5 +81,5 @@ Present your advice as a friendly, concise summary of 3–5 short sentences, jus
     ],
   });
 
-  return completion.choices[0].message.content!.trim();
+  return completion.choices[0].message.content?.trim();
 }

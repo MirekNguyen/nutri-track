@@ -2,13 +2,13 @@
 
 import { Cell, Label, Pie, PieChart } from "recharts";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { MealTotal } from "../../../hooks/use-meal-total";
-import { FC } from "react";
+import type { MealTotal } from "../../../hooks/use-meal-total";
+import type { FC } from "react";
 
 const chartConfig = {
   breakfast: {

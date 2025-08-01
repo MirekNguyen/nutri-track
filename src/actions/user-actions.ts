@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { User, users, weightEntries } from "@/db/schema";
+import { type User, users, weightEntries } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 
 export async function getCurrentUser(): Promise<User> {

@@ -1,7 +1,7 @@
 "use client";
 
 import { DateSelector } from "../common/date-selector";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { AddFoodEntry } from "./food-entry/add-food-entry";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";

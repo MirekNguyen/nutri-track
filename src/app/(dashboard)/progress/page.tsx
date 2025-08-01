@@ -35,7 +35,7 @@ import {
   deleteWeightEntry,
 } from "@/actions/weight-actions";
 import { toast } from "sonner";
-import { BodyMeasurement, WeightEntry } from "@/db/schema";
+import type { BodyMeasurement, WeightEntry } from "@/db/schema";
 
 export default function ProgressPage() {
   const [activeTab, setActiveTab] = useState("weight");
@@ -87,7 +87,7 @@ export default function ProgressPage() {
 
     try {
       const weight = Number.parseFloat(newWeight);
-      if (isNaN(weight)) throw new Error("Invalid weight value");
+      if (Number.isNaN(weight)) throw new Error("Invalid weight value");
 
       const today = new Date();
 

@@ -1,4 +1,4 @@
-import { FoodEntry } from "@/db/schema";
+import type { FoodEntry } from "@/db/schema";
 
 export const useMacros = (entries: FoodEntry[]) => {
   return entries.reduce(

@@ -37,8 +37,7 @@ export const AddFoodEntry: FC<Props> = ({ children, type }) => {
   }, [type]);
 
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]"
           style={{
             height: isMobile ? "80vh" : "600px",
@@ -86,7 +85,6 @@ export const AddFoodEntry: FC<Props> = ({ children, type }) => {
         </DialogContent>
         <DialogTrigger asChild>{children}</DialogTrigger>
       </Dialog>
-    </>
   )
 }
 

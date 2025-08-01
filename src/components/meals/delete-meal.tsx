@@ -12,9 +12,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Meal } from "@/db/schema";
+import type { Meal } from "@/db/schema";
 import { Trash2 } from "lucide-react";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
