@@ -1,7 +1,7 @@
 "use client"
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
-import { type FC, type ReactNode, useState } from "react"
+import { type FC, type ReactNode, useMemo, useState } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -15,10 +15,26 @@ type Props = {
   children: ReactNode
 }
 
-export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
+export const AddFoodEntry: FC<Props> = ({ children, type }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [foodTab, setFoodTab] = useState<string>("choose")
   const isMobile = useIsMobile()
+  
+  const defaultMealType = useMemo(() => {
+    if (type) return type;
+    
+    const currentHour = new Date().getHours();
+    
+    if (currentHour >= 5 && currentHour < 10) {
+      return "breakfast";
+    } else if (currentHour >= 10 && currentHour < 16) {
+      return "lunch";
+    } else if (currentHour >= 16 && currentHour < 21) {
+      return "dinner";
+    } else {
+      return "snack";
+    }
+  }, [type]);
 
   return (
     <>
@@ -56,7 +72,7 @@ export const AddFoodEntry: FC<Props> = ({ children, type = "breakfast" }) => {
             </TabsList>
 
             <TabsContent value="choose" className="mt-4">
-              <EntryForm submitAction={() => setIsOpen(false)} type={type} />
+              <EntryForm submitAction={() => setIsOpen(false)} type={defaultMealType} />
             </TabsContent>
 
             <TabsContent value="ai" className="mt-4">
