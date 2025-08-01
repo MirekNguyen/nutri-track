@@ -88,7 +88,8 @@ export default function StatisticsPage() {
 
   // Calculate average macronutrient distribution
   const getMacroDistribution = () => {
-    if (entries.length === 0) return { protein: 0, carbs: 0, fat: 0, caffeine: 0 };
+    if (entries.length === 0)
+      return { protein: 0, carbs: 0, fat: 0, caffeine: 0 };
     const { start, end } = getDateRange();
     const days = eachDayOfInterval({ start, end });
 
@@ -110,12 +111,11 @@ export default function StatisticsPage() {
           (sum, entry) => sum + entry.carbs,
           0,
         );
-        const fat = entriesForDay.reduce(
-          (sum, entry) => sum + entry.fat,
+        const fat = entriesForDay.reduce((sum, entry) => sum + entry.fat, 0);
+        const caffeine = entriesForDay.reduce(
+          (sum, entry) => sum + (entry.caffeine ?? 0),
           0,
         );
-        const caffeine = entriesForDay.reduce((sum, entry) => sum + (entry.caffeine ?? 0), 0);
-        
 
         return {
           date: dateStr,

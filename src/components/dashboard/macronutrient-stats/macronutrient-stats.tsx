@@ -13,10 +13,7 @@ type Props = {
 export const MacronutrientStats = async ({ date }: Props) => {
   const entries = await getFoodEntries(date);
   const userData = await getUserData();
-  const totalCalories = entries.reduce(
-    (sum, entry) => sum + entry.calories,
-    0,
-  );
+  const totalCalories = entries.reduce((sum, entry) => sum + entry.calories, 0);
   const macrosData = useMacros(entries);
 
   const nutritionGoals = {
@@ -99,7 +96,8 @@ export const MacronutrientStats = async ({ date }: Props) => {
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
-            Coeficient {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
+            Coeficient{" "}
+            {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
           </p>
         </CardContent>
       </Card>

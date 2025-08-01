@@ -28,17 +28,21 @@ type CaloriesEntry = {
   date: string;
   calories: number;
   formattedDate: string;
-}
+};
 
 type Props = {
   data: CaloriesEntry[];
-}
+};
 
 export function CaloriesChart({ data }: Props) {
   const total = data.reduce((sum, entry) => sum + entry.calories, 0);
   const avg = data.length > 0 ? Math.round(total / data.length) : 0;
-  const minDate = new Date(Math.min(...data.map(entry => new Date(entry.date).getTime())));
-  const maxDate = new Date(Math.max(...data.map(entry => new Date(entry.date).getTime())));
+  const minDate = new Date(
+    Math.min(...data.map((entry) => new Date(entry.date).getTime())),
+  );
+  const maxDate = new Date(
+    Math.max(...data.map((entry) => new Date(entry.date).getTime())),
+  );
   const daysSpan = differenceInCalendarDays(maxDate, minDate) + 1;
   const maintenanceCalories = 2300;
 
@@ -89,12 +93,13 @@ export function CaloriesChart({ data }: Props) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex justify-between flex-col xl:flex-row gap-2 w-full">
-        <div className="flex gap-2 leading-none font-medium">
-          Average calories: {avg} kcal
-        </div>
-        <div className="flex gap-2 leading-none font-medium">
-          Total Deficit: {(maintenanceCalories - avg) * daysSpan} kcal ({((maintenanceCalories - avg) * daysSpan / 7700).toFixed(2)} kg)
-        </div>
+          <div className="flex gap-2 leading-none font-medium">
+            Average calories: {avg} kcal
+          </div>
+          <div className="flex gap-2 leading-none font-medium">
+            Total Deficit: {(maintenanceCalories - avg) * daysSpan} kcal (
+            {(((maintenanceCalories - avg) * daysSpan) / 7700).toFixed(2)} kg)
+          </div>
         </div>
         <div className="text-muted-foreground leading-none">
           Showing daily calories for the past {daysSpan} days

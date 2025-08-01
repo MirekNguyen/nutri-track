@@ -27,13 +27,21 @@ type Props = {
     carbs: number;
     fat: number;
     caffeine: number;
-  }
-}
+  };
+};
 
-export function MacronutrientDistributionChart({ macroDistribution}: Props) {
+export function MacronutrientDistributionChart({ macroDistribution }: Props) {
   const chartData = [
-    { macro: "protein", amount: macroDistribution.protein, fill: "var(--color-protein)" },
-    { macro: "carbs", amount: macroDistribution.carbs, fill: "var(--color-carbs)" },
+    {
+      macro: "protein",
+      amount: macroDistribution.protein,
+      fill: "var(--color-protein)",
+    },
+    {
+      macro: "carbs",
+      amount: macroDistribution.carbs,
+      fill: "var(--color-carbs)",
+    },
     { macro: "fat", amount: macroDistribution.fat, fill: "var(--color-fat)" },
   ];
   const chartConfig = {
@@ -73,11 +81,11 @@ export function MacronutrientDistributionChart({ macroDistribution}: Props) {
         {macroDistribution.caffeine > 0 && (
           <CardFooter className="flex-col gap-2 text-sm items-center">
             <div className="flex gap-2 leading-none font-medium text-center">
-              Average caffeine intake {macroDistribution.caffeine} mg <TrendingUp className="h-4 w-4" />
+              Average caffeine intake {macroDistribution.caffeine} mg{" "}
+              <TrendingUp className="h-4 w-4" />
             </div>
-        </CardFooter>
-      )}
-
+          </CardFooter>
+        )}
       </CardContent>
     </Card>
   );

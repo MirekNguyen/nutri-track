@@ -79,34 +79,37 @@ const MobileFoodRecord = ({ entry, meals }: Props) => {
                 <h3 className="text-xs font-medium text-foreground">
                   {entry.foodName}
                 </h3>
-                <p className="text-xs text-muted-foreground">{entry.calories.toFixed(0)} kcal</p>
+                <p className="text-xs text-muted-foreground">
+                  {entry.calories.toFixed(0)} kcal
+                </p>
               </div>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
               <div className="flex flex-col gap-1">
-              <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground mt-1">
-                <span>
-                  {formatEntryDateTime(entry.entryDate, entry.entryTime)}
-                </span>
-                <span className="font-medium">
-                  {entry.amount}{" "}
-                  {entry.mealId
-                    ? meals.find((m) => m.id === entry.mealId)?.unit ||
-                      "serving"
-                    : "serving"}
-                </span>
+                <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground mt-1">
+                  <span>
+                    {formatEntryDateTime(entry.entryDate, entry.entryTime)}
+                  </span>
+                  <span className="font-medium">
+                    {entry.amount}{" "}
+                    {entry.mealId
+                      ? meals.find((m) => m.id === entry.mealId)?.unit ||
+                        "serving"
+                      : "serving"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
+                  <span className="text-blue-600 dark:text-blue-400">
+                    {entry.protein.toFixed(0)}g protein
+                  </span>
+                  <span className="text-purple-600 dark:text-purple-400">
+                    {entry.carbs.toFixed(0)}g carbs
+                  </span>
+                  <span className="text-yellow-600 dark:text-yellow-400">
+                    {entry.fat.toFixed(0)}g fat
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
-                <span className="text-blue-600 dark:text-blue-400">
-                  {entry.protein.toFixed(0)}g protein
-                </span>
-                <span className="text-purple-600 dark:text-purple-400">
-                  {entry.carbs.toFixed(0)}g carbs
-                </span>
-                <span className="text-yellow-600 dark:text-yellow-400">
-                  {entry.fat.toFixed(0)}g fat
-                </span>
-              </div></div>
               <DeleteEntryButton
                 entry={entry}
                 className="border hover:border-red-600 dark:hover:border-red-400"

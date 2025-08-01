@@ -1,10 +1,10 @@
 "use server";
 
-import { db } from "@/db";
-import { foodEntries, type FoodEntry, type NewFoodEntry } from "@/db/schema";
-import { eq, and, asc, between } from "drizzle-orm";
-import { getCurrentUser } from "./user-actions";
+import { and, asc, between, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { db } from "@/db";
+import { type FoodEntry, foodEntries, type NewFoodEntry } from "@/db/schema";
+import { getCurrentUser } from "./user-actions";
 
 export async function getFoodEntries(
   formattedDate: string,

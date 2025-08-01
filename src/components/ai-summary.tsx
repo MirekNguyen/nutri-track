@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, Sparkles } from "lucide-react";
 import { getHealthSummaryWithUser } from "@/actions/ai-summary-actions";
@@ -43,7 +48,10 @@ export function AISummary({ date }: HealthSummaryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm sm:w-auto">
+        <Button
+          variant="outline"
+          className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm sm:w-auto"
+        >
           <Sparkles className="w-4 h-4" />
           AI Summarize
         </Button>

@@ -56,8 +56,8 @@ export const getUserData = async () => {
     const tdee = bmr * 1.5;
     const proteinGoal = 1.8 * weight;
     const calorieGoal = tdee - 500;
-    const carbsGoal = calorieGoal * 0.35 / 4;
-    const fatsGoal = calorieGoal * 0.35 / 9;
+    const carbsGoal = (calorieGoal * 0.35) / 4;
+    const fatsGoal = (calorieGoal * 0.35) / 9;
     return {
       weight,
       bmr,
@@ -67,7 +67,7 @@ export const getUserData = async () => {
       carbsGoal,
       fatsGoal,
       user,
-    }
+    };
   } catch (error) {
     console.error("Error getting user data:", error);
   }

@@ -96,7 +96,7 @@ export default function GoalsPage() {
       createdAt: new Date(),
     },
   ]);
-  const [,setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   // New goal form state
   const [newGoalTitle, setNewGoalTitle] = useState("");

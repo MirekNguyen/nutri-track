@@ -508,9 +508,9 @@ export default function WeightLossPage() {
                         Rapid Weight Loss
                       </h4>
                       <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
-                        You&apos;re losing weight faster than recommended. Consider
-                        increasing your calorie intake slightly to ensure
-                        sustainable and healthy weight loss.
+                        You&apos;re losing weight faster than recommended.
+                        Consider increasing your calorie intake slightly to
+                        ensure sustainable and healthy weight loss.
                       </p>
                     </div>
                   )}

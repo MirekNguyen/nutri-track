@@ -60,7 +60,9 @@ export default async function ProfilePage() {
               <div className="grid grid-cols-1 gap-4 w-full">
                 <Card className="bg-background p-3 rounded-md text-center">
                   <p className="text-sm text-gray-500">Member Since</p>
-                  <p className="font-medium">{format(user.createdAt ?? new Date(), 'MMM yyyy')}</p>
+                  <p className="font-medium">
+                    {format(user.createdAt ?? new Date(), "MMM yyyy")}
+                  </p>
                 </Card>
               </div>
             </CardContent>

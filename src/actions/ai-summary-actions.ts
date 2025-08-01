@@ -8,7 +8,9 @@ export type HealthSummaryPayload = {
   date: string;
 };
 
-export async function getHealthSummaryWithUser({ date }: HealthSummaryPayload): Promise<string> {
+export async function getHealthSummaryWithUser({
+  date,
+}: HealthSummaryPayload): Promise<string> {
   const user = await getCurrentUser();
   const weights = await getWeightEntries();
   const entries = await getFoodEntries(date);
@@ -22,7 +24,7 @@ export async function getHealthSummaryWithUser({ date }: HealthSummaryPayload): 
       (e) =>
         `${e.foodName} (calories: ${e.calories}, protein: ${e.protein}, carbs: ${e.carbs}, fat: ${e.fat}${
           e.caffeine ? `, caffeine: ${e.caffeine}mg` : ""
-        })`
+        })`,
     )
     .join("; ");
 
@@ -72,12 +74,12 @@ Present your advice as a friendly, concise summary of 3–5 short sentences, jus
     messages: [
       {
         role: "system",
-        content: `You write friendly health summaries for an app. Never mention being an AI or provide disclaimers.`
+        content: `You write friendly health summaries for an app. Never mention being an AI or provide disclaimers.`,
       },
       {
         role: "user",
-        content: prompt
-      }
+        content: prompt,
+      },
     ],
   });
 

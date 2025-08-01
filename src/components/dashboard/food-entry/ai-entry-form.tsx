@@ -1,48 +1,68 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { Button } from "@/components/ui/button"
-import { DialogClose, DialogFooter } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card } from "@/components/ui/card"
-import { useSearchParams } from "next/navigation"
-import type { FC } from "react"
-import { useState } from "react"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown"
-import type { FieldErrors } from "react-hook-form"
-import { toast } from "sonner"
-import { createFoodEntry } from "@/actions/food-entry-actions"
-import { type CustomEntryFormValues, useCustomEntryForm } from "@/hooks/use-custom-entry-form"
-import ImageUploadForm from "@/components/image-upload-form"
-import { Edit3, Check, ChevronDown } from "lucide-react"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
+import type { FC } from "react";
+import { useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
+import type { FieldErrors } from "react-hook-form";
+import { toast } from "sonner";
+import { createFoodEntry } from "@/actions/food-entry-actions";
+import {
+  type CustomEntryFormValues,
+  useCustomEntryForm,
+} from "@/hooks/use-custom-entry-form";
+import ImageUploadForm from "@/components/image-upload-form";
+import { Edit3, Check, ChevronDown } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 type Props = {
-  submitAction: () => void
-}
+  submitAction: () => void;
+};
 
 export const AIEntryForm: FC<Props> = ({ submitAction }) => {
-  const searchParams = useSearchParams()
-  const dateParam = searchParams.get("date")
-  const selectedDate = dateParam ? new Date(dateParam) : new Date()
-  const [hasAnalyzed, setHasAnalyzed] = useState(false)
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
+  const selectedDate = dateParam ? new Date(dateParam) : new Date();
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
-  const form = useCustomEntryForm()
-  const { register, watch } = form
+  const form = useCustomEntryForm();
+  const { register, watch } = form;
 
   // Watch for changes to detect when AI has populated the form
-  const foodName = watch("foodName")
-  const calories = watch("calories")
+  const foodName = watch("foodName");
+  const calories = watch("calories");
 
   // Update hasAnalyzed when AI populates the form
   React.useEffect(() => {
     if (foodName && calories && !hasAnalyzed) {
-      setHasAnalyzed(true)
+      setHasAnalyzed(true);
     }
-  }, [foodName, calories, hasAnalyzed])
+  }, [foodName, calories, hasAnalyzed]);
 
   const onSubmit = async (data: CustomEntryFormValues) => {
     try {
@@ -57,24 +77,24 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
         entryDate: selectedDate.toISOString().split("T")[0],
         entryTime: new Date().toTimeString().split(" ")[0],
         mealId: null,
-      })
-      form.reset()
-      setHasAnalyzed(false)
+      });
+      form.reset();
+      setHasAnalyzed(false);
       toast.success("Success!", {
         description: "Food entry added successfully",
-      })
-      submitAction()
+      });
+      submitAction();
     } catch (error) {
-      console.error("Error adding AI entry:", error)
+      console.error("Error adding AI entry:", error);
       toast.error("Error", {
         description: "Failed to add food entry. Please try again.",
-      })
+      });
     }
-  }
+  };
 
   const onError = (_errors: FieldErrors<CustomEntryFormValues>) => {
-    toast.error("Please fix form errors")
-  }
+    toast.error("Please fix form errors");
+  };
 
   return (
     <div className="space-y-4">
@@ -90,12 +110,16 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                 {hasAnalyzed ? (
                   <>
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-600">AI Results</span>
+                    <span className="text-sm font-medium text-green-600">
+                      AI Results
+                    </span>
                   </>
                 ) : (
                   <>
                     <Edit3 className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium text-muted-foreground">Manual Entry</span>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Manual Entry
+                    </span>
                   </>
                 )}
               </div>
@@ -110,7 +134,10 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
             {/* Collapsed Summary */}
             <CollapsibleContent className="space-y-4">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit, onError)}
+                  className="space-y-4"
+                >
                   {/* Food Name & Meal Type */}
                   <div className="grid grid-cols-1 gap-3">
                     <FormField
@@ -120,7 +147,11 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                         <FormItem>
                           <FormLabel className="text-sm">Food Name</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="e.g. Grilled Chicken" className="h-9" />
+                            <Input
+                              {...field}
+                              placeholder="e.g. Grilled Chicken"
+                              className="h-9"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -157,7 +188,10 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                         <FormItem>
                           <FormLabel className="text-sm">Meal Type</FormLabel>
                           <FormControl>
-                            <MealTypeDropdown newMealType={field.value} setNewMealType={field.onChange} />
+                            <MealTypeDropdown
+                              newMealType={field.value}
+                              setNewMealType={field.onChange}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -167,7 +201,9 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
 
                   {/* Macros */}
                   <div className="space-y-2">
-                    <FormLabel className="text-sm text-muted-foreground">Macronutrients (grams)</FormLabel>
+                    <FormLabel className="text-sm text-muted-foreground">
+                      Macronutrients (grams)
+                    </FormLabel>
                     <div className="grid grid-cols-3 gap-2">
                       <FormField
                         name="protein"
@@ -182,7 +218,9 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                                 step="0.01"
                                 placeholder="25"
                                 className="h-8 text-xs"
-                                {...register("protein", { valueAsNumber: true })}
+                                {...register("protein", {
+                                  valueAsNumber: true,
+                                })}
                               />
                             </FormControl>
                             <FormMessage />
@@ -241,7 +279,13 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                         <FormItem>
                           <FormLabel className="text-sm">Amount</FormLabel>
                           <FormControl>
-                            <Input {...field} type="number" step="0.01" placeholder="1" className="h-9" />
+                            <Input
+                              {...field}
+                              type="number"
+                              step="0.01"
+                              placeholder="1"
+                              className="h-9"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -254,7 +298,10 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                         <FormItem>
                           <FormLabel className="text-sm">Unit</FormLabel>
                           <FormControl>
-                            <Select value={field.value} onValueChange={field.onChange}>
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
                               <SelectTrigger className="h-9">
                                 <SelectValue placeholder="Unit" />
                               </SelectTrigger>
@@ -284,16 +331,24 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
               {(foodName || calories) && (
                 <div className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg mb-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{foodName || "Food Item"}</span>
+                    <span className="text-sm font-medium">
+                      {foodName || "Food Item"}
+                    </span>
                     {calories && (
                       <>
                         <span className="text-muted-foreground">•</span>
-                        <span className="text-sm text-muted-foreground">{calories} cal</span>
+                        <span className="text-sm text-muted-foreground">
+                          {calories} cal
+                        </span>
                       </>
                     )}
                   </div>
                   <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                    >
                       Edit
                     </Button>
                   </CollapsibleTrigger>
@@ -310,8 +365,8 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        form.reset()
-                        setHasAnalyzed(false)
+                        form.reset();
+                        setHasAnalyzed(false);
                       }}
                       className="h-9 text-sm"
                     >
@@ -338,7 +393,9 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
           <div className="text-center py-6 text-muted-foreground">
             <Edit3 className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm mb-1">No photos uploaded yet</p>
-            <p className="text-xs">Upload photos above or enter details manually</p>
+            <p className="text-xs">
+              Upload photos above or enter details manually
+            </p>
             {/* <Button */}
             {/*   type="button" */}
             {/*   variant="ghost" */}
@@ -352,6 +409,5 @@ export const AIEntryForm: FC<Props> = ({ submitAction }) => {
         </Card>
       )}
     </div>
-  )
-}
-
+  );
+};

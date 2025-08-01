@@ -14,8 +14,8 @@ import { type FC, useState } from "react";
 
 type Props = {
   date: Date;
-}
-export const DateSelector: FC<Props> = ({date}) => {
+};
+export const DateSelector: FC<Props> = ({ date }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(date);
   const [open, setOpen] = useState(false);
   const router = useRouter();

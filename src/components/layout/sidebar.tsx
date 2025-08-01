@@ -68,14 +68,10 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            { (state === "expanded" || isMobile) && (
-            <Header />
-            )}
+            {(state === "expanded" || isMobile) && <Header />}
           </SidebarMenuItem>
           <SidebarMenuItem>
-            { (state === "collapsed") && (
-            <SidebarTrigger />
-            )}
+            {state === "collapsed" && <SidebarTrigger />}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -99,15 +95,17 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        {state === "expanded" && (<div className="mt-auto px-3 py-2">
-          <div className="bg-green-50 dark:bg-green-950/20 text-green-800 dark:text-green-200 rounded-md p-3 text-sm">
-            <p className="font-medium mb-1">Pro Tip</p>
-            <p className="text-xs text-green-700 dark:text-green-300">
-              Track your meals consistently for better insights into your
-              nutrition habits.
-            </p>
+        {state === "expanded" && (
+          <div className="mt-auto px-3 py-2">
+            <div className="bg-green-50 dark:bg-green-950/20 text-green-800 dark:text-green-200 rounded-md p-3 text-sm">
+              <p className="font-medium mb-1">Pro Tip</p>
+              <p className="text-xs text-green-700 dark:text-green-300">
+                Track your meals consistently for better insights into your
+                nutrition habits.
+              </p>
+            </div>
           </div>
-        </div>)}
+        )}
         <UserAvatar />
       </SidebarFooter>
     </Sidebar>

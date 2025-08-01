@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Github, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
-import { Toaster } from "@/components/ui/sonner"
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function SignupPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
       // This is where you would integrate with Clerk
       // For now, we'll just simulate a signup
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast("Success", {
         description: "Your account has been created. You can now log in.",
-      })
+      });
 
       // Redirect to login after successful signup
-      router.push("/login")
+      router.push("/login");
     } catch (error) {
-      console.error("Signup error:", error)
+      console.error("Signup error:", error);
       toast.error("Error", {
         description: "Failed to create account. Please try again.",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -73,7 +73,9 @@ export default function SignupPage() {
         </div>
 
         <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create an account</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            Create an account
+          </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -127,13 +129,21 @@ export default function SignupPage() {
                   ) : (
                     <Eye className="h-4 w-4 text-gray-500" />
                   )}
-                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                  <span className="sr-only">
+                    {showPassword ? "Hide password" : "Show password"}
+                  </span>
                 </Button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Password must be at least 8 characters long
+              </p>
             </div>
 
-            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700"
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -151,7 +161,9 @@ export default function SignupPage() {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -187,17 +199,21 @@ export default function SignupPage() {
 
           <div className="mt-6 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-green-600 hover:underline font-medium">
+            <Link
+              href="/login"
+              className="text-green-600 hover:underline font-medium"
+            >
               Sign in
             </Link>
           </div>
         </div>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          By signing up, you agree to NutriTrack&apos;s Terms of Service and Privacy Policy.
+          By signing up, you agree to NutriTrack&apos;s Terms of Service and
+          Privacy Policy.
         </p>
       </div>
       <Toaster />
     </div>
-  )
+  );
 }

@@ -39,7 +39,13 @@ type Props = {
   numberOfDays: number;
 };
 
-export function MacronutrientChart({ chartData, title, description, footer, numberOfDays }: Props) {
+export function MacronutrientChart({
+  chartData,
+  title,
+  description,
+  footer,
+  numberOfDays,
+}: Props) {
   return (
     <Card>
       <CardHeader>

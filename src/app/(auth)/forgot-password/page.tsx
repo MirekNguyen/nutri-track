@@ -1,44 +1,45 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ArrowLeft, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
-import { Toaster } from "@/components/ui/sonner"
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function ForgotPasswordPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
       // This is where you would integrate with Clerk
       // For now, we'll just simulate a password reset request
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setIsSubmitted(true)
+      setIsSubmitted(true);
 
       toast("Email sent", {
-        description: "If an account exists with this email, you'll receive a reset link.",
-      })
+        description:
+          "If an account exists with this email, you'll receive a reset link.",
+      });
     } catch (error) {
-      console.error("Password reset error:", error)
+      console.error("Password reset error:", error);
       toast.error("Error", {
         description: "Failed to send reset email. Please try again.",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -67,23 +68,35 @@ export default function ForgotPasswordPage() {
         </div>
 
         <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
-          <Link href="/login" className="inline-flex items-center text-sm text-green-600 hover:text-green-700 mb-6">
+          <Link
+            href="/login"
+            className="inline-flex items-center text-sm text-green-600 hover:text-green-700 mb-6"
+          >
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to login
           </Link>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Reset your password</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Reset your password
+          </h2>
           <p className="text-gray-600 mb-6">
-            Enter your email address and we&apos;ll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset
+            your password.
           </p>
 
           {isSubmitted ? (
             <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
-              <h3 className="text-sm font-medium text-green-800">Check your email</h3>
+              <h3 className="text-sm font-medium text-green-800">
+                Check your email
+              </h3>
               <p className="text-sm text-green-700 mt-1">
-                We&apos;ve sent a password reset link to {email}. The link will expire in 10 minutes.
+                We&apos;ve sent a password reset link to {email}. The link will
+                expire in 10 minutes.
               </p>
-              <Button className="w-full mt-4 bg-green-600 hover:bg-green-700" onClick={() => setIsSubmitted(false)}>
+              <Button
+                className="w-full mt-4 bg-green-600 hover:bg-green-700"
+                onClick={() => setIsSubmitted(false)}
+              >
                 Send another email
               </Button>
             </div>
@@ -102,7 +115,11 @@ export default function ForgotPasswordPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -118,5 +135,5 @@ export default function ForgotPasswordPage() {
       </div>
       <Toaster />
     </div>
-  )
+  );
 }

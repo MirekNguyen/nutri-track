@@ -63,7 +63,7 @@ export default function MealsDashboard({ meals }: Props) {
       // Search filter
       const matchesSearch =
         meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (meal.description?.toLowerCase().includes(searchQuery.toLowerCase()));
+        meal.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Tags filter
       const matchesTags =
@@ -85,7 +85,8 @@ export default function MealsDashboard({ meals }: Props) {
           return (b.protein || 0) - (a.protein || 0);
         default:
           return (
-            new Date(b.createdAt ?? new Date()).getTime() - new Date(a.createdAt ?? new Date()).getTime()
+            new Date(b.createdAt ?? new Date()).getTime() -
+            new Date(a.createdAt ?? new Date()).getTime()
           );
       }
     });
@@ -99,8 +100,9 @@ export default function MealsDashboard({ meals }: Props) {
           ? "Added to favorites"
           : "Removed from favorites",
         {
-        description: `${updatedMeal.name} has been ${updatedMeal.isFavorite ? "added to" : "removed from"} your favorites.`,
-      });
+          description: `${updatedMeal.name} has been ${updatedMeal.isFavorite ? "added to" : "removed from"} your favorites.`,
+        },
+      );
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast("Error", {
@@ -125,7 +127,9 @@ export default function MealsDashboard({ meals }: Props) {
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Meals</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          Meals
+        </h1>
         <NewMealDialog>
           <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
             <PlusCircle className="mr-2 h-4 w-4" /> Add Meal
@@ -327,10 +331,10 @@ export default function MealsDashboard({ meals }: Props) {
               <CardFooter className="flex justify-between items-center pt-2 border-t">
                 <div className="flex flex-wrap gap-1">
                   {meal.tags?.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
                 <div className="flex gap-1">
                   <EditMealDialog id={meal.id} meal={meal}>

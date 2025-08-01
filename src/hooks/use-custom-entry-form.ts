@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 export const customEntrySchema = z.object({
-  foodName: z.string("Food name is required").min(2, "Food name must be at least 2 characters"),
+  foodName: z
+    .string("Food name is required")
+    .min(2, "Food name must be at least 2 characters"),
   calories: z
     .number("Calories are required")
     .min(1, "Calories must be a positive number"),
@@ -13,9 +15,7 @@ export const customEntrySchema = z.object({
   carbs: z
     .number("Carbs are required")
     .min(0, "Carbs must be a positive number"),
-  fat: z
-    .number("Fat is required")
-    .min(0, "Fat must be a positive integer"),
+  fat: z.number("Fat is required").min(0, "Fat must be a positive integer"),
   amount: z
     .number("Amount is required")
     .min(0.1, "Amount must be at least 0.1"),

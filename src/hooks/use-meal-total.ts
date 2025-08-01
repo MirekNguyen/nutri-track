@@ -3,9 +3,9 @@ import type { FoodEntry } from "@/db/schema";
 const mealTypes = ["breakfast", "lunch", "dinner", "snack"] as const;
 
 export type MealTotal = {
-  mealType: typeof mealTypes[number];
+  mealType: (typeof mealTypes)[number];
   calories: number;
-}
+};
 
 export const useMealTotal = (entries: FoodEntry[]): MealTotal[] => {
   return mealTypes.map((mealType) => {

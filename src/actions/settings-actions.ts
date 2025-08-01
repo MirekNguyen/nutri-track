@@ -1,17 +1,21 @@
-"use server"
+"use server";
 
-import { db } from "@/db"
-import { userSettings, type NewUserSettings } from "@/db/schema"
-import { eq } from "drizzle-orm"
-import { getCurrentUser } from "./user-actions"
+import { db } from "@/db";
+import { userSettings, type NewUserSettings } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getCurrentUser } from "./user-actions";
 
 export async function getUserSettings() {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUser();
 
-    const result = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1)
+    const result = await db
+      .select()
+      .from(userSettings)
+      .where(eq(userSettings.userId, user.id))
+      .limit(1);
 
-    const settings = result[0]
+    const settings = result[0];
 
     if (!settings) {
       // Create default settings if none exist
@@ -28,28 +32,35 @@ export async function getUserSettings() {
         cloudBackup: true,
         analytics: true,
         personalization: true,
-      })
+      });
     }
 
-    return settings
+    return settings;
   } catch (error) {
-    console.error("Error getting user settings:", error)
-    throw new Error("Failed to get user settings")
+    console.error("Error getting user settings:", error);
+    throw new Error("Failed to get user settings");
   }
 }
 
 export async function createUserSettings(
-  settingsData: Omit<NewUserSettings, "id" | "userId" | "createdAt" | "updatedAt">,
+  settingsData: Omit<
+    NewUserSettings,
+    "id" | "userId" | "createdAt" | "updatedAt"
+  >,
 ) {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUser();
 
     // Check if settings already exist
-    const existingSettings = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1)
+    const existingSettings = await db
+      .select()
+      .from(userSettings)
+      .where(eq(userSettings.userId, user.id))
+      .limit(1);
 
     if (existingSettings[0]) {
       // Update existing settings
-      return updateUserSettings(settingsData)
+      return updateUserSettings(settingsData);
     }
 
     // Create new settings
@@ -59,20 +70,22 @@ export async function createUserSettings(
         ...settingsData,
         userId: user.id,
       })
-      .returning()
+      .returning();
 
-    return settings
+    return settings;
   } catch (error) {
-    console.error("Error creating user settings:", error)
-    throw new Error("Failed to create user settings")
+    console.error("Error creating user settings:", error);
+    throw new Error("Failed to create user settings");
   }
 }
 
 export async function updateUserSettings(
-  settingsData: Partial<Omit<NewUserSettings, "id" | "userId" | "createdAt" | "updatedAt">>,
+  settingsData: Partial<
+    Omit<NewUserSettings, "id" | "userId" | "createdAt" | "updatedAt">
+  >,
 ) {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUser();
 
     const [updatedSettings] = await db
       .update(userSettings)
@@ -81,15 +94,15 @@ export async function updateUserSettings(
         updatedAt: new Date(),
       })
       .where(eq(userSettings.userId, user.id))
-      .returning()
+      .returning();
 
     if (!updatedSettings) {
-      throw new Error("User settings not found")
+      throw new Error("User settings not found");
     }
 
-    return updatedSettings
+    return updatedSettings;
   } catch (error) {
-    console.error("Error updating user settings:", error)
-    throw new Error("Failed to update user settings")
+    console.error("Error updating user settings:", error);
+    throw new Error("Failed to update user settings");
   }
 }
