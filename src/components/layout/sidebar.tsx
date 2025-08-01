@@ -8,7 +8,7 @@ import {
   Utensils,
   Weight,
 } from "lucide-react";
-
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -23,9 +23,8 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Header } from "./header";
-import { usePathname } from "next/navigation";
 import { UserAvatar } from "../common/user-avatar";
+import { Header } from "./header";
 
 const items = [
   {

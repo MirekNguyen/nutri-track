@@ -1,16 +1,16 @@
 "use client";
-import type React from "react";
-import { useState } from "react";
+import { useSignIn } from "@clerk/nextjs";
+import type { OAuthStrategy } from "@clerk/types";
+import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useSignIn } from "@clerk/nextjs";
-import type { OAuthStrategy } from "@clerk/types";
-import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 export default function LoginPage() {

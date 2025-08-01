@@ -1,6 +1,4 @@
 "use client";
-import type { FoodEntry, Meal } from "@/db/schema";
-import { DeleteEntryButton } from "./delete-entry-button";
 import { format, parseISO } from "date-fns";
 import {
   Accordion,
@@ -8,7 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import type { FoodEntry, Meal } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { DeleteEntryButton } from "./delete-entry-button";
 
 type Props = {
   entry: FoodEntry;

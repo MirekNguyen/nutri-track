@@ -1,14 +1,14 @@
 import { relations } from "drizzle-orm";
 import {
-  pgTable,
-  serial,
-  varchar,
-  text,
-  integer,
-  timestamp,
   boolean,
   date,
+  integer,
   numeric,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";

@@ -1,8 +1,8 @@
 "use server";
 
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { bodyMeasurements, type NewBodyMeasurement } from "@/db/schema";
-import { eq, and, desc } from "drizzle-orm";
 import { getCurrentUser } from "./user-actions";
 
 export async function getBodyMeasurements() {

@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { subDays, differenceInDays } from "date-fns";
+import { differenceInDays, subDays } from "date-fns";
+import { Calculator, Calendar, Target, TrendingDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { getFoodEntries } from "@/actions/food-entry-actions";
+import { getNutritionGoals } from "@/actions/nutrition-goal-actions";
+import { getWeightEntries } from "@/actions/weight-actions";
 import {
   Card,
   CardContent,
@@ -19,11 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, TrendingDown, Target, Calendar } from "lucide-react";
-import { getWeightEntries } from "@/actions/weight-actions";
-import { getFoodEntries } from "@/actions/food-entry-actions";
-import { getNutritionGoals } from "@/actions/nutrition-goal-actions";
-import { toast } from "sonner";
 import type { FoodEntry, WeightEntry } from "@/db/schema";
 
 export default function WeightLossPage() {
@@ -86,7 +86,7 @@ export default function WeightLossPage() {
     if (gender === "male") {
       return 10 * weightKg + 6.25 * heightCm - 5 * ageYears + 5;
     }
-      return 10 * weightKg + 6.25 * heightCm - 5 * ageYears - 161;
+    return 10 * weightKg + 6.25 * heightCm - 5 * ageYears - 161;
   };
 
   // Calculate TDEE (Total Daily Energy Expenditure)

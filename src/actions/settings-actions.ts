@@ -1,8 +1,8 @@
 "use server";
 
-import { db } from "@/db";
-import { userSettings, type NewUserSettings } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { type NewUserSettings, userSettings } from "@/db/schema";
 import { getCurrentUser } from "./user-actions";
 
 export async function getUserSettings() {

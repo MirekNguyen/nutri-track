@@ -1,15 +1,15 @@
 "use client";
 
+import { Loader2, Sparkles } from "lucide-react";
 import * as React from "react";
+import { getHealthSummaryWithUser } from "@/actions/ai-summary-actions";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles } from "lucide-react";
-import { getHealthSummaryWithUser } from "@/actions/ai-summary-actions";
 
 type HealthSummaryDialogProps = {
   date: string;

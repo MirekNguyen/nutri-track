@@ -1,5 +1,6 @@
 "use client";
 
+import type { FC } from "react";
 import { Cell, Label, Pie, PieChart } from "recharts";
 import {
   type ChartConfig,
@@ -8,7 +9,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { MealTotal } from "../../../hooks/use-meal-total";
-import type { FC } from "react";
 
 const chartConfig = {
   breakfast: {

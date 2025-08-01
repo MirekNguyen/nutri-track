@@ -1,27 +1,26 @@
 "use client";
 
-import { Loader, Plus, UtensilsCrossed } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { CommandLoading } from "cmdk";
+import { ChevronDown, Loader, Plus, UtensilsCrossed } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { type FC, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { createFoodEntry } from "@/actions/food-entry-actions";
+import { getMeals } from "@/actions/meal-actions";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
+import { NewMealDialog } from "@/components/meals/new-meal-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useSearchParams } from "next/navigation";
-import { type FC, useState } from "react";
-import { getMeals } from "@/actions/meal-actions";
-import { createFoodEntry } from "@/actions/food-entry-actions";
-import { useQuery } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import {
   Command,
   CommandEmpty,
@@ -30,12 +29,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Skeleton } from "@/components/ui/skeleton";
-import { CommandLoading } from "cmdk";
-import type { Meal } from "@/db/schema";
-import { toast } from "sonner";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -44,9 +38,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { NewMealDialog } from "@/components/meals/new-meal-dialog";
-import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
-import { ChevronDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { Meal } from "@/db/schema";
 
 type Props = {
   submitAction: () => void;

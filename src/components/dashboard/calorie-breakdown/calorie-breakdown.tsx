@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { FC } from "react";
 import { getFoodEntries } from "@/actions/food-entry-actions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMealTotal } from "../../../hooks/use-meal-total";
 import { CalorieBreadownChart } from "./calorie-breakdown-chart";
 

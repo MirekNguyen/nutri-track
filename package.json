@@ -10,7 +10,9 @@
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write --unsafe ./src",
     "format": "biome format ./src",
-    "format:fix": "biome format --write --unsafe ./src"
+    "format:fix": "biome format --write ./src",
+    "check": "biome check ./src",
+    "check:fix": "biome check --write ./src"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.14.3",

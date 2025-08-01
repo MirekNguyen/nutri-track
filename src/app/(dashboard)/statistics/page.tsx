@@ -1,22 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { format, subDays, eachDayOfInterval } from "date-fns";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQuery } from "@tanstack/react-query";
+import { eachDayOfInterval, format, subDays } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { CaloriesChart } from "./calories-chart";
+import { useState } from "react";
+import { getFoodEntriesRange } from "@/actions/food-entry-actions";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { CaloriesChart } from "./calories-chart";
 import { MacronutrientChart } from "./macronutrient-chart";
 import { MacronutrientDistributionChart } from "./macronutrient-distribution-chart";
-import { useQuery } from "@tanstack/react-query";
-import { getFoodEntriesRange } from "@/actions/food-entry-actions";
 
 type DateRange = {
   from: Date | undefined;

@@ -1,4 +1,4 @@
-import { Coffee, Utensils, Moon, Apple } from "lucide-react";
+import { Apple, Coffee, Moon, Utensils } from "lucide-react";
 
 interface MealTypeIconProps {
   type: "breakfast" | "lunch" | "dinner" | "snack";

@@ -1,8 +1,8 @@
 "use server";
 import { OpenAI } from "openai";
+import { getFoodEntries } from "./food-entry-actions";
 import { getCurrentUser } from "./user-actions";
 import { getWeightEntries } from "./weight-actions";
-import { getFoodEntries } from "./food-entry-actions";
 
 export type HealthSummaryPayload = {
   date: string;
@@ -74,7 +74,8 @@ Present your advice as a friendly, concise summary of 3–5 short sentences, jus
     messages: [
       {
         role: "system",
-        content: "You write friendly health summaries for an app. Never mention being an AI or provide disclaimers.",
+        content:
+          "You write friendly health summaries for an app. Never mention being an AI or provide disclaimers.",
       },
       {
         role: "user",

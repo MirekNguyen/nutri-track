@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import {
-  Search,
-  Filter,
   ChevronDown,
-  X,
   Edit,
+  Filter,
   Heart,
   PlusCircle,
+  Search,
+  X,
 } from "lucide-react";
-
+import { useState } from "react";
+import { toast } from "sonner";
+import { toggleFavoriteMeal } from "@/actions/meal-actions";
+import { DeleteMeal } from "@/components/meals/delete-meal";
+import { EditMealDialog } from "@/components/meals/edit-meal-dialog";
+import { NewMealDialog } from "@/components/meals/new-meal-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,8 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -29,14 +32,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-
-import { toggleFavoriteMeal } from "@/actions/meal-actions";
+import { Input } from "@/components/ui/input";
 import type { Meal } from "@/db/schema";
-import { toast } from "sonner";
-import { DeleteMeal } from "@/components/meals/delete-meal";
-import { EditMealDialog } from "@/components/meals/edit-meal-dialog";
-import { NewMealDialog } from "@/components/meals/new-meal-dialog";
 
 type Props = {
   meals: Meal[];

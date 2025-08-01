@@ -1,16 +1,15 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
+import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 export default function SignupPage() {

@@ -1,5 +1,6 @@
 "use client";
 
+import { differenceInCalendarDays } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   Card,
@@ -15,7 +16,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { differenceInCalendarDays } from "date-fns";
 
 const chartConfig = {
   calories: {

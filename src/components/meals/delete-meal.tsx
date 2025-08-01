@@ -1,5 +1,8 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
+import { type FC, useState } from "react";
+import { toast } from "sonner";
 import { deleteMeal } from "@/actions/meal-actions";
 import {
   AlertDialog,
@@ -13,9 +16,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Meal } from "@/db/schema";
-import { Trash2 } from "lucide-react";
-import { type FC, useState } from "react";
-import { toast } from "sonner";
 
 type Props = {
   meal: Meal;

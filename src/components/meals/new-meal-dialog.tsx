@@ -1,10 +1,10 @@
 "use client";
 
-import { createMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
-import type { NewMeal } from "@/db/schema";
 import type { FC, PropsWithChildren } from "react";
 import { toast } from "sonner";
+import { createMeal } from "@/actions/meal-actions";
+import type { NewMeal } from "@/db/schema";
 import { MealDialog } from "./meal-dialog";
 
 export const NewMealDialog: FC<PropsWithChildren> = ({ children }) => {

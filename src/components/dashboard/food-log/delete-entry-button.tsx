@@ -1,11 +1,11 @@
 "use client";
 
-import { deleteFoodEntry } from "@/actions/food-entry-actions";
-import { Button } from "@/components/ui/button";
-import type { FoodEntry } from "@/db/schema";
 import { Trash2 } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import { toast } from "sonner";
+import { deleteFoodEntry } from "@/actions/food-entry-actions";
+import { Button } from "@/components/ui/button";
+import type { FoodEntry } from "@/db/schema";
 
 type Props = {
   entry: FoodEntry;

@@ -1,8 +1,8 @@
+import { format } from "date-fns";
 import { CalorieBreakdown } from "@/components/dashboard/calorie-breakdown/calorie-breakdown";
 import { CalorieTracker } from "@/components/dashboard/calorie-tracker";
 import { FoodLog } from "@/components/dashboard/food-log/food-log";
 import { MacronutrientStats } from "@/components/dashboard/macronutrient-stats/macronutrient-stats";
-import { format } from "date-fns";
 
 type Props = {
   searchParams: Promise<{ date?: string }>;

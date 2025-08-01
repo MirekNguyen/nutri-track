@@ -1,21 +1,22 @@
 "use client";
 
-import React from "react";
-
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
+import { Check, ChevronDown, Edit3 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import type { FC } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import type { FieldErrors } from "react-hook-form";
+import { toast } from "sonner";
+import { createFoodEntry } from "@/actions/food-entry-actions";
+import ImageUploadForm from "@/components/image-upload-form";
+import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -24,21 +25,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MealTypeDropdown } from "@/components/meals/meal-type-dropdown";
-import type { FieldErrors } from "react-hook-form";
-import { toast } from "sonner";
-import { createFoodEntry } from "@/actions/food-entry-actions";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   type CustomEntryFormValues,
   useCustomEntryForm,
 } from "@/hooks/use-custom-entry-form";
-import ImageUploadForm from "@/components/image-upload-form";
-import { Edit3, Check, ChevronDown } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 type Props = {
   submitAction: () => void;

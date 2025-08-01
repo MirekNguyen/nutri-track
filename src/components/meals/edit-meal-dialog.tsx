@@ -1,10 +1,10 @@
 "use client";
 
-import { updateMeal } from "@/actions/meal-actions";
 import { useQueryClient } from "@tanstack/react-query";
-import type { NewMeal } from "@/db/schema";
 import type { FC, ReactNode } from "react";
 import { toast } from "sonner";
+import { updateMeal } from "@/actions/meal-actions";
+import type { NewMeal } from "@/db/schema";
 import { MealDialog } from "./meal-dialog";
 
 type Props = {

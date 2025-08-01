@@ -1,8 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { PlusCircle, Camera, Loader2 } from "lucide-react";
+import { Camera, Loader2, PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import {
+  createBodyMeasurement,
+  deleteBodyMeasurement,
+  getBodyMeasurements,
+} from "@/actions/measurement-actions";
+import {
+  createWeightEntry,
+  deleteWeightEntry,
+  getWeightEntries,
+} from "@/actions/weight-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +23,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -24,17 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  getBodyMeasurements,
-  createBodyMeasurement,
-  deleteBodyMeasurement,
-} from "@/actions/measurement-actions";
-import {
-  getWeightEntries,
-  createWeightEntry,
-  deleteWeightEntry,
-} from "@/actions/weight-actions";
-import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { BodyMeasurement, WeightEntry } from "@/db/schema";
 
 export default function ProgressPage() {

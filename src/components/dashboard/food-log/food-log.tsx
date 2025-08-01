@@ -1,10 +1,10 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlusCircle } from "lucide-react";
+import type { FC } from "react";
+import { getFoodEntries } from "@/actions/food-entry-actions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateMealTypeTotals } from "../../../hooks/calculate-mealtype-totals";
 import { AddFoodEntry } from "../food-entry/add-food-entry";
 import { FoodRecordSection } from "./food-record-section";
-import { getFoodEntries } from "@/actions/food-entry-actions";
-import type { FC } from "react";
 
 type Props = {
   date: string;

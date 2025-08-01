@@ -1,10 +1,10 @@
-import { MobileMenu } from "@/components/layout/mobile-menu";
-import { MobileHeader } from "@/components/layout/mobile-header";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
 import { cookies } from "next/headers";
 import type { PropsWithChildren } from "react";
+import { MobileHeader } from "@/components/layout/mobile-header";
+import { MobileMenu } from "@/components/layout/mobile-menu";
 import { AppSidebar } from "@/components/layout/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const cookieStore = await cookies();

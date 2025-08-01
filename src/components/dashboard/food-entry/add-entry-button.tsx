@@ -1,9 +1,9 @@
 "use client";
 
 import { PlusCircle } from "lucide-react";
-import { AddFoodEntry } from "./add-food-entry";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AddFoodEntry } from "./add-food-entry";
 
 export const AddEntryButton = () => {
   const isMobile = useIsMobile();

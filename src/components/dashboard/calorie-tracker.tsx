@@ -1,12 +1,12 @@
 "use client";
 
-import { DateSelector } from "../common/date-selector";
-import type { PropsWithChildren } from "react";
-import { AddFoodEntry } from "./food-entry/add-food-entry";
-import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
+import type { PropsWithChildren } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { AISummary } from "../ai-summary";
+import { DateSelector } from "../common/date-selector";
+import { Button } from "../ui/button";
+import { AddFoodEntry } from "./food-entry/add-food-entry";
 
 type Props = {
   selectedDate: string;

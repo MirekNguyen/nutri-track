@@ -1,6 +1,9 @@
 "use client";
 
+import { useClerk, useUser } from "@clerk/nextjs";
 import { ChevronsUpDown, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import { useRouter } from "next/navigation";
-import { useUser, useClerk } from "@clerk/nextjs";
 import { SidebarMenuButton } from "../ui/sidebar";
 
 export const UserAvatar = () => {

@@ -1,6 +1,10 @@
 "use client";
 
-import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { type ReactNode, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,14 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
 import type { NewMeal } from "@/db/schema";
-import { UnitDropdown } from "./unit-dropdown";
-import { type ReactNode, useState } from "react";
-import { type MealFormValues, mealZodSchema } from "./meal-zod-schema";
 import {
   Form,
   FormControl,
@@ -27,7 +26,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { type MealFormValues, mealZodSchema } from "./meal-zod-schema";
+import { UnitDropdown } from "./unit-dropdown";
 
 type Props = {
   defaultValues: Partial<MealFormValues>;
