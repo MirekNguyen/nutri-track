@@ -13,26 +13,15 @@ import {
   Target,
   Beef,
   Wheat,
-  Loader2,
 } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
 import { toggleFavoriteMeal } from "@/actions/meal-actions"
 import { DeleteMeal } from "@/components/meals/delete-meal"
+import { EditMealDialog } from "@/components/meals/edit-meal-dialog"
+import { NewMealDialog } from "@/components/meals/new-meal-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -43,25 +32,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
 import type { Meal } from "@/db/schema"
-
-// Zod Schema for Meal Form
-const mealFormSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
-  description: z.string().optional(),
-  calories: z.number().min(0, "Calories must be positive").max(10000, "Calories must be less than 10,000"),
-  protein: z.number().min(0, "Protein must be positive").max(1000, "Protein must be less than 1,000g").optional(),
-  carbs: z.number().min(0, "Carbs must be positive").max(1000, "Carbs must be less than 1,000g").optional(),
-  fat: z.number().min(0, "Fat must be positive").max(1000, "Fat must be less than 1,000g").optional(),
-  unit: z.string().min(1, "Unit is required").max(50, "Unit must be less than 50 characters"),
-  tags: z.string().optional(),
-})
-
-type MealFormValues = z.infer<typeof mealFormSchema>
 
 type Props = {
   meals: Meal[]
@@ -69,33 +42,8 @@ type Props = {
 
 export default function MealsDashboard({ meals }: Props) {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "calories" | "protein" | "createdAt">("createdAt")
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
-
-  const allTags = Array.from(new Set(meals.filter((meal) => meal.tags !== null).flatMap((meal) => meal.tags || [])))
-
-  // Add Meal Form
-  const addForm = useForm<MealFormValues>({
-    resolver: zodResolver(mealFormSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      calories: 0,
-      protein: 0,
-      carbs: 0,
-      fat: 0,
-      unit: "serving",
-      tags: "",
-    },
-  })
-
-  // Edit Meal Form
-  const editForm = useForm<MealFormValues>({
-    resolver: zodResolver(mealFormSchema),
-  })
 
   // Filter and sort meals
   const filteredMeals = meals
@@ -104,12 +52,9 @@ export default function MealsDashboard({ meals }: Props) {
         meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
-      const matchesTags =
-        selectedTags.length === 0 || (meal.tags && selectedTags.every((tag) => meal.tags?.includes(tag)))
-
       const matchesFavorite = !showFavoritesOnly || meal.isFavorite
 
-      return matchesSearch && matchesTags && matchesFavorite
+      return matchesSearch && matchesFavorite
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -138,76 +83,13 @@ export default function MealsDashboard({ meals }: Props) {
     }
   }
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
-  }
-
   const clearFilters = () => {
     setSearchQuery("")
-    setSelectedTags([])
     setShowFavoritesOnly(false)
     setSortBy("createdAt")
   }
 
-  const onAddSubmit = async (values: MealFormValues) => {
-    try {
-      // Convert tags string to array
-      const tagsArray = values.tags
-        ? values.tags
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean)
-        : []
-
-      // Here you would call your add meal action
-      // await addMeal({ ...values, tags: tagsArray })
-
-      toast("Meal added successfully")
-      addForm.reset()
-      setIsAddDialogOpen(false)
-    } catch (error) {
-      toast("Error adding meal")
-    }
-  }
-
-  const onEditSubmit = async (values: MealFormValues) => {
-    if (!editingMeal) return
-
-    try {
-      // Convert tags string to array
-      const tagsArray = values.tags
-        ? values.tags
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean)
-        : []
-
-      // Here you would call your update meal action
-      // await updateMeal(editingMeal.id, { ...values, tags: tagsArray })
-
-      toast("Meal updated successfully")
-      setEditingMeal(null)
-    } catch (error) {
-      toast("Error updating meal")
-    }
-  }
-
-  const openEditDialog = (meal: Meal) => {
-    setEditingMeal(meal)
-    editForm.reset({
-      name: meal.name,
-      description: meal.description || "",
-      calories: meal.calories,
-      protein: meal.protein || 0,
-      carbs: meal.carbs || 0,
-      fat: meal.fat || 0,
-      unit: meal.unit || "serving",
-      tags: meal.tags?.join(", ") || "",
-    })
-  }
-
-  const activeFiltersCount = selectedTags.length + (showFavoritesOnly ? 1 : 0)
-  const hasActiveFilters = activeFiltersCount > 0 || searchQuery || sortBy !== "createdAt"
+  const hasActiveFilters = showFavoritesOnly || searchQuery || sortBy !== "createdAt"
 
   return (
     <div className="space-y-8">
@@ -217,171 +99,12 @@ export default function MealsDashboard({ meals }: Props) {
           <h1 className="text-3xl font-bold tracking-tight">Meals</h1>
           <p className="text-muted-foreground">Manage your meal database and track nutrition information</p>
         </div>
-
-        {/* Add Meal Dialog */}
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Add Meal
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Add New Meal</DialogTitle>
-              <DialogDescription>Add a new meal to your database with nutrition information.</DialogDescription>
-            </DialogHeader>
-            <Form {...addForm}>
-              <form onSubmit={addForm.handleSubmit(onAddSubmit)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={addForm.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Meal name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={addForm.control}
-                    name="unit"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Unit</FormLabel>
-                        <FormControl>
-                          <Input placeholder="serving, cup, etc." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={addForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Optional description" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={addForm.control}
-                    name="calories"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Calories</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={addForm.control}
-                    name="protein"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Protein (g)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={addForm.control}
-                    name="carbs"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Carbs (g)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={addForm.control}
-                    name="fat"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Fat (g)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => field.onChange(Number(e.target.value))}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={addForm.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tags</FormLabel>
-                      <FormControl>
-                        <Input placeholder="breakfast, healthy, quick (comma separated)" {...field} />
-                      </FormControl>
-                      <FormDescription>Separate multiple tags with commas</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={addForm.formState.isSubmitting}>
-                    {addForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Add Meal
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+        <NewMealDialog>
+          <Button size="lg" className="gap-2">
+            <PlusCircle className="h-4 w-4" />
+            Add Meal
+          </Button>
+        </NewMealDialog>
       </div>
 
       {/* Filters and Search */}
@@ -403,9 +126,9 @@ export default function MealsDashboard({ meals }: Props) {
                   <Button variant="outline" className="gap-2 bg-transparent">
                     <Filter className="h-4 w-4" />
                     Filter
-                    {activeFiltersCount > 0 && (
+                    {showFavoritesOnly && (
                       <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                        {activeFiltersCount}
+                        1
                       </span>
                     )}
                   </Button>
@@ -417,21 +140,6 @@ export default function MealsDashboard({ meals }: Props) {
                     <Heart className="mr-2 h-4 w-4" />
                     Favorites Only
                   </DropdownMenuCheckboxItem>
-                  {allTags.length > 0 && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuLabel>Tags</DropdownMenuLabel>
-                      {allTags.map((tag) => (
-                        <DropdownMenuCheckboxItem
-                          key={tag}
-                          checked={selectedTags.includes(tag)}
-                          onCheckedChange={() => toggleTag(tag)}
-                        >
-                          {tag}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </>
-                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -472,184 +180,21 @@ export default function MealsDashboard({ meals }: Props) {
             </div>
           </div>
 
-          {selectedTags.length > 0 && (
+          {showFavoritesOnly && (
             <>
               <Separator />
-              <div className="flex flex-wrap gap-2">
-                <span className="text-sm font-medium text-muted-foreground">Active tags:</span>
-                {selectedTags.map((tag) => (
-                  <div
-                    key={tag}
-                    className="inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  >
-                    {tag}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleTag(tag)} />
-                  </div>
-                ))}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
+                <div className="inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-secondary text-secondary-foreground">
+                  <Heart className="h-3 w-3" />
+                  Favorites Only
+                  <X className="h-3 w-3 cursor-pointer" onClick={() => setShowFavoritesOnly(false)} />
+                </div>
               </div>
             </>
           )}
         </CardHeader>
       </Card>
-
-      {/* Edit Meal Dialog */}
-      <Dialog open={!!editingMeal} onOpenChange={() => setEditingMeal(null)}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Edit Meal</DialogTitle>
-            <DialogDescription>Update the meal information and nutrition details.</DialogDescription>
-          </DialogHeader>
-          <Form {...editForm}>
-            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Meal name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="unit"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Unit</FormLabel>
-                      <FormControl>
-                        <Input placeholder="serving, cup, etc." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={editForm.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Optional description" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="calories"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Calories</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="protein"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Protein (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="carbs"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Carbs (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="fat"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fat (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={editForm.control}
-                name="tags"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tags</FormLabel>
-                    <FormControl>
-                      <Input placeholder="breakfast, healthy, quick (comma separated)" {...field} />
-                    </FormControl>
-                    <FormDescription>Separate multiple tags with commas</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingMeal(null)}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={editForm.formState.isSubmitting}>
-                  {editForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Update Meal
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
 
       {/* Results */}
       {filteredMeals.length === 0 ? (
@@ -673,95 +218,106 @@ export default function MealsDashboard({ meals }: Props) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredMeals.map((meal) => (
-            <Card key={meal.id} className="group overflow-hidden transition-all hover:shadow-md">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-1 flex-1 min-w-0">
-                    <CardTitle className="text-lg leading-tight truncate">{meal.name}</CardTitle>
-                    <p className="text-xs text-muted-foreground">Per {meal.unit || "serving"}</p>
+        <>
+          {/* Meals Grid */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredMeals.map((meal) => (
+              <Card key={meal.id} className="group overflow-hidden transition-all hover:shadow-lg border-0 shadow-sm">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <CardTitle className="text-lg leading-tight">{meal.name}</CardTitle>
+                      <p className="text-sm text-muted-foreground">Per {meal.unit || "serving"}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-8 w-8 shrink-0 ${
+                        meal.isFavorite ? "text-red-500 hover:text-red-600" : "text-muted-foreground hover:text-red-500"
+                      }`}
+                      onClick={() => handleToggleFavorite(meal.id)}
+                    >
+                      <Heart className={`h-4 w-4 ${meal.isFavorite ? "fill-current" : ""}`} />
+                      <span className="sr-only">{meal.isFavorite ? "Remove from favorites" : "Add to favorites"}</span>
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`h-8 w-8 shrink-0 ${
-                      meal.isFavorite ? "text-red-500 hover:text-red-600" : "text-muted-foreground hover:text-red-500"
-                    }`}
-                    onClick={() => handleToggleFavorite(meal.id)}
-                  >
-                    <Heart className={`h-4 w-4 ${meal.isFavorite ? "fill-current" : ""}`} />
-                    <span className="sr-only">{meal.isFavorite ? "Remove from favorites" : "Add to favorites"}</span>
-                  </Button>
-                </div>
-                {meal.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{meal.description}</p>
-                )}
-              </CardHeader>
+                  {meal.description && (
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{meal.description}</p>
+                  )}
+                </CardHeader>
 
-              <CardContent className="pb-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-orange-50 dark:bg-orange-950/20">
-                      <Zap className="h-4 w-4 text-orange-600" />
-                      <div>
-                        <p className="text-xs font-medium text-orange-600">Calories</p>
-                        <p className="text-sm font-bold text-orange-700">{meal.calories}</p>
+                <CardContent className="pb-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
+                        <div className="rounded-full bg-orange-500 p-1.5">
+                          <Zap className="h-3 w-3 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-orange-700 dark:text-orange-300">Calories</p>
+                          <p className="text-lg font-bold text-orange-800 dark:text-orange-200">{meal.calories}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
+                        <div className="rounded-full bg-purple-500 p-1.5">
+                          <Wheat className="h-3 w-3 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-purple-700 dark:text-purple-300">Carbs</p>
+                          <p className="text-lg font-bold text-purple-800 dark:text-purple-200">{meal.carbs || 0}g</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-50 dark:bg-purple-950/20">
-                      <Wheat className="h-4 w-4 text-purple-600" />
-                      <div>
-                        <p className="text-xs font-medium text-purple-600">Carbs</p>
-                        <p className="text-sm font-bold text-purple-700">{meal.carbs || 0}g</p>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
+                        <div className="rounded-full bg-blue-500 p-1.5">
+                          <Target className="h-3 w-3 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">Protein</p>
+                          <p className="text-lg font-bold text-blue-800 dark:text-blue-200">{meal.protein || 0}g</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20">
+                        <div className="rounded-full bg-green-500 p-1.5">
+                          <Beef className="h-3 w-3 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-green-700 dark:text-green-300">Fat</p>
+                          <p className="text-lg font-bold text-green-800 dark:text-green-200">{meal.fat || 0}g</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-                      <Target className="h-4 w-4 text-blue-600" />
-                      <div>
-                        <p className="text-xs font-medium text-blue-600">Protein</p>
-                        <p className="text-sm font-bold text-blue-700">{meal.protein || 0}g</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/20">
-                      <Beef className="h-4 w-4 text-green-600" />
-                      <div>
-                        <p className="text-xs font-medium text-green-600">Fat</p>
-                        <p className="text-sm font-bold text-green-700">{meal.fat || 0}g</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
+                </CardContent>
 
-              <CardFooter className="flex items-center justify-between pt-4 border-t">
-                <div className="flex flex-wrap gap-1 flex-1 min-w-0 text-xs text-muted-foreground">
-                  {meal.tags?.slice(0, 3).join(", ")}
-                  {meal.tags && meal.tags.length > 3 && ` +${meal.tags.length - 3} more`}
-                </div>
-                <div className="flex gap-1 ml-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => openEditDialog(meal)}
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span className="sr-only">Edit meal</span>
-                  </Button>
-                  <DeleteMeal meal={meal} />
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                <CardFooter className="flex items-center justify-between pt-4 border-t bg-muted/20">
+                  <div className="text-xs text-muted-foreground">
+                    Added {new Date(meal.createdAt ?? new Date()).toLocaleDateString()}
+                  </div>
+                  <div className="flex gap-1">
+                    <EditMealDialog id={meal.id} meal={meal}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-100 hover:text-blue-600"
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span className="sr-only">Edit meal</span>
+                      </Button>
+                    </EditMealDialog>
+                    <DeleteMeal meal={meal} />
+                  </div>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Results Summary */}
       {filteredMeals.length > 0 && (
-        <div className="flex items-center justify-center text-sm text-muted-foreground">
+        <div className="flex items-center justify-center text-sm text-muted-foreground border-t pt-8">
           Showing {filteredMeals.length} of {meals.length} meals
         </div>
       )}
