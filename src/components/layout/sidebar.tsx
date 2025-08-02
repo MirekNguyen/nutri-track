@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "../common/user-avatar";
 import { Header } from "./header";
+import Link from "next/link";
 
 const items = [
   {
@@ -82,10 +83,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton isActive={item.url === pathname} asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
