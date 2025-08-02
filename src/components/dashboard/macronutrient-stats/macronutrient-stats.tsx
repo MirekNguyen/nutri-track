@@ -1,10 +1,11 @@
-import { Info } from "lucide-react";
+import { Beef, Droplets, Info, Wheat, Zap } from "lucide-react";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getUserData } from "@/actions/user-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useMacros } from "../../../hooks/use-macros";
+import { MacroCard } from "./macro-card";
 
 type Props = {
   date: string;
@@ -15,6 +16,9 @@ export const MacronutrientStats = async ({ date }: Props) => {
   const userData = await getUserData();
   const totalCalories = entries.reduce((sum, entry) => sum + entry.calories, 0);
   const macrosData = useMacros(entries);
+  const totalProtein = macrosData.protein;
+  const totalCarbs = macrosData.carbs;
+  const totalFat = macrosData.fat;
 
   const nutritionGoals = {
     calorieGoal: userData?.calorieGoal ?? 2000,
@@ -22,145 +26,57 @@ export const MacronutrientStats = async ({ date }: Props) => {
     carbsGoal: userData?.carbsGoal ?? 200,
     fatGoal: userData?.fatsGoal ?? 65,
   };
+  const macros = [
+    {
+      title: "Calories",
+      current: totalCalories,
+      goal: nutritionGoals.calorieGoal,
+      unit: " kcal",
+      color: "green",
+      border: "border-l-green-500",
+      icon: Zap,
+      isOverLimit: totalCalories > nutritionGoals.calorieGoal,
+      subtitle: `${Math.round((totalCalories / nutritionGoals.calorieGoal) * 100)}% of daily intake`,
+    },
+    {
+      title: "Protein",
+      current: totalProtein,
+      goal: nutritionGoals.proteinGoal,
+      unit: "g",
+      color: "blue",
+      border: "border-l-blue-500",
+      icon: Beef,
+      isOverLimit: false,
+      subtitle: `${(totalProtein / (userData?.weight ?? 70)).toFixed(1)}g per kg`,
+    },
+    {
+      title: "Carbs",
+      current: totalCarbs,
+      goal: nutritionGoals.carbsGoal,
+      unit: "g",
+      color: "purple",
+      border: "border-l-purple-500",
+      icon: Wheat,
+      isOverLimit: false,
+      subtitle: `${Math.round((totalCarbs / nutritionGoals.carbsGoal) * 100)}% of daily limit`,
+    },
+    {
+      title: "Fats",
+      current: totalFat,
+      goal: nutritionGoals.fatGoal,
+      unit: "g",
+      color: "orange",
+      border: "border-l-orange-500",
+      icon: Droplets,
+      isOverLimit: false,
+      subtitle: `${Math.round((totalFat / nutritionGoals.fatGoal) * 100)}% of daily limit`,
+    },
+  ];
   return (
     <>
-      <Card
-        className={cn(
-          "border-l-4 shadow-sm hover:shadow-md transition-shadow",
-          "bg-linear-to-br from-green-50 to-green-100/50 dark:from-green-950/20 dark:to-green-900/10",
-          totalCalories > nutritionGoals.calorieGoal
-            ? "border-red-300"
-            : "border-green-300 dark:border-green-700",
-        )}
-      >
-        <CardHeader className="md:pb-2">
-          <CardTitle className="text-sm font-medium text-foreground flex items-center justify-between">
-            Calories
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-4 w-4 text-muted-foreground"
-            >
-              <Info size={14} />
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-baseline justify-between flex-col md:flex-row">
-            <div className="text-xl md:text-3xl font-bold text-green-600">
-              {totalCalories.toFixed(0)} kcal
-            </div>
-            <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.calorieGoal.toFixed(0)} kcal
-            </div>
-          </div>
-          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className={`h-full ${totalCalories > nutritionGoals.calorieGoal ? "bg-red-500" : "bg-green-500"}`}
-              style={{
-                width: `${Math.min(100, (totalCalories / nutritionGoals.calorieGoal) * 100)}%`,
-              }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {Math.round((totalCalories / nutritionGoals.calorieGoal) * 100)}% of
-            daily intake
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="border-l-4 border-blue-600 dark:border-blue-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="md:pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">
-            Protein
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-baseline justify-between flex-col md:flex-row">
-            <div className="text-xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
-              {macrosData.protein.toFixed(0)}g
-            </div>
-            <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.proteinGoal.toFixed(0)}g
-            </div>
-          </div>
-          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-500"
-              style={{
-                width: `${Math.min(100, (macrosData.protein / (nutritionGoals.proteinGoal || 1)) * 100)}%`,
-              }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mr-1" />
-            Coeficient{" "}
-            {(macrosData.protein / (userData?.weight ?? 1)).toFixed(1)}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="border-l-4 border-purple-600 dark:border-purple-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="md:pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">
-            Carbs
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-baseline justify-between flex-col md:flex-row">
-            <div className="text-xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
-              {macrosData.carbs.toFixed(0)}g
-            </div>
-            <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.carbsGoal.toFixed(0)}g
-            </div>
-          </div>
-          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-purple-500"
-              style={{
-                width: `${Math.min(100, (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100)}%`,
-              }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {Math.round(
-              (macrosData.carbs / (nutritionGoals.carbsGoal || 1)) * 100,
-            )}
-            % of daily limit
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="border-l-4 border-yellow-600 dark:border-yellow-400 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader className="md:pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">
-            Fats
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-baseline justify-between flex-col md:flex-row">
-            <div className="text-xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400">
-              {macrosData.fat.toFixed(0)}g
-            </div>
-            <div className="text-sm text-muted-foreground">
-              / {nutritionGoals.fatGoal.toFixed(0)}g
-            </div>
-          </div>
-          <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-yellow-500"
-              style={{
-                width: `${Math.min(100, (macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}%`,
-              }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {Math.round((macrosData.fat / (nutritionGoals.fatGoal || 1)) * 100)}
-            % of daily limit
-          </p>
-        </CardContent>
-      </Card>
+      {macros.map((macro) => (
+        <MacroCard key={macro.title} {...macro} />
+      ))}
     </>
   );
 };
