@@ -1,8 +1,6 @@
 import { AlertCircle, TrendingUp } from "lucide-react";
 import type React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 interface MacroCardProps {
