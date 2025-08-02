@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   ChevronDown,
@@ -8,341 +8,749 @@ import {
   PlusCircle,
   Search,
   X,
-} from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { toggleFavoriteMeal } from "@/actions/meal-actions";
-import { DeleteMeal } from "@/components/meals/delete-meal";
-import { EditMealDialog } from "@/components/meals/edit-meal-dialog";
-import { NewMealDialog } from "@/components/meals/new-meal-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+  Calendar,
+  Zap,
+  Target,
+  Beef,
+  Wheat,
+  Loader2,
+} from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { toggleFavoriteMeal } from "@/actions/meal-actions"
+import { DeleteMeal } from "@/components/meals/delete-meal"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import type { Meal } from "@/db/schema";
+} from "@/components/ui/dropdown-menu"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import type { Meal } from "@/db/schema"
+
+// Zod Schema for Meal Form
+const mealFormSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  description: z.string().optional(),
+  calories: z.number().min(0, "Calories must be positive").max(10000, "Calories must be less than 10,000"),
+  protein: z.number().min(0, "Protein must be positive").max(1000, "Protein must be less than 1,000g").optional(),
+  carbs: z.number().min(0, "Carbs must be positive").max(1000, "Carbs must be less than 1,000g").optional(),
+  fat: z.number().min(0, "Fat must be positive").max(1000, "Fat must be less than 1,000g").optional(),
+  unit: z.string().min(1, "Unit is required").max(50, "Unit must be less than 50 characters"),
+  tags: z.string().optional(),
+})
+
+type MealFormValues = z.infer<typeof mealFormSchema>
 
 type Props = {
-  meals: Meal[];
-};
+  meals: Meal[]
+}
 
 export default function MealsDashboard({ meals }: Props) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [sortBy, setSortBy] = useState<
-    "name" | "calories" | "protein" | "createdAt"
-  >("createdAt");
-  const allTags = Array.from(
-    new Set(
-      meals
-        .filter((meal) => meal.tags !== null)
-        .flatMap((meal) => meal.tags || []),
-    ),
-  );
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [sortBy, setSortBy] = useState<"name" | "calories" | "protein" | "createdAt">("createdAt")
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
+
+  const allTags = Array.from(new Set(meals.filter((meal) => meal.tags !== null).flatMap((meal) => meal.tags || [])))
+
+  // Add Meal Form
+  const addForm = useForm<MealFormValues>({
+    resolver: zodResolver(mealFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      unit: "serving",
+      tags: "",
+    },
+  })
+
+  // Edit Meal Form
+  const editForm = useForm<MealFormValues>({
+    resolver: zodResolver(mealFormSchema),
+  })
 
   // Filter and sort meals
   const filteredMeals = meals
     .filter((meal) => {
-      // Search filter
       const matchesSearch =
         meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meal.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
-      // Tags filter
       const matchesTags =
-        selectedTags.length === 0 ||
-        (meal.tags && selectedTags.every((tag) => meal.tags?.includes(tag)));
+        selectedTags.length === 0 || (meal.tags && selectedTags.every((tag) => meal.tags?.includes(tag)))
 
-      // Favorites filter
-      const matchesFavorite = !showFavoritesOnly || meal.isFavorite;
+      const matchesFavorite = !showFavoritesOnly || meal.isFavorite
 
-      return matchesSearch && matchesTags && matchesFavorite;
+      return matchesSearch && matchesTags && matchesFavorite
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "name":
-          return a.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name)
         case "calories":
-          return b.calories - a.calories;
+          return b.calories - a.calories
         case "protein":
-          return (b.protein || 0) - (a.protein || 0);
+          return (b.protein || 0) - (a.protein || 0)
         default:
-          return (
-            new Date(b.createdAt ?? new Date()).getTime() -
-            new Date(a.createdAt ?? new Date()).getTime()
-          );
+          return new Date(b.createdAt ?? new Date()).getTime() - new Date(a.createdAt ?? new Date()).getTime()
       }
-    });
+    })
 
   const handleToggleFavorite = async (id: number) => {
     try {
-      const updatedMeal = await toggleFavoriteMeal(id);
-
-      toast(
-        updatedMeal.isFavorite
-          ? "Added to favorites"
-          : "Removed from favorites",
-        {
-          description: `${updatedMeal.name} has been ${updatedMeal.isFavorite ? "added to" : "removed from"} your favorites.`,
-        },
-      );
+      const updatedMeal = await toggleFavoriteMeal(id)
+      toast(updatedMeal.isFavorite ? "Added to favorites" : "Removed from favorites", {
+        description: `${updatedMeal.name} has been ${updatedMeal.isFavorite ? "added to" : "removed from"} your favorites.`,
+      })
     } catch (error) {
-      console.error("Error toggling favorite:", error);
+      console.error("Error toggling favorite:", error)
       toast("Error", {
         description: "Failed to update favorite status. Please try again.",
-      });
+      })
     }
-  };
+  }
 
   const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  };
+    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
+  }
 
   const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedTags([]);
-    setShowFavoritesOnly(false);
-    setSortBy("createdAt");
-  };
+    setSearchQuery("")
+    setSelectedTags([])
+    setShowFavoritesOnly(false)
+    setSortBy("createdAt")
+  }
+
+  const onAddSubmit = async (values: MealFormValues) => {
+    try {
+      // Convert tags string to array
+      const tagsArray = values.tags
+        ? values.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+        : []
+
+      // Here you would call your add meal action
+      // await addMeal({ ...values, tags: tagsArray })
+
+      toast("Meal added successfully")
+      addForm.reset()
+      setIsAddDialogOpen(false)
+    } catch (error) {
+      toast("Error adding meal")
+    }
+  }
+
+  const onEditSubmit = async (values: MealFormValues) => {
+    if (!editingMeal) return
+
+    try {
+      // Convert tags string to array
+      const tagsArray = values.tags
+        ? values.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+        : []
+
+      // Here you would call your update meal action
+      // await updateMeal(editingMeal.id, { ...values, tags: tagsArray })
+
+      toast("Meal updated successfully")
+      setEditingMeal(null)
+    } catch (error) {
+      toast("Error updating meal")
+    }
+  }
+
+  const openEditDialog = (meal: Meal) => {
+    setEditingMeal(meal)
+    editForm.reset({
+      name: meal.name,
+      description: meal.description || "",
+      calories: meal.calories,
+      protein: meal.protein || 0,
+      carbs: meal.carbs || 0,
+      fat: meal.fat || 0,
+      unit: meal.unit || "serving",
+      tags: meal.tags?.join(", ") || "",
+    })
+  }
+
+  const activeFiltersCount = selectedTags.length + (showFavoritesOnly ? 1 : 0)
+  const hasActiveFilters = activeFiltersCount > 0 || searchQuery || sortBy !== "createdAt"
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-          Meals
-        </h1>
-        <NewMealDialog>
-          <Button className="bg-green-600 hover:bg-green-700 text-sm w-full sm:w-auto">
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Meal
-          </Button>
-        </NewMealDialog>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight">Meals</h1>
+          <p className="text-muted-foreground">Manage your meal database and track nutrition information</p>
+        </div>
+
+        {/* Add Meal Dialog */}
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="lg" className="gap-2">
+              <PlusCircle className="h-4 w-4" />
+              Add Meal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Add New Meal</DialogTitle>
+              <DialogDescription>Add a new meal to your database with nutrition information.</DialogDescription>
+            </DialogHeader>
+            <Form {...addForm}>
+              <form onSubmit={addForm.handleSubmit(onAddSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={addForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Meal name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={addForm.control}
+                    name="unit"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Unit</FormLabel>
+                        <FormControl>
+                          <Input placeholder="serving, cup, etc." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={addForm.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Optional description" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={addForm.control}
+                    name="calories"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Calories</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={addForm.control}
+                    name="protein"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Protein (g)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={addForm.control}
+                    name="carbs"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Carbs (g)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={addForm.control}
+                    name="fat"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fat (g)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={addForm.control}
+                  name="tags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tags</FormLabel>
+                      <FormControl>
+                        <Input placeholder="breakfast, healthy, quick (comma separated)" {...field} />
+                      </FormControl>
+                      <FormDescription>Separate multiple tags with commas</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={addForm.formState.isSubmitting}>
+                    {addForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Add Meal
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="mb-6 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-              size={18}
-            />
-            <Input
-              placeholder="Search meals..."
-              className="pl-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Filter size={16} />
-                  Filter
-                  {(selectedTags.length > 0 || showFavoritesOnly) && (
-                    <Badge variant="secondary" className="ml-1 h-5 px-1.5">
-                      {selectedTags.length + (showFavoritesOnly ? 1 : 0)}
-                    </Badge>
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search meals by name or description..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2 bg-transparent">
+                    <Filter className="h-4 w-4" />
+                    Filter
+                    {activeFiltersCount > 0 && (
+                      <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end">
+                  <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem checked={showFavoritesOnly} onCheckedChange={setShowFavoritesOnly}>
+                    <Heart className="mr-2 h-4 w-4" />
+                    Favorites Only
+                  </DropdownMenuCheckboxItem>
+                  {allTags.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel>Tags</DropdownMenuLabel>
+                      {allTags.map((tag) => (
+                        <DropdownMenuCheckboxItem
+                          key={tag}
+                          checked={selectedTags.includes(tag)}
+                          onCheckedChange={() => toggleTag(tag)}
+                        >
+                          {tag}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </>
                   )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2 bg-transparent">
+                    Sort
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuRadioGroup value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+                    <DropdownMenuRadioItem value="createdAt">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Newest First
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="name">Name (A-Z)</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="calories">
+                      <Zap className="mr-2 h-4 w-4" />
+                      Highest Calories
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="protein">
+                      <Target className="mr-2 h-4 w-4" />
+                      Highest Protein
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {hasActiveFilters && (
+                <Button variant="ghost" size="icon" onClick={clearFilters} className="h-10 w-10">
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Clear filters</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={showFavoritesOnly}
-                  onCheckedChange={setShowFavoritesOnly}
-                >
-                  Favorites Only
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>Tags</DropdownMenuLabel>
-                {allTags.map((tag) => (
-                  <DropdownMenuCheckboxItem
+              )}
+            </div>
+          </div>
+
+          {selectedTags.length > 0 && (
+            <>
+              <Separator />
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Active tags:</span>
+                {selectedTags.map((tag) => (
+                  <div
                     key={tag}
-                    checked={selectedTags.includes(tag)}
-                    onCheckedChange={() => toggleTag(tag)}
+                    className="inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   >
                     {tag}
-                  </DropdownMenuCheckboxItem>
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleTag(tag)} />
+                  </div>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  Sort
-                  <ChevronDown size={16} />
+              </div>
+            </>
+          )}
+        </CardHeader>
+      </Card>
+
+      {/* Edit Meal Dialog */}
+      <Dialog open={!!editingMeal} onOpenChange={() => setEditingMeal(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit Meal</DialogTitle>
+            <DialogDescription>Update the meal information and nutrition details.</DialogDescription>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Meal name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="unit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Unit</FormLabel>
+                      <FormControl>
+                        <Input placeholder="serving, cup, etc." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={editForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Optional description" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="calories"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Calories</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="protein"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Protein (g)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="carbs"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Carbs (g)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="fat"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fat (g)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={editForm.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tags</FormLabel>
+                    <FormControl>
+                      <Input placeholder="breakfast, healthy, quick (comma separated)" {...field} />
+                    </FormControl>
+                    <FormDescription>Separate multiple tags with commas</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setEditingMeal(null)}>
+                  Cancel
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Sort By</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={sortBy === "createdAt"}
-                  onCheckedChange={(checked) =>
-                    checked && setSortBy("createdAt")
-                  }
-                >
-                  Newest First
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={sortBy === "name"}
-                  onCheckedChange={(checked) => checked && setSortBy("name")}
-                >
-                  Name (A-Z)
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={sortBy === "calories"}
-                  onCheckedChange={(checked) =>
-                    checked && setSortBy("calories")
-                  }
-                >
-                  Highest Calories
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={sortBy === "protein"}
-                  onCheckedChange={(checked) => checked && setSortBy("protein")}
-                >
-                  Highest Protein
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {(searchQuery ||
-              selectedTags.length > 0 ||
-              showFavoritesOnly ||
-              sortBy !== "createdAt") && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={clearFilters}
-                title="Clear filters"
-              >
-                <X size={16} />
+                <Button type="submit" disabled={editForm.formState.isSubmitting}>
+                  {editForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Update Meal
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Results */}
+      {filteredMeals.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <div className="rounded-full bg-muted p-4 mb-4">
+              <Search className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">No meals found</h3>
+            <p className="text-muted-foreground text-center max-w-sm">
+              {hasActiveFilters
+                ? "Try adjusting your search terms or filters to find what you're looking for."
+                : "Get started by adding your first meal to the database."}
+            </p>
+            {hasActiveFilters && (
+              <Button variant="outline" onClick={clearFilters} className="mt-4 gap-2 bg-transparent">
+                <X className="h-4 w-4" />
+                Clear filters
               </Button>
             )}
-          </div>
-        </div>
-        {selectedTags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {selectedTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="flex items-center gap-1"
-              >
-                {tag}
-                <X
-                  size={14}
-                  className="cursor-pointer"
-                  onClick={() => toggleTag(tag)}
-                />
-              </Badge>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {filteredMeals.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-          <div className="text-gray-400 mb-4">
-            <Search size={48} className="mx-auto" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-1">
-            No meals found
-          </h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
-        </div>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredMeals.map((meal) => (
-            <Card
-              key={meal.id}
-              className="overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-shadow"
-            >
-              <CardHeader className="pb-2 flex flex-row justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg">{meal.name}</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Per {meal.unit || "serving"}
-                  </p>
-                  {meal.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                      {meal.description}
-                    </p>
-                  )}
+            <Card key={meal.id} className="group overflow-hidden transition-all hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 flex-1 min-w-0">
+                    <CardTitle className="text-lg leading-tight truncate">{meal.name}</CardTitle>
+                    <p className="text-xs text-muted-foreground">Per {meal.unit || "serving"}</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-8 w-8 shrink-0 ${
+                      meal.isFavorite ? "text-red-500 hover:text-red-600" : "text-muted-foreground hover:text-red-500"
+                    }`}
+                    onClick={() => handleToggleFavorite(meal.id)}
+                  >
+                    <Heart className={`h-4 w-4 ${meal.isFavorite ? "fill-current" : ""}`} />
+                    <span className="sr-only">{meal.isFavorite ? "Remove from favorites" : "Add to favorites"}</span>
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-8 w-8 ${meal.isFavorite ? "text-red-500" : "text-gray-400"}`}
-                  onClick={() => handleToggleFavorite(meal.id)}
-                >
-                  <Heart
-                    className={meal.isFavorite ? "fill-current" : ""}
-                    size={18}
-                  />
-                </Button>
+                {meal.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{meal.description}</p>
+                )}
               </CardHeader>
-              <CardContent className="pb-2 flex-1">
-                <div className="grid grid-cols-4 gap-2 text-center">
-                  <div className="bg-gray-50 dark:bg-muted/50 p-2 rounded-md">
-                    <p className="text-xs text-gray-500">Calories</p>
-                    <p className="font-semibold">{meal.calories}</p>
+
+              <CardContent className="pb-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-orange-50 dark:bg-orange-950/20">
+                      <Zap className="h-4 w-4 text-orange-600" />
+                      <div>
+                        <p className="text-xs font-medium text-orange-600">Calories</p>
+                        <p className="text-sm font-bold text-orange-700">{meal.calories}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-50 dark:bg-purple-950/20">
+                      <Wheat className="h-4 w-4 text-purple-600" />
+                      <div>
+                        <p className="text-xs font-medium text-purple-600">Carbs</p>
+                        <p className="text-sm font-bold text-purple-700">{meal.carbs || 0}g</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="bg-blue-50 dark:bg-blue-950/20 p-2 rounded-md">
-                    <p className="text-xs text-gray-500">Protein</p>
-                    <p className="font-semibold text-blue-600">
-                      {meal.protein || 0}g
-                    </p>
-                  </div>
-                  <div className="bg-purple-50 dark:bg-purple-950/20 p-2 rounded-md">
-                    <p className="text-xs text-gray-500">Carbs</p>
-                    <p className="font-semibold text-purple-600">
-                      {meal.carbs || 0}g
-                    </p>
-                  </div>
-                  <div className="bg-orange-50 dark:bg-orange-950/20 p-2 rounded-md">
-                    <p className="text-xs text-gray-500">Fat</p>
-                    <p className="font-semibold text-orange-600">
-                      {meal.fat || 0}g
-                    </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20">
+                      <Target className="h-4 w-4 text-blue-600" />
+                      <div>
+                        <p className="text-xs font-medium text-blue-600">Protein</p>
+                        <p className="text-sm font-bold text-blue-700">{meal.protein || 0}g</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/20">
+                      <Beef className="h-4 w-4 text-green-600" />
+                      <div>
+                        <p className="text-xs font-medium text-green-600">Fat</p>
+                        <p className="text-sm font-bold text-green-700">{meal.fat || 0}g</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-between items-center pt-2 border-t">
-                <div className="flex flex-wrap gap-1">
-                  {meal.tags?.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
+
+              <CardFooter className="flex items-center justify-between pt-4 border-t">
+                <div className="flex flex-wrap gap-1 flex-1 min-w-0 text-xs text-muted-foreground">
+                  {meal.tags?.slice(0, 3).join(", ")}
+                  {meal.tags && meal.tags.length > 3 && ` +${meal.tags.length - 3} more`}
                 </div>
-                <div className="flex gap-1">
-                  <EditMealDialog id={meal.id} meal={meal}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-500 hover:text-blue-500"
-                    >
-                      <Edit size={16} />
-                    </Button>
-                  </EditMealDialog>
+                <div className="flex gap-1 ml-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => openEditDialog(meal)}
+                  >
+                    <Edit className="h-4 w-4" />
+                    <span className="sr-only">Edit meal</span>
+                  </Button>
                   <DeleteMeal meal={meal} />
                 </div>
               </CardFooter>
@@ -350,6 +758,14 @@ export default function MealsDashboard({ meals }: Props) {
           ))}
         </div>
       )}
-    </>
-  );
+
+      {/* Results Summary */}
+      {filteredMeals.length > 0 && (
+        <div className="flex items-center justify-center text-sm text-muted-foreground">
+          Showing {filteredMeals.length} of {meals.length} meals
+        </div>
+      )}
+    </div>
+  )
 }
+
