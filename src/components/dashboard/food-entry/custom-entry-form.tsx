@@ -167,7 +167,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                             type="number"
                             step="0.01"
                             placeholder="25"
-                            className="h-8 text-xs"
+                            className="h-8 text-sm"
                             {...register("protein", { valueAsNumber: true })}
                           />
                         </FormControl>
@@ -187,7 +187,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                             type="number"
                             step="0.01"
                             placeholder="5"
-                            className="h-8 text-xs"
+                            className="h-8 text-sm"
                             {...register("carbs", { valueAsNumber: true })}
                           />
                         </FormControl>
@@ -207,7 +207,7 @@ export const CustomEntryForm: FC<Props> = ({ submitAction }) => {
                             type="number"
                             step="0.01"
                             placeholder="8"
-                            className="h-8 text-xs"
+                            className="h-8 text-sm"
                             {...register("fat", { valueAsNumber: true })}
                           />
                         </FormControl>

@@ -83,7 +83,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
   const isMobile = useIsMobile();
 
   const { data: meals = [], isLoading } = useQuery({
-    queryKey: ["meals"],
+    queryKey: ["getMeals"],
     queryFn: getMeals,
     staleTime: 5 * 60 * 1000,
     retry: 1,
@@ -138,7 +138,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex justify-between gap-4 md:gap-2 flex-col sm:flex-row">
+      <div className="flex justify-between gap-4 md:gap-2 ">
         <div className="flex items-center gap-2">
           <UtensilsCrossed className="w-4 h-4 text-muted-foreground" />
           <h3 className="font-medium text-foreground">
@@ -153,7 +153,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
             className="text-xs bg-transparent"
           >
             <Plus className="w-3 h-3 mr-1" />
-            Create New Meal
+            {!isMobile ? "Create New Meal" : "Create"}
           </Button>
         </NewMealDialog>
       </div>
