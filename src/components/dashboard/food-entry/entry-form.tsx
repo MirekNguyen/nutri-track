@@ -21,14 +21,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
@@ -39,12 +31,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { Meal } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MealSelectResponsive } from "./meal-select";
@@ -171,6 +157,8 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
           </Button>
         </NewMealDialog>
       </div>
+
+            <Card className="p-4">
 
       <Form {...form}>
         <form onSubmit={handleSubmit(handleAddMealEntry)} className="space-y-4">
@@ -342,6 +330,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
           </DialogFooter>
         </form>
       </Form>
+      </Card>
     </div>
   );
 };

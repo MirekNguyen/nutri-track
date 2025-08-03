@@ -48,7 +48,6 @@ export const AddFoodEntry: FC<Props> = ({ children, type }) => {
       <DialogContent
         className="sm:max-w-[550px] max-w-[95vw] p-4 overflow-y-auto max-h-[90vh]"
         style={{
-          height: isMobile ? "80vh" : "600px",
           display: "flex",
           flexDirection: "column",
         }}
