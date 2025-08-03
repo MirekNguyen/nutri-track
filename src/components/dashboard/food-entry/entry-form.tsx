@@ -180,7 +180,7 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel className="text-sm">Select Meal</FormLabel>
-                <Popover open={open} onOpenChange={setOpen}>
+                <Popover open={open} onOpenChange={setOpen} modal={true}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
