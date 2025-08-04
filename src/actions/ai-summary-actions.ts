@@ -69,7 +69,7 @@ Present your advice as a friendly, concise summary of 3–5 short sentences, jus
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4.1",
     max_tokens: 300,
     messages: [
       {
