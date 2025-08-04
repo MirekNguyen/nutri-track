@@ -99,16 +99,16 @@ export const MealSelectResponsive = ({
     </Command>
   );
 
-  if (isMobile) {
-    return (
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-        <DrawerContent>
-          <div className="mt-4 border-t">{List}</div>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
+  // if (isMobile) {
+  //   return (
+  //     <Drawer open={open} onOpenChange={setOpen}>
+  //       <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
+  //       <DrawerContent>
+  //         <div className="mt-4 border-t">{List}</div>
+  //       </DrawerContent>
+  //     </Drawer>
+  //   );
+  // }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
