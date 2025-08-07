@@ -1,9 +1,6 @@
-import { Beef, Droplets, Info, Wheat, Zap } from "lucide-react";
+import { Beef, Droplets, Wheat, Zap } from "lucide-react";
 import { getFoodEntries } from "@/actions/food-entry-actions";
 import { getUserData } from "@/actions/user-actions";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { useMacros } from "../../../hooks/use-macros";
 import { MacroCard } from "./macro-card";
 

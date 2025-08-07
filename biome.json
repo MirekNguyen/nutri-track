@@ -10,7 +10,8 @@
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space"
+    "indentStyle": "space",
+    "formatWithErrors": true
   },
   "linter": {
     "enabled": true,
@@ -19,7 +20,10 @@
       "correctness": {
         "useExhaustiveDependencies": "off",
         "noUnsafeOptionalChaining": "off",
-        "noUnusedImports": "error",
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        },
         "noUnusedFunctionParameters": "error",
         "noUnusedVariables": "error"
       },

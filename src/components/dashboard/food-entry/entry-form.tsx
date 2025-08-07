@@ -158,178 +158,180 @@ export const EntryForm: FC<Props> = ({ submitAction, type }) => {
         </NewMealDialog>
       </div>
 
-            <Card className="p-4">
-
-      <Form {...form}>
-        <form onSubmit={handleSubmit(handleAddMealEntry)} className="space-y-4">
-          {/* Meal Search with Popover */}
-          <FormField
-            name="meal"
-            control={control}
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-sm">Select Meal</FormLabel>
-                <MealSelectResponsive
-                  open={open}
-                  setOpen={setOpen}
-                  meals={meals}
-                  isLoading={isLoading}
-                  selectedMeal={selectedMeal}
-                  onSelect={(meal) => {
-                    setValue("meal", meal);
-                    field.onChange(meal);
-                  }}
-                  isMobile={isMobile}
-                  triggerButton={
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-between h-9 ${!selectedMeal ? "text-muted-foreground" : ""}`}
-                    >
-                      {selectedMeal ? (
-                        <div className="flex items-center gap-2">
-                          <span>{selectedMeal.name}</span>
-                          <Badge variant="secondary" className="text-xs">
-                            {selectedMeal.calories} cal
-                          </Badge>
-                        </div>
-                      ) : (
-                        "Select a meal..."
-                      )}
-                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  }
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Essential Fields */}
-          <div className="grid grid-cols-2 gap-3">
+      <Card className="p-4">
+        <Form {...form}>
+          <form
+            onSubmit={handleSubmit(handleAddMealEntry)}
+            className="space-y-4"
+          >
+            {/* Meal Search with Popover */}
             <FormField
-              name="amount"
+              name="meal"
               control={control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">Amount</FormLabel>
-                  <FormControl>
-                    <div className="flex w-full max-w-sm items-center gap-2">
-                      <Input
-                        {...field}
-                        type="number"
-                        step="0.01"
-                        placeholder="1.0"
-                        className="h-9"
-                        {...register("amount", { valueAsNumber: true })}
-                      />
-                      <Button variant="outline" disabled>
-                        {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
-                          "serving"}
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-sm">Select Meal</FormLabel>
+                  <MealSelectResponsive
+                    open={open}
+                    setOpen={setOpen}
+                    meals={meals}
+                    isLoading={isLoading}
+                    selectedMeal={selectedMeal}
+                    onSelect={(meal) => {
+                      setValue("meal", meal);
+                      field.onChange(meal);
+                    }}
+                    isMobile={isMobile}
+                    triggerButton={
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-between h-9 ${!selectedMeal ? "text-muted-foreground" : ""}`}
+                      >
+                        {selectedMeal ? (
+                          <div className="flex items-center gap-2">
+                            <span>{selectedMeal.name}</span>
+                            <Badge variant="secondary" className="text-xs">
+                              {selectedMeal.calories} cal
+                            </Badge>
+                          </div>
+                        ) : (
+                          "Select a meal..."
+                        )}
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
-                    </div>
-                  </FormControl>
+                    }
+                  />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              name="mealType"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">Meal Type</FormLabel>
-                  <FormControl>
-                    <MealTypeDropdown
-                      newMealType={field.value ?? type}
-                      setNewMealType={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
 
-          {/* Advanced Details - Collapsible */}
-          {selectedMeal && (
-            <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-              <CollapsibleTrigger asChild>
+            {/* Essential Fields */}
+            <div className="grid grid-cols-2 gap-3">
+              <FormField
+                name="amount"
+                control={control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm">Amount</FormLabel>
+                    <FormControl>
+                      <div className="flex w-full max-w-sm items-center gap-2">
+                        <Input
+                          {...field}
+                          type="number"
+                          step="0.01"
+                          placeholder="1.0"
+                          className="h-9"
+                          {...register("amount", { valueAsNumber: true })}
+                        />
+                        <Button variant="outline" disabled>
+                          {meals.find((m) => m.id === selectedMeal?.id)?.unit ||
+                            "serving"}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="mealType"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm">Meal Type</FormLabel>
+                    <FormControl>
+                      <MealTypeDropdown
+                        newMealType={field.value ?? type}
+                        setNewMealType={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Advanced Details - Collapsible */}
+            {selectedMeal && (
+              <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full h-8 text-xs text-muted-foreground"
+                  >
+                    Nutritional Details
+                    <ChevronDown
+                      className={`w-3 h-3 ml-2 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+                    />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-3">
+                  <Card className="p-3 bg-muted/30">
+                    <div className="text-xs text-muted-foreground mb-2">
+                      Per {amount} {selectedMeal.unit}:
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex justify-between">
+                        <span>Calories:</span>
+                        <span className="font-medium">
+                          {(selectedMeal.calories * amount).toFixed(0)} kcal
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Protein:</span>
+                        <span className="font-medium">
+                          {(selectedMeal.protein * amount).toFixed(0)}g
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Carbs:</span>
+                        <span className="font-medium">
+                          {(selectedMeal.carbs * amount).toFixed(0)}g
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Fat:</span>
+                        <span className="font-medium">
+                          {(selectedMeal.fat * amount).toFixed(0)}g
+                        </span>
+                      </div>
+                    </div>
+                  </Card>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+
+            {/* Footer */}
+            <DialogFooter className="pt-4 gap-2">
+              <DialogClose asChild>
                 <Button
                   type="button"
-                  variant="ghost"
-                  className="w-full h-8 text-xs text-muted-foreground"
+                  variant="outline"
+                  disabled={isSubmitting}
+                  className="h-9 text-sm bg-transparent"
                 >
-                  Nutritional Details
-                  <ChevronDown
-                    className={`w-3 h-3 ml-2 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
-                  />
+                  Cancel
                 </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-3">
-                <Card className="p-3 bg-muted/30">
-                  <div className="text-xs text-muted-foreground mb-2">
-                    Per {amount} {selectedMeal.unit}:
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex justify-between">
-                      <span>Calories:</span>
-                      <span className="font-medium">
-                        {(selectedMeal.calories * amount).toFixed(0)} kcal
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Protein:</span>
-                      <span className="font-medium">
-                        {(selectedMeal.protein * amount).toFixed(0)}g
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Carbs:</span>
-                      <span className="font-medium">
-                        {(selectedMeal.carbs * amount).toFixed(0)}g
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Fat:</span>
-                      <span className="font-medium">
-                        {(selectedMeal.fat * amount).toFixed(0)}g
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </CollapsibleContent>
-            </Collapsible>
-          )}
-
-          {/* Footer */}
-          <DialogFooter className="pt-4 gap-2">
-            <DialogClose asChild>
+              </DialogClose>
               <Button
-                type="button"
-                variant="outline"
-                disabled={isSubmitting}
-                className="h-9 text-sm bg-transparent"
+                className="bg-green-600 hover:bg-green-700 h-9 text-sm font-medium"
+                type="submit"
+                disabled={isSubmitting || !selectedMeal}
               >
-                Cancel
+                {isSubmitting ? (
+                  <>
+                    <Loader className="mr-2 h-3 w-3 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  "Add Entry"
+                )}
               </Button>
-            </DialogClose>
-            <Button
-              className="bg-green-600 hover:bg-green-700 h-9 text-sm font-medium"
-              type="submit"
-              disabled={isSubmitting || !selectedMeal}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader className="mr-2 h-3 w-3 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                "Add Entry"
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </Form>
+            </DialogFooter>
+          </form>
+        </Form>
       </Card>
     </div>
   );
